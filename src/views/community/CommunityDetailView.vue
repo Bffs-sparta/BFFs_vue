@@ -245,7 +245,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 body {
     margin: 0;
     padding: 0;
@@ -738,13 +738,7 @@ header >  #menu {
     height: 15px;
 }
 
-/* 
-.card > p > img {
-  width: auto !important;
-  height: auto !important;
-  text-align: center;
-  object-fit: cover;
-} */
+
 
 
 
@@ -793,40 +787,45 @@ header >  #menu {
 }
 
 .message {
-    min-width: 98px;
-    height: 100%;
-
-
+    min-width: 98%;
+    height: 90%;
     display: -webkit-box;
     -webkit-box-orient: vertical;
     margin-top: 1rem;
     color: rgba(107, 114, 128, 1);
 }
 
-.message > p {
-  width: 199px;
+.message >  p {
+  width: 192px;
   overflow: hidden;  	
   text-overflow: ellipsis;
   white-space: nowrap;
 
 }
 
-.message > #text {
+
+
+.message >>>  p {
+  width: 198px;
+  color: #707070;
   overflow: hidden;  	
   text-overflow: ellipsis;
   white-space: nowrap;
+
+}
+
+
+
+.message >>> p img {
+        width: 199px !important;
+    height: 199px !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    object-fit: cover;
 }
 
 .message > img {
-  width: 199px !important;
-  height: 199px !important;
-display: flex;
-align-items: center;
-justify-content: center;
-  object-fit: cover;
-}
-
-.message > p > img {
   width: 199px !important;
   height: 199px !important;
   text-align: center;
