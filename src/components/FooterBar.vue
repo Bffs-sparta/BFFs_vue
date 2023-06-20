@@ -1,11 +1,7 @@
 <template>
-  <div>
-    <footer>
-      <div class="wrap">
-        <img src="@/assets/b.png" alt="BFFs">
-      </div>
-    </footer>
-  </div>    
+  <footer>
+       <img src="@/assets/b.png" alt="BFFs">   
+  </footer>  
 </template>
 
 <script>
@@ -15,25 +11,27 @@ export default {
 </script>
 
 <style scoped>
-#wrap {
-    min-height: calc(100% - 4rem);
+main {
+    height: auto;
+    min-height: 100%;
+    padding-bottom: 70px;
 }
 
 footer {
+    height: 70px;
     background-color: #dddddd;
-    height: 4rem;
-    bottom: 0px;
-}
-
-footer > .wrap {
+    position: relative;
+    transform: translateY(100%);
     display: flex;
     justify-content: center;
     align-items: center;
     height: 70px;
 }
 
-footer > .wrap > img {
+
+footer  > img {
     width:42px;
     height: 42px;
 }
+
 </style>
