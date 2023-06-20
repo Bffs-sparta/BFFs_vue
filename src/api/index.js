@@ -173,11 +173,17 @@ function fetchCommunityCategoryFeed(community_name,category_name) {
 
 // 커뮤니티 수정, 삭제
 function fetchCommunityDetail(community_name) {
-    return axios.get(`${config.baseUrl}/community/${community_name}/`,{
-        headers: {
-            'Authorization': `Bearer ${access_token()}`,
-        }
-    })
+    
+    const token = access_token()
+    if (token) {
+        return axios.get(`${config.baseUrl}/community/${community_name}/`,{
+            headers: {
+                'Authorization': `Bearer ${access_token()}`,
+            }
+        })
+    } else {
+        return axios.get(`${config.baseUrl}/community/${community_name}/`)
+    }
 }
 function fetchCommunityEdit(community_name, formData) {
     
@@ -259,6 +265,11 @@ function fetchCommunityBookmark(community_name) {
 // 커뮤니티 검색
 function fetchSearchCommunity(name) {
     return axios.get(`${config.baseUrl}/community/search?search=${name}`)
+}
+
+// 피드 검색
+function fetchSearchFeed(name) {
+    return axios.get(`${config.baseUrl}/feed/search?search=${name}`)
 }
 
 // 유저 검색
@@ -375,10 +386,21 @@ function fetchGroupPurchaseCreate(community_name) {
     return axios.get(`${config.baseUrl}/feed/${community_name}/grouppurchase/`)
 }
 
-// 공구 게시글 수정, 삭제
-function fetchGroupPurchaseFeedDetail(grouppurchase_id) {
+// 공구 게시글 수정
+function fetchGroupPurchaseEdit(grouppurchase_id) {
     return axios.get(`${config.baseUrl}/feed/grouppurchase/${grouppurchase_id}/`)
 }
+
+// 공구 게시글 삭제
+function fetchGroupPurchaseDelete(grouppurchase_id) {
+    return axios.get(`${config.baseUrl}/feed/grouppurchase/${grouppurchase_id}/`)
+}
+
+// // 공구 게시글 작성자가 종료
+// function fetchGroupPurchaseSelfEnd(grouppurchase_id) {
+//     return axios.get(`${config.baseUrl}/feed/${grouppurchase_id}/self_end/`)
+// }
+
 
 // 댓글 생성
 function fetchCommentCreate(feed_id, text) {
@@ -416,14 +438,27 @@ function fetchCommentDelete(comment_id) {
 }
 
 // 대댓글 생성
-function fetchCocommentCreate(comment_id) {
-    return axios.get(`${config.baseUrl}/feed/${comment_id}/cocomment/`)
+function fetchCocommentCreate(comment_id,text) {
+    console.log(text)
+    return axios.post(`${config.baseUrl}/feed/${comment_id}/cocomment/`,{
+        text,
+    },{
+        headers: {
+            'Authorization': `Bearer ${access_token()}`,
+            'Content-Type': 'application/json',
+        }
+    })
 }
 
 // 대댓글 수정, 삭제
-function fetchCocommentDetail(cocomment_id) {
-    return axios.get(`${config.baseUrl}/feed/cocomment/${cocomment_id}/`)
+function fetchCocommentDelete(cocomment_id) {
+    return axios.delete(`${config.baseUrl}/feed/cocomment/${cocomment_id}/`,{
+        headers: {
+            'Authorization': `Bearer ${access_token()}`,
+        }
+    })
 }
+
 function imageUpload(file) {
     return axios.post(`${config.baseUrl}/feed/image/upload/`, file, {
         headers: {
@@ -431,6 +466,42 @@ function imageUpload(file) {
         }
     })
 }
+
+// 공구 댓글 생성
+// function fetchGroupPurchaseCommentCreate(grouppurchase_id, text) {
+//     return axios.post(`${config.baseUrl}/feed/${grouppurchase_id}/purchasecomment/`,{
+//         text,
+//     },
+//     {
+//         headers: {
+//             'Authorization': `Bearer ${access_token()}`,
+//             'Content-Type': 'application/json',
+//         }
+//     })
+// }
+
+// // 공구 댓글 수정
+// function fetchGroupPurchaseCommentEdit(purchase_comment_id, text) {
+//     return axios.put(`${config.baseUrl}/feed/purchasecomment/${purchase_comment_id}/`,{
+//         text,
+//     },
+//     {
+//         headers: {
+//             'Authorization': `Bearer ${access_token()}`,
+//             'Content-Type': 'application/json',
+//         }
+//     })
+// }
+//
+// // 공구 댓글 삭제 
+// function fetchGroupPurchaseCommentDelete(purchase_comment_id) {
+//     return axios.delete(`${config.baseUrl}/feed/purchasecomment/${purchase_comment_id}/`,{
+//         headers: {
+//             'Authorization': `Bearer ${access_token()}`,
+//         }
+//     })
+// }
+
 export {
     fetchSignup,
     fetchLogin,
@@ -462,6 +533,7 @@ export {
     fetchForbiddenDelete,
     fetchCommunityBookmark,
     fetchSearchCommunity,
+    fetchSearchFeed,
     fetchSearchUser,
     fetchFeedAll,
     fetchFeedList,
@@ -478,12 +550,18 @@ export {
     fetchGroupPurchaseDetail,
     fetchGroupPurchaseJoin,
     fetchGroupPurchaseCreate,
-    fetchGroupPurchaseFeedDetail,
+    fetchGroupPurchaseEdit,
+    fetchGroupPurchaseDelete,
     fetchCommentCreate,
     fetchCommentEdit,
     fetchCommentDelete,
     fetchCocommentCreate,
-    fetchCocommentDetail,
+    fetchCocommentDelete,
     imageUpload,
     fetchCommunityCategoryPagination,
+    //fetchGroupPurchaseSelfEnd,
+    //fetchGroupPurchaseCommentCreate,
+    //fetchGroupPurchaseCommentEdit,
+    //fetchGroupPurchaseCommentDelete,
+    
 }

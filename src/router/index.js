@@ -8,6 +8,7 @@ import CommunityManageView from '../views/community/CommunityManageView.vue'
 import CommunityMainView from '../views/community/CommunityMainView.vue'
 import CommunityDetailView from '../views/community/CommunityDetailView.vue'
 import CommunityDetailCategoryView from '../views/community/CommunityDetailCategoryView.vue'
+import CommunitySearchView from '../views/community/CommunitySearchView.vue'
 import CallBackView from '../views/user/CallBackView.vue'
 import FeedWriteView from '../views/feed/FeedWriteView.vue'
 import ProfileView from '../views/user/ProfileView.vue'
@@ -16,6 +17,10 @@ import MeetAI from '../views/user/MeetAI.vue'
 import MeetFriendView from '../views/feed/MeetFriendView.vue'
 import FeedUpdateView from '../views/feed/FeedUpdateView.vue'
 import FeedDetailView from '../views/feed/FeedDetailView.vue'
+import FeedSearchView from '../views/feed/FeedSearchView.vue'
+import PurchaseWriteView from '../views/feed/PurchaseWriteView.vue'
+import PurchaseUpdateView from '../views/feed/PurchaseUpdateView.vue'
+import PurchaseDetail from '../views/feed/PurchaseDetail.vue'
 
 Vue.use(VueRouter)
 
@@ -63,6 +68,11 @@ export const router = new VueRouter({
             component: CommunityDetailView
         },
         {
+            path: '/community/search/:name',
+            name: 'community-search',
+            component: CommunitySearchView
+        },
+        {
             path: '/community/:community_name/category/:category_name',
             name: 'community-category',
             component: CommunityDetailCategoryView
@@ -91,6 +101,26 @@ export const router = new VueRouter({
             path:'/community/detail/:community_name/feed/:feed_id',
             name:'feed-detail',
             component:FeedDetailView
+        },
+        {
+            path:'/feed/search/:name',
+            name:'feed-search',
+            component:FeedSearchView
+        },
+        {
+            path:'/community/:community_name/purchase/write',
+            name:'purchase-create',
+            component:PurchaseWriteView
+        },
+        {
+            path:'/community/update/purchase/:purchase_id',
+            name:'purchase-update',
+            component:PurchaseUpdateView
+        },
+        {
+            path:'/community/detail/:community_name/purchase/:purchase_id',
+            name:'purchase-detail',
+            component:PurchaseDetail
         },
         {
             path:'/meetfriend',

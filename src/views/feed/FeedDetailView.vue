@@ -11,7 +11,7 @@
               src="@/assets/comu_image(2).jpg"
             />
           </div>
-          <p class="head-title">{{ community?.title }}</p>
+          <p class="head-title">{{ community?.title }} | {{ community?.communityurl }}</p>
           <div class="button-box">
             <div class="bookmark">
               <input
@@ -184,7 +184,7 @@
               <div class="sub-text-info">
                 <p>댓글 |</p>
                 <p
-                  v-if="comment == '아직 댓글이 없습니다'"
+                  v-if="comment &&comment == '아직 댓글이 없습니다'"
                   style="margin-left: 3px;"
                 >
                   0
@@ -204,160 +204,116 @@
                 입 력
               </button>
             </div>
-            community
             <div class="sub-content-wrapper">
               <!-- 댓글 1개 묶음 -->
-              <div class="comment-box">
-                <!-- comment 내용 -->
-                <div v-if="comment == '아직 댓글이 없습니다'">
-                  <p>{{ comment }}</p>
-                </div>
-                <div v-else>
-                  <div
-                    class="comment-card"
-                    v-for="(comment, index) in comment"
-                    :key="index"
-                  >
-                    <li class="comment-author">
-                      <router-link :to="`/profile/${comment.user_id}`">{{
-                        comment.nickname
-                      }}</router-link>
-                    </li>
-                    <li class="comment-date">
-                      작성일 {{ comment?.created_at?.slice(5, 10) }} 수정일
-                      {{ comment?.updated_at?.slice(5, 10) }}
-                    </li>
-                    <li class="comment-text">
-                      {{ comment.text }}
-                    </li>
-                    <a class="cocomment-button">댓글 달기</a>
-                    <div
-                      class="comment-func-box"
-                      v-if="userid === comment.user_id"
-                    >
-                      <button
-                        class="comment-edit-btn"
-                        @click="editComment(comment.id)"
+              <div v-if="comment == '아직 댓글이 없습니다'">
+                <p>{{ comment }}</p>
+              </div>
+              <div v-else>
+                <div class="comment-box"  v-for="(comment, index) in comment" :key="index">
+                  <!-- comment 내용 -->
+                  <div>
+                    <div class="comment-card">
+                      <li class="comment-author">
+                        <router-link :to="`/profile/${comment?.user_id}`">{{
+                          comment?.nickname
+                        }}</router-link>
+                      </li>
+                      <li class="comment-date">
+                        작성일 {{ comment?.created_at?.slice(5, 10) }} 수정일
+                        {{ comment?.updated_at?.slice(5, 10) }}
+                      </li>
+                      <li class="comment-text">
+                        {{ comment.text }}
+                      </li>
+                      <a class="cocomment-button" @click="cocommentShow(comment)">댓글 달기</a>
+                      <div
+                        class="comment-func-box"
+                        v-if="userid === comment.user_id"
                       >
-                        <svg
-                          class="edit-icon"
-                          viewBox="0 0 512 512"
-                          height="17.5"
-                          width="15"
+                        <button
+                          class="comment-edit-btn"
+                          @click="editComment(comment.id)"
                         >
-                          <path
-                            d="M410.3 231l11.3-11.3-33.9-33.9-62.1-62.1L291.7 89.8l-11.3 11.3-22.6 22.6L58.6 322.9c-10.4 10.4-18 23.3-22.2 37.4L1 480.7c-2.5 8.4-.2 17.5 6.1 23.7s15.3 8.5 23.7 6.1l120.3-35.4c14.1-4.2 27-11.8 37.4-22.2L387.7 253.7 410.3 231zM160 399.4l-9.1 22.7c-4 3.1-8.5 5.4-13.3 6.9L59.4 452l23-78.1c1.4-4.9 3.8-9.4 6.9-13.3l22.7-9.1v32c0 8.8 7.2 16 16 16h32zM362.7 18.7L348.3 33.2 325.7 55.8 314.3 67.1l33.9 33.9 62.1 62.1 33.9 33.9 11.3-11.3 22.6-22.6 14.5-14.5c25-25 25-65.5 0-90.5L453.3 18.7c-25-25-65.5-25-90.5 0zm-47.4 168l-144 144c-6.2 6.2-16.4 6.2-22.6 0s-6.2-16.4 0-22.6l144-144c6.2-6.2 16.4-6.2 22.6 0s6.2 16.4 0 22.6z"
-                          ></path>
-                        </svg>
-                      </button>
-                      <button
-                        class="comment-delete-btn"
-                        @click="deleteComment(comment.id)"
-                      >
-                        <svg
-                          viewBox="0 0 15 17.5"
-                          height="17.5"
-                          width="15"
-                          xmlns="http://www.w3.org/2000/svg"
-                          class="delete-icon"
+                          <svg
+                            class="edit-icon"
+                            viewBox="0 0 512 512"
+                            height="17.5"
+                            width="15"
+                          >
+                            <path
+                              d="M410.3 231l11.3-11.3-33.9-33.9-62.1-62.1L291.7 89.8l-11.3 11.3-22.6 22.6L58.6 322.9c-10.4 10.4-18 23.3-22.2 37.4L1 480.7c-2.5 8.4-.2 17.5 6.1 23.7s15.3 8.5 23.7 6.1l120.3-35.4c14.1-4.2 27-11.8 37.4-22.2L387.7 253.7 410.3 231zM160 399.4l-9.1 22.7c-4 3.1-8.5 5.4-13.3 6.9L59.4 452l23-78.1c1.4-4.9 3.8-9.4 6.9-13.3l22.7-9.1v32c0 8.8 7.2 16 16 16h32zM362.7 18.7L348.3 33.2 325.7 55.8 314.3 67.1l33.9 33.9 62.1 62.1 33.9 33.9 11.3-11.3 22.6-22.6 14.5-14.5c25-25 25-65.5 0-90.5L453.3 18.7c-25-25-65.5-25-90.5 0zm-47.4 168l-144 144c-6.2 6.2-16.4 6.2-22.6 0s-6.2-16.4 0-22.6l144-144c6.2-6.2 16.4-6.2 22.6 0s6.2 16.4 0 22.6z"
+                            ></path>
+                          </svg>
+                        </button>
+                        <button
+                          class="comment-delete-btn"
+                          @click="deleteComment(comment)"
                         >
-                          <path
-                            transform="translate(-2.5 -1.25)"
-                            d="M15,18.75H5A1.251,1.251,0,0,1,3.75,17.5V5H2.5V3.75h15V5H16.25V17.5A1.251,1.251,0,0,1,15,18.75ZM5,5V17.5H15V5Zm7.5,10H11.25V7.5H12.5V15ZM8.75,15H7.5V7.5H8.75V15ZM12.5,2.5h-5V1.25h5V2.5Z"
-                            id="Fill"
-                          ></path>
-                        </svg>
-                      </button>
+                          <svg
+                            viewBox="0 0 15 17.5"
+                            height="17.5"
+                            width="15"
+                            xmlns="http://www.w3.org/2000/svg"
+                            class="delete-icon"
+                          >
+                            <path
+                              transform="translate(-2.5 -1.25)"
+                              d="M15,18.75H5A1.251,1.251,0,0,1,3.75,17.5V5H2.5V3.75h15V5H16.25V17.5A1.251,1.251,0,0,1,15,18.75ZM5,5V17.5H15V5Zm7.5,10H11.25V7.5H12.5V15ZM8.75,15H7.5V7.5H8.75V15ZM12.5,2.5h-5V1.25h5V2.5Z"
+                              id="Fill"
+                            ></path>
+                          </svg>
+                        </button>
+                      </div>
                     </div>
                   </div>
-                </div>
 
-                <!-- 대댓글 입력 폼 -->
-                <div class="coco-input-wrapper">
-                  <div class="coco-text-info">
-                    <p>대댓글 달기</p>
+                  <!-- 대댓글 입력 폼 -->
+                  <div class="coco-input-wrapper" v-if="comment.cocommentshow">
+                    <div class="coco-text-info">
+                      <p>대댓글 달기</p>
+                    </div>
+                    <textarea
+                      autocomplete="off"
+                      class="input-coco-text"
+                      placeholder="여기에 댓글을 입력하세요"
+                      v-model="inputCocomment"
+                    ></textarea>
+                    <button class="coco-submit-button" @keyup.enter="createCocomment(comment)" @click="createCocomment(comment)">입 력</button>
+                    <button class="coco-quit-button">취 소</button>
                   </div>
-                  <textarea
-                    autocomplete="off"
-                    class="input-coco-text"
-                    placeholder="여기에 댓글을 입력하세요"
-                  ></textarea>
-                  <button class="coco-submit-button">입 력</button>
-                  <button class="coco-quit-button">취 소</button>
+
+                  <!-- 대댓글 내용 -->
+                  <div class="cocommnet-box" v-for ="cocomment,index in comment.cocomment" :key="index">
+                      <p class="cocomment-deco">|</p>
+                      <div class="cocomment-card">
+                          <li class="comment-author"> {{cocomment.nickname}} </li>
+                          <li class="comment-date">
+                            작성일 {{ cocomment?.created_at?.slice(5, 10) }} 수정일{{ cocomment?.updated_at?.slice(5, 10) }}
+                          </li>
+                          <li class="comment-text">
+                              {{cocomment.text}}
+                          </li>
+                          <div class="comment-func-box">
+                              <button class="comment-edit-btn">
+                                  <svg class="edit-icon" viewBox="0 0 512 512" height="17.5" width="15">
+                                      <path
+                                          d="M410.3 231l11.3-11.3-33.9-33.9-62.1-62.1L291.7 89.8l-11.3 11.3-22.6 22.6L58.6 322.9c-10.4 10.4-18 23.3-22.2 37.4L1 480.7c-2.5 8.4-.2 17.5 6.1 23.7s15.3 8.5 23.7 6.1l120.3-35.4c14.1-4.2 27-11.8 37.4-22.2L387.7 253.7 410.3 231zM160 399.4l-9.1 22.7c-4 3.1-8.5 5.4-13.3 6.9L59.4 452l23-78.1c1.4-4.9 3.8-9.4 6.9-13.3l22.7-9.1v32c0 8.8 7.2 16 16 16h32zM362.7 18.7L348.3 33.2 325.7 55.8 314.3 67.1l33.9 33.9 62.1 62.1 33.9 33.9 11.3-11.3 22.6-22.6 14.5-14.5c25-25 25-65.5 0-90.5L453.3 18.7c-25-25-65.5-25-90.5 0zm-47.4 168l-144 144c-6.2 6.2-16.4 6.2-22.6 0s-6.2-16.4 0-22.6l144-144c6.2-6.2 16.4-6.2 22.6 0s6.2 16.4 0 22.6z">
+                                      </path>
+                                  </svg>
+                              </button>
+                              <button class="comment-delete-btn" @click="deleteCocomment(cocomment.id)">
+                                  <svg viewBox="0 0 15 17.5" height="17.5" width="15"
+                                      xmlns="http://www.w3.org/2000/svg" class="delete-icon">
+                                      <path transform="translate(-2.5 -1.25)"
+                                          d="M15,18.75H5A1.251,1.251,0,0,1,3.75,17.5V5H2.5V3.75h15V5H16.25V17.5A1.251,1.251,0,0,1,15,18.75ZM5,5V17.5H15V5Zm7.5,10H11.25V7.5H12.5V15ZM8.75,15H7.5V7.5H8.75V15ZM12.5,2.5h-5V1.25h5V2.5Z"
+                                          id="Fill"></path>
+                                  </svg>
+                              </button>
+                          </div>
+                      </div>
+                  </div>
                 </div>
-
-                <!-- 대댓글 내용 -->
-                <!-- <div class="cocommnet-box">
-                                    <p class="cocomment-deco">|</p>
-                                    <div class="cocomment-card">
-                                        <li class="comment-author"> 작성자 </li>
-                                        <li class="comment-date">작성-수정-일자</li>
-                                        <li class="comment-text">
-                                            어머님, 나는 별 하나에 아름다운 말 한마디씩 불러 봅니다. 소학교 때 책상을 같이 했던 아이들의 이름과, 패, 경, 옥, 이런 이국 소녀들의
-                                            이름과,
-                                            벌써 아기 어머니 된 계집애들의 이름과, 가난한 이웃 사람들의 이름과, 비둘기, 강아지, 토끼, 노새, 노루, '프랑시스 잠', '라이너 마리아
-                                            릴케'
-                                            이런 시인의 이름을 불러 봅니다.
-                                        </li>
-                                        <div class="comment-func-box">
-                                            <button class="comment-edit-btn">
-                                                <svg class="edit-icon" viewBox="0 0 512 512" height="17.5" width="15">
-                                                    <path
-                                                        d="M410.3 231l11.3-11.3-33.9-33.9-62.1-62.1L291.7 89.8l-11.3 11.3-22.6 22.6L58.6 322.9c-10.4 10.4-18 23.3-22.2 37.4L1 480.7c-2.5 8.4-.2 17.5 6.1 23.7s15.3 8.5 23.7 6.1l120.3-35.4c14.1-4.2 27-11.8 37.4-22.2L387.7 253.7 410.3 231zM160 399.4l-9.1 22.7c-4 3.1-8.5 5.4-13.3 6.9L59.4 452l23-78.1c1.4-4.9 3.8-9.4 6.9-13.3l22.7-9.1v32c0 8.8 7.2 16 16 16h32zM362.7 18.7L348.3 33.2 325.7 55.8 314.3 67.1l33.9 33.9 62.1 62.1 33.9 33.9 11.3-11.3 22.6-22.6 14.5-14.5c25-25 25-65.5 0-90.5L453.3 18.7c-25-25-65.5-25-90.5 0zm-47.4 168l-144 144c-6.2 6.2-16.4 6.2-22.6 0s-6.2-16.4 0-22.6l144-144c6.2-6.2 16.4-6.2 22.6 0s6.2 16.4 0 22.6z">
-                                                    </path>
-                                                </svg>
-                                            </button>
-                                            <button class="comment-delete-btn">
-                                                <svg viewBox="0 0 15 17.5" height="17.5" width="15"
-                                                    xmlns="http://www.w3.org/2000/svg" class="delete-icon">
-                                                    <path transform="translate(-2.5 -1.25)"
-                                                        d="M15,18.75H5A1.251,1.251,0,0,1,3.75,17.5V5H2.5V3.75h15V5H16.25V17.5A1.251,1.251,0,0,1,15,18.75ZM5,5V17.5H15V5Zm7.5,10H11.25V7.5H12.5V15ZM8.75,15H7.5V7.5H8.75V15ZM12.5,2.5h-5V1.25h5V2.5Z"
-                                                        id="Fill"></path>
-                                                </svg>
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div> -->
-                <!-- 대댓글 내용 -->
-                <!-- <div class="cocommnet-box">
-                                    <p class="cocomment-deco">|</p>
-                                    <div class="cocomment-card">
-                                        <li class="comment-author"> 작성자 </li>
-                                        <li class="comment-date">작성-수정-일자</li>
-                                        <li class="comment-text">
-                                            별헤는 밤 좋다~
-                                            별 하나에 추억과
-                                            별 하나에 사랑과
-                                            별 하나에 쓸쓸함과
-                                            별 하나에 동경과
-                                            별 하나에 시와
-                                            별 하나에 어머니, 어머니,
-
-                                            어머님, 나는 별 하나에 아름다운 말 한마디씩 불러 봅니다. 소학교 때 책상을 같이 했던 아이들의 이름과, 패, 경, 옥, 이런 이국 소녀들의
-                                            이름과,
-                                            벌써 아기 어머니 된 계집애들의 이름과, 가난한 이웃 사람들의 이름과, 비둘기, 강아지, 토끼, 노새, 노루, '프랑시스 잠', '라이너 마리아
-                                            릴케'
-                                            이런 시인의 이름을 불러 봅니다.
-                                        </li>
-                                        <div class="comment-func-box">
-                                            <button class="comment-edit-btn">
-                                                <svg class="edit-icon" viewBox="0 0 512 512" height="17.5" width="15">
-                                                    <path
-                                                        d="M410.3 231l11.3-11.3-33.9-33.9-62.1-62.1L291.7 89.8l-11.3 11.3-22.6 22.6L58.6 322.9c-10.4 10.4-18 23.3-22.2 37.4L1 480.7c-2.5 8.4-.2 17.5 6.1 23.7s15.3 8.5 23.7 6.1l120.3-35.4c14.1-4.2 27-11.8 37.4-22.2L387.7 253.7 410.3 231zM160 399.4l-9.1 22.7c-4 3.1-8.5 5.4-13.3 6.9L59.4 452l23-78.1c1.4-4.9 3.8-9.4 6.9-13.3l22.7-9.1v32c0 8.8 7.2 16 16 16h32zM362.7 18.7L348.3 33.2 325.7 55.8 314.3 67.1l33.9 33.9 62.1 62.1 33.9 33.9 11.3-11.3 22.6-22.6 14.5-14.5c25-25 25-65.5 0-90.5L453.3 18.7c-25-25-65.5-25-90.5 0zm-47.4 168l-144 144c-6.2 6.2-16.4 6.2-22.6 0s-6.2-16.4 0-22.6l144-144c6.2-6.2 16.4-6.2 22.6 0s6.2 16.4 0 22.6z">
-                                                    </path>
-                                                </svg>
-                                            </button>
-                                            <button class="comment-delete-btn">
-                                                <svg viewBox="0 0 15 17.5" height="17.5" width="15"
-                                                    xmlns="http://www.w3.org/2000/svg" class="delete-icon">
-                                                    <path transform="translate(-2.5 -1.25)"
-                                                        d="M15,18.75H5A1.251,1.251,0,0,1,3.75,17.5V5H2.5V3.75h15V5H16.25V17.5A1.251,1.251,0,0,1,15,18.75ZM5,5V17.5H15V5Zm7.5,10H11.25V7.5H12.5V15ZM8.75,15H7.5V7.5H8.75V15ZM12.5,2.5h-5V1.25h5V2.5Z"
-                                                        id="Fill"></path>
-                                                </svg>
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div> -->
               </div>
             </div>
           </div>
@@ -376,7 +332,9 @@ import {
   fetchFeedLike,
   fetchCommentCreate,
   fetchCommentEdit,
-  fetchCommentDelete
+  fetchCommentDelete,
+  fetchCocommentCreate,
+  fetchCocommentDelete,
 } from "@/api/index.js";
 
 export default {
@@ -391,8 +349,14 @@ export default {
     feedadmin() {
       return this.data.admin.map(admin => admin.user_id);
     },
-    comment() {
-      return this.data?.comment;
+    comment(){
+      if (Array.isArray(this.data?.comment)) {
+          return this.data?.comment?.map(comment => ({
+            ...comment,
+            cocommentshow: false
+          }))
+        }
+        return [];
     },
     bookmark() {
       return this.community?.is_bookmarked;
@@ -409,7 +373,8 @@ export default {
     return {
       userid: "",
       email: "",
-      inputComment: ""
+      inputComment: "",
+      inputCocomment:"",
     };
   },
   created() {
@@ -436,13 +401,15 @@ export default {
           alert(response.data.msg);
         }
       } catch (error) {
-        console.log(error);
+        if (error.response.status === 401) {
+          alert("로그인을 해주세요");
+        }
       }
     },
     async addNotification() {
       try {
         const feed_id = this.$route.params.feed_id;
-        const response = await fetchFeedNotification(this.community, feed_id);
+        const response = await fetchFeedNotification(this.community.communityurl, feed_id);
         if (response.status === 200) {
           alert(response.data.message);
         }
@@ -474,7 +441,9 @@ export default {
           this.feed.like_bool = !this.feed.like_bool;
         }
       } catch (error) {
-        console.log(error);
+        if (error.response.status === 401) {
+          alert("로그인을 해주세요");
+        }
       }
     },
     async createComment() {
@@ -483,11 +452,16 @@ export default {
         const response = await fetchCommentCreate(feed_id, this.inputComment);
         if (response.status === 201) {
           alert(response.data.message);
-          this.data.comment = response.data.comment;
           this.inputComment = "";
+          const feed_id = this.$route.params.feed_id;
+          const community_name = this.$route.params.community_name;
+          this.$store.dispatch("FETCH_FEED_DETAIL", { community_name, feed_id });
         }
       } catch (error) {
-        console.log(error);
+        if (error.response.status === 401) {
+          alert("로그인을 해주세요");
+          this.inputComment = '';
+        }
       }
     },
     async editComment(comment_id) {
@@ -503,11 +477,14 @@ export default {
         console.log(error);
       }
     },
-    async deleteComment(comment_id) {
+    async deleteComment(comment) {
       try {
-        const response = await fetchCommentDelete(comment_id);
+        const response = await fetchCommentDelete(comment.id);
         if (response.status === 200) {
           alert(response.data.message);
+          const feed_id = this.$route.params.feed_id;
+          const community_name = this.$route.params.community_name;
+          this.$store.dispatch("FETCH_FEED_DETAIL", { community_name, feed_id });
         }
       } catch (error) {
         console.log(error);
@@ -522,7 +499,54 @@ export default {
       } else {
         alert("게시글이 존재하지않습니다");
       }
-    }
+    },
+    cocommentShow(comment) {
+      comment.cocommentshow = !comment.cocommentshow;
+      this.$forceUpdate()
+    },
+    async createCocomment(comment) {
+      try {
+        const response = await fetchCocommentCreate(comment.id, this.inputCocomment);
+        if (response.status === 201) {
+          alert(response.data.message);
+          this.inputComment = "";
+          const feed_id = this.$route.params.feed_id;
+          const community_name = this.$route.params.community_name;
+          this.$store.dispatch("FETCH_FEED_DETAIL", { community_name, feed_id });
+        }
+      } catch (error) {
+        if (error.response.status === 401) {
+          alert("로그인을 해주세요");
+          this.inputCocomment = '';
+        }
+      }
+    },
+    // async editCocomment(comment_id) {
+    //   try {
+    //     const response = await fetchCommentEdit(
+    //       comment_id,
+    //       this.inputCocomment
+    //     );
+    //     if (response.status === 201) {
+    //       alert(response.data.message);
+    //     }
+    //   } catch (error) {
+    //     console.log(error);
+    //   }
+    // },
+    async deleteCocomment(comment_id) {
+      try {
+        const response = await fetchCocommentDelete(comment_id);
+        if (response.status === 200) {
+          alert(response.data.message);
+          const feed_id = this.$route.params.feed_id;
+          const community_name = this.$route.params.community_name;
+          this.$store.dispatch("FETCH_FEED_DETAIL", { community_name, feed_id });
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    },
   }
 };
 </script>
@@ -537,7 +561,9 @@ a {
   text-decoration: none;
   color: #454545;
 }
-
+textarea{
+  resize: none;
+}
 .head-area {
   width: 100%;
   height: 150px;
@@ -1170,6 +1196,7 @@ a {
   margin-top: 5px;
   grid-column: 3 / 4;
   grid-row: 1 / 2;
+  font-size: 13px;
 }
 
 .comment-text {

@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <main>
     <div class="visual">
       <div class="inner">
         <div class="title">
@@ -38,45 +38,26 @@
         <div class="main-box">
           <div class="card-container" id="profile-card-list">
             <!-- 혼자놀기 카드 박스 -->
-            <router-link
-              :to="`/profile/${profile.id}`"
-              class="alone-card-box"
-              v-for="(profile, index) in profile"
-              :key="index"
-            >
-              <div
-                class="card-image"
-                v-if="profile.profileimageurl.slice(37, 42) === 'kakao'"
-              >
+            <router-link :to="`/profile/${profile.id}`" class="alone-card-box" v-for="(profile, index) in profile" :key="index">
+              <div class="card-image" v-if="profile.profileimageurl.slice(37, 42) === 'kakao'">
                 <img :src="profile.profileimageurl.slice(28)" />
               </div>
               <div class="card-image" v-else>
-                <img
-                  :src="profile.profileimageurl"
-                  v-if="profile.profileimage != null"
-                />
+                <img :src="profile.profileimageurl" v-if="profile.profileimage != null"/>
                 <img src="@/assets/room_image(5).jpg" v-else />
               </div>
               <div class="card-text">
-                <a
-                  class="alone-text-title"
-                  v-if="profile.introduction != null"
-                  >{{ profile.introduction }}</a
-                >
+                <a class="alone-text-title" v-if="profile.introduction != null" >{{ profile.introduction }}</a>
                 <a class="alone-text-title" v-else>친구해요 !</a>
               </div>
               <div class="card-subtext">
                 <div style="margin-top:10px; margin-right:20px;">
-                  <span class="alone-text-content" style="margin-left:20px;"
-                    >{{ profile.region }} |
-                  </span>
+                  <span class="alone-text-content" style="margin-left:20px;">{{ profile.region }} | </span>
                   <span class="alone-text-content">{{ profile.nickname }}</span>
                 </div>
                 <div class="alone-text-view-box">
                   <img src="@/assets/comment.png" alt="댓글 아이콘 이미지" />
-                  <span class="with-text-view-content">{{
-                    profile.bookmark_count
-                  }}</span>
+                  <span class="with-text-view-content">{{ profile.bookmark_count }}</span>
                 </div>
               </div>
             </router-link>
@@ -157,7 +138,7 @@
         </div>
       </div>
     </section>
-  </div>
+  </main>
 </template>
 
 <script>
@@ -184,6 +165,12 @@ export default {
 body {
   margin: 0;
   padding: 0;
+  height: 100vh;
+}
+main {
+    height: auto;
+    min-height: 100%;
+    padding-bottom: 70px;
 }
 * {
   font-family: "Noto Sans KR", sans-serif;

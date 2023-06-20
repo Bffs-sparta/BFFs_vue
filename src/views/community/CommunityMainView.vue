@@ -17,7 +17,7 @@
                 <!-- 검색 -->
                 <div class="search-box">
                     <div class="container-input">
-                        <input type="text" placeholder="Search" name="text" class="input" autocomplete="off" v-model="name" @keyup.enter="searchCommunity()">
+                        <input type="text" placeholder="Search" name="text" class="input" autocomplete="off" v-model="searchname" @keyup.enter="searchCommunity()">
                         <svg fill="#000000" width="20px" height="20px" viewBox="0 0 1920 1920"
                             xmlns="http://www.w3.org/2000/svg">
                             <path
@@ -86,12 +86,14 @@
                 <h3>| 새로 생긴 커뮤니티 </h3>
             </div>
             <div class="main-box">
-                <div class="new-card-wrapper">
-                    <div v-if="newcommunity?.length == 0">
-                        <p>새로운 커뮤니티가 없습니다</p>
-                    </div>
+                <div v-if="newcommunity?.length == 0">
+                    <p>새로운 커뮤니티가 없습니다</p>
+                </div>
+                <div class="new-card-wrapper" v-else>
+                    
                     <!-- 새 커뮤니티 카드 박스 -->
-                    <router-link :to="`/community/detail/${newcommunity?.communityurl}`" class="new-card-box" v-else v-for="(newcommunity, index) in newcommunity" :key=index>
+
+                    <router-link :to="`/community/detail/${newcommunity?.communityurl}`" class="new-card-box" v-for="(newcommunity, index) in newcommunity" :key=index>
                         <div class="new-card-image">
                             <img id="new-card-image" v-if="newcommunity.image != null" :src="newcommunity.imageurl">
                             <img id="new-card-image" v-else src="@/assets/comu_image(1).jpg">
@@ -100,6 +102,7 @@
                         <!-- <span id="new-text-region" class="new-text-region">경기</span> -->
                         <span id="new-text-introduction" class="new-text-introduction">{{ newcommunity.introduction }}</span>
                     </router-link>
+
                 </div>
             </div>
         </div>
@@ -156,12 +159,11 @@
 
 <script>
 import { mapGetters } from "vuex";
-import  { fetchSearchCommunity } from "@/api/index.js";
 
 export default {
     data() {
         return {
-            name: "",
+            searchname: "",
         }
     },
     computed: {
@@ -194,17 +196,10 @@ export default {
     },
     created() {
         this.$store.dispatch("FETCH_COMMUNITY_LIST");
-    },
+    },    
     methods: {
-        async searchCommunity() {
-            try {
-                const response = await fetchSearchCommunity(this.name)
-                if (response.status === 200) {
-                    console.log(response)
-                }
-            } catch (error) {
-                console.log(error)
-            } 
+        searchCommunity() {
+            this.$router.push(`/community/search/${this.searchname}`)
         },
     },
 };
