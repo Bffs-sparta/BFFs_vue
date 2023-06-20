@@ -122,7 +122,7 @@
                             </div>
 
                             <div class="message">
-                                <img src="@/assets/bird.png" alt="bird">
+                                <img src="@/assets/오목갸우뚱.png" alt="bird">
                                 <p>
                             Lorem ipsum dolor sit amet consectetur adipisicing elit. Deserunt
                             voluptatem alias ut provident sapiente repellendus.sssssssssssssssssssssssss
@@ -163,7 +163,9 @@
                                     <p class="name">{{feed.nickname}}</p>
                                 </div>
                             </div>
-                            <div v-html="feed.content" class="message"></div>
+                            <div v-html="feed.content" class="message">
+
+                            </div>
                             <!-- <p class="message">
                                 
                             Lorem ipsum dolor sit amet consectetur adipisicing elit. Deserunt
@@ -243,7 +245,7 @@ export default {
 }
 </script>
 
-<style scoped>
+<style>
 body {
     margin: 0;
     padding: 0;
@@ -266,6 +268,8 @@ p {
 img {
     display: block;
 }
+
+
 
 h3 {
     color: #454545;
@@ -422,12 +426,6 @@ header >  #menu {
 }
 
 
-/* main {
-    height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-} */
 
 .head-area {
     width: 100%;
@@ -740,13 +738,15 @@ header >  #menu {
     height: 15px;
 }
 
-
-
+/* 
 .card > p > img {
   width: auto !important;
   height: auto !important;
+  text-align: center;
   object-fit: cover;
-}
+} */
+
+
 
 .header {
   display: flex;
@@ -766,6 +766,12 @@ header >  #menu {
   background-repeat: no-repeat;  
 }
 
+.header .title {
+  width: 184px;
+  overflow: hidden;  	
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
 
 .title {
   margin-top: 0.25rem;
@@ -774,6 +780,7 @@ header >  #menu {
   font-weight: 600;
   --tw-text-opacity: 1;
   color: rgba(55, 65, 81, 1);
+
 }
 
 .name {
@@ -797,9 +804,33 @@ header >  #menu {
 }
 
 .message > p {
+  width: 199px;
   overflow: hidden;  	
   text-overflow: ellipsis;
   white-space: nowrap;
+
+}
+
+.message > #text {
+  overflow: hidden;  	
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.message > img {
+  width: 199px !important;
+  height: 199px !important;
+display: flex;
+align-items: center;
+justify-content: center;
+  object-fit: cover;
+}
+
+.message > p > img {
+  width: 199px !important;
+  height: 199px !important;
+  text-align: center;
+  object-fit: cover;
 }
 
 .btn {

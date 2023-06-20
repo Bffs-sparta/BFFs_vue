@@ -210,7 +210,7 @@ export default {
 };
 </script>
 
-<style scoped>
+<style>
 body {
     margin: 0;
     padding: 0;
@@ -778,6 +778,11 @@ a {
     display: flex;
     position: relative;
     overflow: hidden;
+}
+.with-card-image img {
+  width: auto !important;
+  height: auto !important;
+  object-fit: cover;
 }
 .with-text-title {
     margin-top: 10px;
