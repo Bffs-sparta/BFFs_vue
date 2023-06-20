@@ -6,8 +6,9 @@ import {
     fetchCommunityAdmin,
     fetchFeedList,
     fetchSearchCommunity,
+    fetchSearchFeed,
     fetchCommunityCategoryPagination,
-    fetchSearchUser
+    fetchSearchUser,
 }from '@/api/index.js'
 
 const state ={
@@ -18,6 +19,7 @@ const state ={
     communitycategoryfeed:{},
     searchcommunity: {},
     feedlist: {},
+    searchfeed: {},
 }
 
 const getters ={
@@ -38,6 +40,9 @@ const getters ={
     },
     fetchSearchCommunity(state) {
         return state.searchcommunity
+    },
+    fetchSearchFeed(state) {
+        return state.searchfeed
     },
     fetchcategoryfeed(state) {
         return state.communitycategoryfeed
@@ -65,6 +70,9 @@ const mutations ={
     },
     SET_SEARCH_COMMUNITY(state, searchcommunity) {
         state.searchcommunity = searchcommunity
+    },
+    SET_SEARCH_FEED(state, searchfeed) {
+        state.searchfeed = searchfeed
     },
 }
 const actions ={
@@ -122,7 +130,16 @@ const actions ={
             console.log(error)
         }
     },
-    async FETCH_SEARCH_COMMUNITY(context, name) {
+    async FETCH_COMMUNITY_CATEGORY_PAGINATION(context, url) {
+        try {
+            const response = await fetchCommunityCategoryPagination(url)
+            context.commit('SET_COMMUNITY_CATEGORY_DETAIL', response.data)
+            return response
+        } catch (error) {
+            console.log(error)
+        }
+    },
+    async search_community(context, name) {
         try {
             const response = await fetchSearchCommunity(name)
             context.commit('SET_SEARCH_COMMUNITY', response.data)
@@ -131,10 +148,10 @@ const actions ={
             console.log(error)
         }
     },
-    async FETCH_COMMUNITY_CATEGORY_PAGINATION(context, url) {
+    async search_feed(context, name) {
         try {
-            const response = await fetchCommunityCategoryPagination(url)
-            context.commit('SET_COMMUNITY_CATEGORY_DETAIL', response.data)
+            const response = await fetchSearchFeed(name)
+            context.commit('SET_SEARCH_FEED', response.data)
             return response
         } catch (error) {
             console.log(error)

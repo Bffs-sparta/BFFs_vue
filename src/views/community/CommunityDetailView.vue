@@ -6,7 +6,7 @@
                 <div class="image-box">
                     <img id="head_img" class="head_img" src="@/assets/comu_image(2).jpg">
                 </div>
-                <p class="head-title">{{this.community_name}}</p>
+                <p class="head-title">{{ community?.title }} | {{ community?.communityurl }}</p>
                 <div class="button-box">
                     <div class="bookmark">
                         <input type="checkbox"  @click="addBookmark" id="checkboxInput" :checked="bookmark">
@@ -101,17 +101,57 @@
         </div>
         
         <section class="container">
-            <div class="post-list">
-                <div class="main-section">
+            <div class="post-list" v-if="popularfeeds == null">
+                <section class="main-section">
                     <div class="main-container">
-                        <div class="subtitle" onclick="location.href=''">
+                        <div class="subtitle">
+                            <h3>아직 게시글이 없습니다</h3>
+                        </div>
+                    </div>
+                </section>                
+            </div>
+            <div class="post-list" v-else>
+                <section class="main-section">
+                    <div class="main-container">
+                        <div class="subtitle">
                             <h3>Popular Posts</h3>
                         </div>
                     </div>
-                </div>
+                </section>
 
-                <div class="newpost">
-                    <div class="posts">
+                <section class="newpost" v-if="popularfeeds">
+                    <div class="posts" v-for="(feed, index) in popularfeeds" :key="index">
+                        <router-link :to="`${community_name}/feed/${feed.id}`" class="card">
+                            <div class="header">
+                                <div class="image"></div>
+                                <div>
+                                    <p class="title">{{feed.title}}</p>
+                                    <p class="name">{{feed.nickname}}</p>
+                                </div>
+                            </div>
+                            <div v-html="feed.content" class="message"></div>
+                            <!-- <p class="message">
+                                
+                            Lorem ipsum dolor sit amet consectetur adipisicing elit. Deserunt
+                            voluptatem alias ut provident sapiente repellendus.
+                            </p> -->
+                            <div class="button-group">
+                                <div class="with-text-view-box">
+                                    <svg class="icon" width="20" height="15" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12,21.35L10.55,20.03C5.4,15.36 2,12.27 2,8.5C2,5.41 4.42,3 7.5,3C9.24,3 10.91,3.81 12,5.08C13.09,3.81 14.76,3 16.5,3C19.58,3 22,5.41 22,8.5C22,12.27 18.6,15.36 13.45,20.03L12,21.35Z"></path></svg>
+                                    <span class="with-text-view-content">{{feed.likes_count}}</span> 
+                                </div>
+                                <div class="with-text-view-box">
+                                    <img src="@/assets/comment.png" alt="댓글 아이콘 이미지">
+                                    <span class="with-text-view-content">{{feed.comments_count}}</span> 
+                                </div>
+                                <div class="with-text-view-box">
+                                    <img src="@/assets/view_look.png" alt="조회수 아이콘 이미지">
+                                    <span class="with-text-view-content">{{feed.view_count}}</span> 
+                                </div>
+                            </div>          
+                        </router-link>
+                    </div>
+                    <!--<div class="posts">
                         <div class="card">
                             <div class="header">
                                 <div class="image"></div>
@@ -123,6 +163,8 @@
 
                             <div class="message">
                                 <img src="@/assets/오목갸우뚱.png" alt="bird">
+
+
                                 <p>
                             Lorem ipsum dolor sit amet consectetur adipisicing elit. Deserunt
                             voluptatem alias ut provident sapiente repellendus.sssssssssssssssssssssssss
@@ -141,20 +183,20 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
-                </div>
+                    </div>-->
+                </section>
 
 
-                <div class="main-section">
+                <section class="main-section">
                     <div class="main-container">
                         <div class="subtitle">
                             <h3>New Posts</h3>
                         </div>
                     </div>
-                </div>
+                </section>
 
-                <div class="newpost">
-                    <div class="posts" v-for="(feed, index) in feed" :key="index">
+                <section class="newpost" v-if="newfeeds">
+                    <div class="posts" v-for="(feed, index) in newfeeds" :key="index">
                         <router-link :to="`${community_name}/feed/${feed.id}`" class="card">
                             <div class="header">
                                 <div class="image"></div>
@@ -171,13 +213,23 @@
                             Lorem ipsum dolor sit amet consectetur adipisicing elit. Deserunt
                             voluptatem alias ut provident sapiente repellendus.
                             </p> -->
-                            <button class="btn" disabled>
-                                <svg class="icon" width="30" height="30" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12,21.35L10.55,20.03C5.4,15.36 2,12.27 2,8.5C2,5.41 4.42,3 7.5,3C9.24,3 10.91,3.81 12,5.08C13.09,3.81 14.76,3 16.5,3C19.58,3 22,5.41 22,8.5C22,12.27 18.6,15.36 13.45,20.03L12,21.35Z"></path></svg>
-                                <p class="name">{{feed.likes_count}}</p>
-                            </button>          
+                            <div class="button-group">
+                                <div class="with-text-view-box">
+                                    <svg class="icon" width="20" height="15" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12,21.35L10.55,20.03C5.4,15.36 2,12.27 2,8.5C2,5.41 4.42,3 7.5,3C9.24,3 10.91,3.81 12,5.08C13.09,3.81 14.76,3 16.5,3C19.58,3 22,5.41 22,8.5C22,12.27 18.6,15.36 13.45,20.03L12,21.35Z"></path></svg>
+                                    <span class="with-text-view-content">{{feed.likes_count}}</span> 
+                                </div>
+                                <div class="with-text-view-box">
+                                    <img src="@/assets/comment.png" alt="댓글 아이콘 이미지">
+                                    <span class="with-text-view-content">{{feed.comments_count}}</span> 
+                                </div>
+                                <div class="with-text-view-box">
+                                    <img src="@/assets/view_look.png" alt="조회수 아이콘 이미지">
+                                    <span class="with-text-view-content">{{feed.view_count}}</span> 
+                                </div>
+                            </div>         
                         </router-link>
                     </div>
-                </div>
+                </section>
             </div>
         </section>
     </main>
@@ -195,9 +247,6 @@ export default {
     },
     computed: {
         ...mapGetters(["fetchFeedList", "fetchCommunityDetail"]),
-        feed(){
-            return this.fetchFeedList.results;
-        },
         community_name() {
             return this.$route.params.name;
         },
@@ -219,11 +268,34 @@ export default {
         },
         adminids(){
             const adminIds = [];
-            for (const admin of this.fetchCommunityDetail.data.admin) {
+            for (const admin of this.fetchCommunityDetail.data?.admin) {
                 adminIds.push(admin.user_id);
             }
             return adminIds;
         },
+        popularfeeds(){
+            if (Array.isArray(this.fetchFeedList.results) && this.fetchFeedList.results.length > 0) {
+                return [...this.fetchFeedList.results].sort((a, b) => new Date(b.view_count) - new Date(a.view_count));
+            } else {
+                return null; // 또는 다른 적절한 기본 값
+            }
+            // return [...this.fetchFeedList.results].sort((a, b) => new Date(b.view_count) - new Date(a.view_count));
+        },
+        newfeeds(){
+            if (Array.isArray(this.fetchFeedList.results) && this.fetchFeedList.results.length > 0) {
+                return [...this.fetchFeedList.results].sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+            } else {
+                return null; // 또는 다른 적절한 기본 값
+            }
+            // return [...this.fetchFeedList.results].sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+        },
+    },
+    watch: {
+        $route(to) {
+            const community_name = to.params.name
+            this.$store.dispatch("FETCH_FEED_LIST", community_name);
+            this.$store.dispatch("FETCH_COMMUNITY_DETAIL", community_name);
+        }
     },
     created() {
         const community_name = this.$route.params.name
@@ -251,6 +323,11 @@ body {
     padding: 0;
 }
 
+main {
+    height: auto;
+    min-height: 100%;
+    /*padding-bottom: 70px;*/
+}
 
 * {
     font-family: 'Noto Sans KR', sans-serif;
@@ -660,12 +737,11 @@ header >  #menu {
 }
 
 .container {
-    height: 100vh;
+    height: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
     margin: 42px 0;
-    
 }
 
 .post-list {
@@ -730,6 +806,7 @@ header >  #menu {
     display: flex;
     align-items: center;
     justify-content: center;
+    margin-right: 5px;
 }
 
 .card >.button-group > .with-text-view-box > img {
@@ -737,9 +814,6 @@ header >  #menu {
     width: 20px;
     height: 15px;
 }
-
-
-
 
 
 .header {
@@ -760,12 +834,14 @@ header >  #menu {
   background-repeat: no-repeat;  
 }
 
+
 .header .title {
   width: 184px;
   overflow: hidden;  	
   text-overflow: ellipsis;
   white-space: nowrap;
 }
+
 
 .title {
   margin-top: 0.25rem;
@@ -787,6 +863,7 @@ header >  #menu {
 }
 
 .message {
+
     min-width: 98%;
     height: 90%;
     display: -webkit-box;
@@ -794,6 +871,7 @@ header >  #menu {
     margin-top: 1rem;
     color: rgba(107, 114, 128, 1);
 }
+
 
 .message >  p {
   width: 192px;
@@ -830,6 +908,11 @@ header >  #menu {
   height: 199px !important;
   text-align: center;
   object-fit: cover;
+
+.message > p {
+  overflow: hidden;  	
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .btn {

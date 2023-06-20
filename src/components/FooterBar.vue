@@ -1,16 +1,16 @@
 <template>
+
   <footer>
-    <!-- <div class="inner"> -->
            <img src="@/assets/b.png" alt="BFFs">   
-    <!-- </div> -->
   </footer>  
+
 </template>
 
 <script>
 export default {
-
-}
+};
 </script>
+
 
 <style>
 main {
@@ -25,7 +25,6 @@ main {
 
 footer {
     height: 50px;
-
     position: relative;
     transform: translateY(0%);
     background-color: #dddddd; 
@@ -39,7 +38,5 @@ footer > img {
     width:42px;
     height: 42px;
 }
-
-
 
 </style>

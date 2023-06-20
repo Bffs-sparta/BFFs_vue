@@ -80,9 +80,9 @@ export default {
 </script>
 
 <style scoped>
-.nav-bar {
+/* .nav-bar {
     height: 100%;
-}
+} */
 
 header > .inner{
     position: relative;

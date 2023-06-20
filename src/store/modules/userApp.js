@@ -1,13 +1,11 @@
 import {
     fetchProfile,
     fetchAllProfile,
-    fetchSearchUser,
 }from '@/api/index.js'
 
 
 const state ={
     user: {},
-    searchuser: [],
     profile: [],
     menubar : false,
 }
@@ -22,9 +20,6 @@ const getters ={
     menubar(state) {
         return state.menubar
     },
-    fetchSearchUser(state) {
-        return state.searchuser
-    },
 }
 
 const mutations ={
@@ -36,9 +31,6 @@ const mutations ={
     },
     toggleMenubar(state, menubar) {
         state.menubar = menubar
-    },
-    SET_SEARCH_USER(state, searchuser) {
-        state.searchuser = searchuser
     },
 }
 
@@ -64,15 +56,6 @@ const actions={
     checkMenubar(context, menubar) {
         context.commit('toggleMenubar', menubar)
         return menubar
-    },
-    async FETCH_SEARCH_USER(context, name) {
-        try {
-            const response = await fetchSearchUser(name)
-            context.commit('SET_SEARCH_USER', response.data)
-            return response
-        } catch (error) {
-            console.log(error)
-        }
     },
 }
 export default {
