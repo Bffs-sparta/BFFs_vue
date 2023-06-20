@@ -21,10 +21,17 @@ footer {
     justify-content: center;
     align-items: center;
     bottom: 0;
+    
+main {
+    height: auto;
+    min-height: 100%;
+    padding-bottom: 70px;
 }
+
 
 footer > img {
     width:42px;
     height: 42px;
 }
+
 </style>
