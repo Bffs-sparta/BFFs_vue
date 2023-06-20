@@ -13,12 +13,12 @@
                         <h3>북마크한 커뮤니티</h3>
                         <div class="main-container">
                             <div class="main-box">
-                                <div class="new-card-wrapper">
-                                    <div v-if="bookmark?.length == 0 || true">
-                                        <p>북마크한 커뮤니티가 없습니다</p>
-                                    </div>
+                                <div class="new-card-wrapper" v-if="bookmark?.length == 0 || true">
+                                    <p>북마크한 커뮤니티가 없습니다</p>
+                                </div>
+                                <div class="new-card-wrapper" v-else>                                    
                                     <!-- 새 커뮤니티 카드 박스 -->
-                                    <router-link :to="`/community/detail/${bookmark.communityurl}`" class="new-card-box" v-else v-for="(bookmark, index) in bookmark" :key=index>
+                                    <router-link :to="`/community/detail/${bookmark.communityurl}`" class="new-card-box" v-for="(bookmark, index) in bookmark" :key=index>
                                         <div class="new-card-image">
                                             <img id="new-card-image" v-if="bookmark.image != null" :src="bookmark.imageurl">
                                             <img id="new-card-image" v-else src="@/assets/comu_image(1).jpg">
@@ -36,12 +36,12 @@
                         <h3>내 커뮤니티</h3>                        
                         <div class="main-container">
                             <div class="main-box">
-                                <div class="new-card-wrapper">
-                                    <div v-if="community?.length == 0">
-                                        <p>내 커뮤니티가 없습니다</p>
-                                    </div>
+                                <div class="new-card-wrapper" v-if="community?.length == 0">
+                                    <p>내 커뮤니티가 없습니다</p>
+                                </div>
+                                <div class="new-card-wrapper" v-else>                                    
                                     <!-- 새 커뮤니티 카드 박스 -->
-                                    <router-link :to="`/community/detail/${community.communityurl}`" class="new-card-box" v-else v-for="(community, index) in community" :key=index>
+                                    <router-link :to="`/community/detail/${community.communityurl}`" class="new-card-box" v-for="(community, index) in community" :key=index>
                                         <div class="new-card-image">
                                             <img id="new-card-image" v-if="community.image != ''" :src="community.imageurl">
                                             <img id="new-card-image" v-else src="@/assets/comu_image(1).jpg">
@@ -70,12 +70,12 @@
                         <h3>내 게시글</h3>
                         <div class="main-container">
                             <div class="main-box">
-                                <div class="new-card-wrapper">
-                                    <div v-if="feed?.length == 0">
-                                        <p>내 게시글이 없습니다</p>
-                                    </div>
+                                <div class="new-card-wrapper" v-if="feed?.length == 0">
+                                    <p>내 게시글이 없습니다</p>
+                                </div>
+                                <div class="new-card-wrapper" v-else>                                    
                                     <!-- 새 커뮤니티 카드 박스 -->
-                                    <router-link :to="`/community/detail/:community_name/feed/${feed.id}`" class="new-card-box" v-else v-for="(feed, index) in feed" :key=index>
+                                    <router-link :to="`/community/detail/:community_name/feed/${feed.id}`" class="new-card-box" v-for="(feed, index) in feed" :key=index>
                                         <div class="new-card-image">
                                             <img id="new-card-image" v-if="feed.image != null" :src="feed.imageurl">
                                             <img id="new-card-image" v-else src="@/assets/comu_image(1).jpg">

@@ -238,6 +238,7 @@ export default {
             }
         },
         InputImage(event) {
+            console.log(event)
             this.fetchCommunityDetail.data.imageurl = event.target.files[0]
             const reader = new FileReader();
             reader.onload = (event) => {

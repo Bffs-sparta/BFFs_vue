@@ -50,7 +50,7 @@
                 <div class="wrap">
                     <router-link to="/user/register">회원가입</router-link>
                     <a @click="passwordModal">비밀번호 변경</a>
-                </div>      
+                </div>
             </div>
         </div>
     </div>
@@ -68,6 +68,7 @@ export default {
             password:'',
         }
     },
+    
     methods: {
         passwordModal(){
             this.modalopen = true;
@@ -103,6 +104,11 @@ export default {
             }
         }
     },
+    computed: {
+        footerClass() {
+            return "login-footer";
+        },
+    },
     components: {
         PasswordResetModal,
     }
@@ -110,15 +116,15 @@ export default {
 </script>
 
 <style scoped>
-/*.back {
+.back{
+    width:100%;
     background-color: #9E2067;
-}*/
-
+}
 .login-wrap {
     width: 500px;
     margin: 0 auto;
-    margin-top: 100px;
     margin-bottom: 100px;
+    padding-top:100px;
 }
 
 .title {

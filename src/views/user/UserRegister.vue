@@ -58,10 +58,11 @@
                 <div class="link">
                     <router-link to="/user/login">로그인</router-link>
                 </div>
+                <div class="register_submit">
+                    <button class="btn" @click="userRegister">회원가입</button>
+                </div>
             </div>
-            <div class="register_submit">
-                <button class="btn" @click="userRegister">회원가입</button>
-            </div>
+            
         </div>
     </div>
 </template>
