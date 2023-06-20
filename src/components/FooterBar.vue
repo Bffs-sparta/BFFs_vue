@@ -1,6 +1,8 @@
 <template>
   <footer>
-       <img src="@/assets/b.png" alt="BFFs">   
+    <!-- <div class="inner"> -->
+           <img src="@/assets/b.png" alt="BFFs">   
+    <!-- </div> -->
   </footer>  
 </template>
 
@@ -10,28 +12,34 @@ export default {
 }
 </script>
 
-<style scoped>
+<style>
 main {
     height: auto;
     min-height: 100%;
-    padding-bottom: 70px;
+    padding-bottom: 50px;
+}
+
+.container {
+  min-height: 1800px;
 }
 
 footer {
-    height: 70px;
-    background-color: #dddddd;
+    height: 50px;
+
     position: relative;
-    transform: translateY(100%);
+    transform: translateY(0%);
+    background-color: #dddddd; 
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 70px;
 }
 
 
-footer  > img {
+footer > img {
     width:42px;
     height: 42px;
 }
+
+
 
 </style>
