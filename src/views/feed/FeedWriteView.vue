@@ -50,16 +50,16 @@ export default {
       async writeFeed() {
           try{
               const response = await this.$store.dispatch("FETCH_FEED_CREATE", {
-              title: this.title,
-              content: this.content,
-              categoryId: this.categoryId,
-          });
-          if(response.status === 201){
-            alert(response.data.message)
-            this.$router.push({name: "community-detail", params: {name: this.$route.params.community_name}});
-          }
+                title: this.title,
+                content: this.content,
+                categoryId: this.categoryId,
+              });
+              if(response.status === 201){
+                alert(response.data.message)
+                this.$router.push({name: "community-detail", params: {name: this.$route.params.community_name}});
+              }
           }catch(error){
-              console.log(error);
+              alert('카테고리를 입력해주세요')
           }
       },
       async handleImageAdded(file, Editor, cursorLocation, resetUploader) {

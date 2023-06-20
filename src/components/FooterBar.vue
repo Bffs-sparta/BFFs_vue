@@ -21,7 +21,8 @@ footer {
     justify-content: center;
     align-items: center;
     bottom: 0;
-    
+}
+
 main {
     height: auto;
     min-height: 100%;

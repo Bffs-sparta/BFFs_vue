@@ -230,7 +230,8 @@ export default {
                 const response = await fetchGuestBook(profile_id, this.inputComment)
                 if (response.status === 200) {
                     alert('방명록을 작성했습니다.')
-                    this.data.guestbook = response.data.guestbook
+                    const user_id = this.$route.params.id
+                    this.$store.dispatch("FETCH_USER_PROFILE", user_id);
                     this.inputComment='';
                 }
             } catch (error) {
@@ -254,6 +255,8 @@ export default {
                 const response = await fetchGuestBookDelete(profile_id, guestbook_id)
                 if (response.status === 204) {
                     console.log(response)
+                    const user_id = this.$route.params.id
+                    this.$store.dispatch("FETCH_USER_PROFILE", user_id);
                     alert('방명록 삭제가 완료되었습니다.')
                 }
             } catch (error) {
@@ -351,7 +354,7 @@ header > .inner > .sub-menu > nav > .menu > li {
 header > .profile > h3 {
     padding: 48px 0 24px 118px;
 }
-button {
+.quit-button {
  display: flex;
  /* height: 3em; */
  width: 100px;
@@ -365,17 +368,17 @@ button {
  border: none;
  background: #fff;
 }
-button > svg {
+.quit-button > svg {
  margin-right: 5px;
  margin-left: 5px;
  font-size: 20px;
  transition: all 0.4s ease-in;
 }
-button:hover > svg {
+.quit-button:hover > svg {
  font-size: 1.2em;
  transform: translateX(-5px);
 }
-button:hover {
+.quit-button:hover {
  box-shadow: 9px 9px 33px #d1d1d1, -9px -9px 33px #ffffff;
  transform: translateY(-2px);
 }
@@ -1022,229 +1025,165 @@ button:hover {
 /* 댓글 내용 area */
 
 .sub-content-wrapper {
-    display: grid;
-    grid-gap:15px;
-    grid-template-columns: 1fr;
-    grid-template-rows: repeat(auto, 100%)
+  display: grid;
+  grid-gap: 15px;
+  grid-template-columns: 1fr;
+  grid-template-rows: repeat(auto, 100%);
 }
-
 
 .comment-box {
-    display: block;
-    list-style-type: none;
-    width: auto;
-    height: 80px auto;
+  display: block;
+  list-style-type: none;
+  width: auto;
+  height: 80px auto;
 }
-.comment-box div p{
-    text-align: center;
+.comment-box div p {
+  text-align: center;
 }
 .comment-card {
-    display: grid;
-    grid-template-columns: 120px auto 200px;
-    grid-template-rows: 30px auto;
-    grid-gap: 4px;
+  display: grid;
+  grid-template-columns: 120px auto 200px;
+  grid-template-rows: 30px auto;
+  grid-gap: 4px;
 
-    padding: 10px 20px ;
-    width: auto;
-    height: auto;
-    background-color: #f7f7f7;
-    color: #454545;
-    box-shadow:#dddddd 0px -2px 0px inset;
+  padding: 10px 20px;
+  width: auto;
+  height: auto;
+  background-color: #f7f7f7;
+  color: #454545;
+  box-shadow: #dddddd 0px -2px 0px inset;
 }
 
 .comment-author {
-    margin: auto 0;
-    grid-column: 1 / 2;
-    grid-row: 1 / 2;
+  margin: auto 0;
+  grid-column: 1 / 2;
+  grid-row: 1 / 2;
 }
 
 .comment-date {
-    margin-left: auto;
-    margin-top: 5px;
-    grid-column: 3 / 4;
-    grid-row: 1 / 2;
+  margin-left: auto;
+  margin-top: 5px;
+  grid-column: 3 / 4;
+  grid-row: 1 / 2;
+  font-size: 13px;
 }
 
 .comment-text {
-    grid-column: 1 / 3;
-    grid-row: 2 / 3;
+  grid-column: 1 / 3;
+  grid-row: 2 / 3;
 }
 
 .comment-func-box {
-    display: flex;
-    grid-column: 3 / 4;
-    grid-row: 2 / 3;
+  display: flex;
+  grid-column: 3 / 4;
+  grid-row: 2 / 3;
 }
 
 /* comment 수정 버튼 */
 
 .comment-edit-btn {
-    background-color: transparent;
-    position: relative;
-    border: none;
-    margin-left: auto;
-    margin-top: auto;
-    margin-right: 5px;
+  background-color: transparent;
+  position: relative;
+  border: none;
+  margin-left: auto;
+  margin-top: auto;
+  margin-right: 5px;
 }
-  
+
 .comment-edit-btn::after {
-    content: '수정';
-    white-space: nowrap;
-    margin-top: 10px;
-    position: absolute;
-    top: -130%;
-    left: 50%;
-    transform: translateX(-50%);
-    width: fit-content;
-    height: fit-content;
-    background-color: rgb(34, 64, 115);
-    padding: 4px 8px;
-    border-radius: 5px;
-    transition: .2s linear;
-    transition-delay: .2s;
-    color: white;
-    text-transform: uppercase;
-    font-size: 12px;
-    opacity: 0;
-    visibility: hidden;
+  content: "수정";
+  white-space: nowrap;
+  margin-top: 10px;
+  position: absolute;
+  top: -130%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: fit-content;
+  height: fit-content;
+  background-color: rgb(34, 64, 115);
+  padding: 4px 8px;
+  border-radius: 5px;
+  transition: 0.2s linear;
+  transition-delay: 0.2s;
+  color: white;
+  text-transform: uppercase;
+  font-size: 12px;
+  opacity: 0;
+  visibility: hidden;
 }
-  
+
 .edit-icon {
-    transform: scale(1.1);
-    transition: .2s linear;
+  transform: scale(1.1);
+  transition: 0.2s linear;
 }
-  
+
 .comment-edit-btn:hover > .edit-icon {
-    transform: scale(1.3);
-    cursor: pointer;
+  transform: scale(1.3);
+  cursor: pointer;
 }
-  
+
 .comment-edit-btn:hover > .edit-icon path {
-    fill: rgb(34, 64, 115);
-    cursor: pointer;
+  fill: rgb(34, 64, 115);
+  cursor: pointer;
 }
-  
+
 .comment-edit-btn:hover::after {
-    visibility: visible;
-    opacity: 1;
-    top: -160%;
-    cursor: pointer;
+  visibility: visible;
+  opacity: 1;
+  top: -160%;
+  cursor: pointer;
 }
 
 /* comment 삭제 버튼 */
 
 .comment-delete-btn {
-    background-color: transparent;
-    position: relative;
-    border: none;
-    margin-top: auto;
-
+  background-color: transparent;
+  position: relative;
+  border: none;
+  margin-top: auto;
 }
-  
+
 .comment-delete-btn::after {
-    content: '삭제';
-    white-space: nowrap;
-    margin-top: 10px;
-    position: absolute;
-    top: -130%;
-    left: 50%;
-    transform: translateX(-50%);
-    width: fit-content;
-    height: fit-content;
-    background-color: rgb(168, 7, 7);
-    padding: 4px 8px;
-    border-radius: 5px;
-    transition: .2s linear;
-    transition-delay: .2s;
-    color: white;
-    text-transform: uppercase;
-    font-size: 12px;
-    opacity: 0;
-    visibility: hidden;
+  content: "삭제";
+  white-space: nowrap;
+  margin-top: 10px;
+  position: absolute;
+  top: -130%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: fit-content;
+  height: fit-content;
+  background-color: rgb(168, 7, 7);
+  padding: 4px 8px;
+  border-radius: 5px;
+  transition: 0.2s linear;
+  transition-delay: 0.2s;
+  color: white;
+  text-transform: uppercase;
+  font-size: 12px;
+  opacity: 0;
+  visibility: hidden;
 }
-  
+
 .delete-icon {
-    transform: scale(1.1);
-    transition: .2s linear;
+  transform: scale(1.1);
+  transition: 0.2s linear;
 }
-  
+
 .comment-delete-btn:hover > .delete-icon {
-    transform: scale(1.3);
-    cursor: pointer;
+  transform: scale(1.3);
+  cursor: pointer;
 }
-  
+
 .comment-delete-btn:hover > .delete-icon path {
-    fill: rgb(168, 7, 7);
-    cursor: pointer;
+  fill: rgb(168, 7, 7);
+  cursor: pointer;
 }
-  
+
 .comment-delete-btn:hover::after {
-    visibility: visible;
-    opacity: 1;
-    top: -160%;
-    cursor: pointer;
-}
-  
-/* 대댓글 작성 버튼 */
-
-.cocomment-button {
-    margin-right: 10px;
-    position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 70px;
-    height: 25px;
-    border: none;
-    background-color: #dddddd;
-    color: #909090;
-    font-weight: 500;
-    font-size: 14px;
-    cursor: pointer;
-    border-radius: 5px;
-    transition-duration: .3s;
-
-    grid-column: 2 / 3;
-    grid-row: 1 / 2;
-}
-
-.cocomment-button:hover {
-    background-color:  rgb(34, 64, 115);
-    color: white
-}
-  
-.cocomment-button:active {
-    transform: translate(0, 3px);
-    transition-duration: .3s;
-}
-
-/* 코코멘트 대댓글 area */
-
-.cocommnet-box {
-    width: 100%;
-    display: flex;
-}
-
-.cocomment-deco {
-    color: #9e2070;
-    font-size: 40px;
-    font-weight: 900;
-    padding-left: 10px;
-    margin: auto;
-}
-
-.cocomment-card {
-    display: grid;
-    grid-template-columns: 120px auto 160px;
-    grid-template-rows: 30px auto;
-    grid-gap: 4px;
-
-    margin-left:20px;
-    padding: 10px 20px ;
-    width: 100%;
-    height: auto;
-    background-color: #f5f5f5;
-    color: #454545;
-    box-shadow:#dddddd 0px -2px 0px inset;
+  visibility: visible;
+  opacity: 1;
+  top: -160%;
+  cursor: pointer;
 }
 </style>

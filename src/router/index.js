@@ -93,7 +93,7 @@ export const router = new VueRouter({
             component:FeedWriteView
         },
         {
-            path:'/feed/update/:feed_id',
+            path:'/:community_name/feed/update/:feed_id',
             name:'feed-update',
             component:FeedUpdateView
         },

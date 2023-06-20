@@ -227,7 +227,7 @@ img {
 
 .card-container {
   margin-top: 40px;
-  height: 300px;
+  height: 330px;
   display: flex;
   overflow-x: auto;
   overflow-y: hidden;

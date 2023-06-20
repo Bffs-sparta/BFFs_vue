@@ -55,11 +55,12 @@ body {
   position: fixed;
   top: 0;
   width: 100%;
+  height: 120px;
   z-index: 100;
   background-color:#fff
 }
 #app_content{
   margin-top:120px;
-  margin-bottom:70px;
+  margin-bottom:100px;
 }
 </style>

@@ -88,7 +88,11 @@ export default {
         searchFeed() {
             const name = this.searchname
             this.$store.dispatch("search_feed", name);
-            //this.searchname = '';
+
+            if (this.fetchSearchFeed?.results?.length === 0) {
+                alert("찾으시는 검색 결과가 없습니다")
+                this.searchname = '';
+            }
         },
     },
 }

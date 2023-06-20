@@ -363,7 +363,11 @@ function fetchNextfeed(community_name,feed_id){
 }
 // 피드 게시글 공지 설정
 function fetchFeedNotification(community_name, feed_id) {
-    return axios.post(`${config.baseUrl}/community/${community_name}/${feed_id}/notification/`)
+    return axios.post(`${config.baseUrl}/community/${community_name}/${feed_id}/notification/`,{},{
+        headers: {
+            'Authorization': `Bearer ${access_token()}`,
+        }
+    })
 }
 
 // 공구 전체 리스트 조회

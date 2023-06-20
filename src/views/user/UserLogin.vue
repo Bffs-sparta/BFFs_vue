@@ -104,11 +104,6 @@ export default {
             }
         }
     },
-    computed: {
-        footerClass() {
-            return "login-footer";
-        },
-    },
     components: {
         PasswordResetModal,
     }

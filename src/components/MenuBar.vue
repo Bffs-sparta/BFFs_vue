@@ -35,7 +35,7 @@
                 <div class="suggestions">
                     <p>건의사항은 개발자 이메일로 보내주세요!</p>
                     <br>
-                    <p>* 페이지 하단 부분 확인 *</p>
+                    <p>* makebffs@gmail.com *</p>
                 </div>
 
             </div>
