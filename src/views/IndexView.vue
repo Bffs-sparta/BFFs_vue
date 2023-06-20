@@ -246,6 +246,8 @@ img {
   overflow-y: hidden;
 }
 
+
+
 #profile-card-list::-webkit-scrollbar {
   height: 10px; /* 스크롤 막대의 너비 */
   background-color: #d7c0cd; /* 스크롤 막대의 배경색 */
@@ -439,6 +441,13 @@ img {
   position: relative;
   overflow: hidden;
 }
+
+.with-card-image > img {
+  width: auto !important;
+  height: auto !important;
+  object-fit: cover;
+}
+
 .with-text-title {
   margin-top: 10px;
   padding-left: 30px;
