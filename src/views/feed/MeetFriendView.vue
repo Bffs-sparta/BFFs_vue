@@ -25,11 +25,9 @@
                 <div class="notice-list">
                     <div class="card" v-for="(profile, index) in profile" :key=index>
                         <router-link :to="`/profile/${profile.id}`">
-                            <div class="card-image" v-if="profile.profileimageurl.slice(37,42) === 'kakao'">
-                                <img :src="profile.profileimageurl.slice(28)" />
-                            </div>
-                            <div class="card-image" v-else>
-                                <img :src="profile.profileimageurl" v-if="profile.profileimage != null" />
+                            <div class="card-image">
+                                <img :src="profile.profileimageurl" v-if="profile.profileimage !== null && profile.profileimage.includes('profile_img')"/>
+                                <img :src="profile.profileimageurl.slice(33)" v-else-if="profile.profileimage !== null"/>
                                 <img src="@/assets/room_image(5).jpg" v-else />
                             </div>
                             <div class="category"> {{ profile.nickname }} | {{ profile.region }} </div>
@@ -37,7 +35,7 @@
                                 <div class="author"> By <span class="name">{{ profile.user_name }}</span></div>
                                 <div class="author"> 가입일 <span class="name">{{ profile.created_at.slice(0, 10) }}</span></div>
                             </div>
-                            <div class="heading" v-else> 인사말이 없습니다
+                            <div class="heading" v-else> 친구해요 !
                                 <div class="author"> By <span class="name">{{ profile.user_name }}</span></div>
                                 <div class="author"> 가입일 <span class="name">{{ profile.created_at.slice(0, 10) }}</span></div>
                             </div>
@@ -102,11 +100,9 @@
             <div class="notice-list">
                 <div class="card" v-for="(profile, index) in newprofile" :key=index>
                     <router-link :to="`/profile/${newprofile.id}`">
-                        <div class="card-image" v-if="profile.profileimageurl.slice(37,42) === 'kakao'">
-                            <img :src="profile.profileimageurl.slice(28)" />
-                        </div>
-                        <div class="card-image" v-else>
-                            <img :src="profile.profileimageurl" v-if="profile.profileimage != null" />
+                        <div class="card-image">
+                            <img :src="profile.profileimageurl" v-if="profile.profileimage !== null && profile.profileimage.includes('profile_img')"/>
+                            <img :src="profile.profileimageurl.slice(33)" v-else-if="profile.profileimage !== null"/>
                             <img src="@/assets/room_image(5).jpg" v-else />
                         </div>
                         <div class="category"> {{ profile.nickname }} | {{ profile.region }} </div>

@@ -15,7 +15,7 @@ export default {
 footer {
     height: 70px;
     background-color: #dddddd;
-    position: fixed;
+    position : relative;
     width:100%;
     display: flex;
     justify-content: center;

@@ -16,7 +16,7 @@
           <!-- 검색 -->
           <div class="search-box">
             <div class="container-input">
-              <input type="text" placeholder="Search" name="text" class="input" autocomplete="off" v-model="searchname" @keyup.enter="searchFeed()">
+              <input type="text" placeholder=" Feed Search" name="text" class="input" autocomplete="off" v-model="searchname" @keyup.enter="searchFeed()">
               <svg fill="#000000" width="20px" height="20px" viewBox="0 0 1920 1920" xmlns="http://www.w3.org/2000/svg">
                 <path d="M790.588 1468.235c-373.722 0-677.647-303.924-677.647-677.647 0-373.722 303.925-677.647 677.647-677.647 373.723 0 677.647 303.925 677.647 677.647 0 373.723-303.924 677.647-677.647 677.647Zm596.781-160.715c120.396-138.692 193.807-319.285 193.807-516.932C1581.176 354.748 1226.428 0 790.588 0S0 354.748 0 790.588s354.748 790.588 790.588 790.588c197.647 0 378.24-73.411 516.932-193.807l516.028 516.142 79.963-79.963-516.142-516.028Z" fill-rule="evenodd"></path>
               </svg>
@@ -30,12 +30,11 @@
             <div class="search-words">
               <p class="search-word1">검색 결과 :</p>
               <p class="search-word2">{{this.searchname}}</p>
-              <!--<p class="search-word2" v-else>{{this.$route.params.name}}</p>-->
             </div>
             <!-- category list 내용 -->
             <div class="main-content-wrapper">
               <!-- 게시글 1개 -->
-              <div class="content-card" v-for="(feed, index) in feeds" :key=index>
+              <router-link :to="`/community/detail/${feed.community_name}/feed/${feed.id}`" class="content-card" v-for="(feed, index) in feeds" :key=index>
                 <div class="image-box">
                   <img class="content-image" src="@/assets/room_image(3).jpg">
                 </div>
@@ -56,8 +55,7 @@
                   <img src="@/assets/comment.png">
                   <span class="content-count">{{feed.comments_count}}</span>
                 </div>
-              </div>
-
+              </router-link>
             </div>
           </div>
         </div>
@@ -376,6 +374,10 @@ body {
     display: grid;
     grid-template-columns: 100%;
     grid-template-rows: repeat(10, auto);
+}
+
+.main-content-wrapper a {
+    text-decoration: none;
 }
 
 .content-card {

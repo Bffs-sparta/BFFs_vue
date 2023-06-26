@@ -443,7 +443,6 @@ function fetchCommentDelete(comment_id) {
 
 // 대댓글 생성
 function fetchCocommentCreate(comment_id,text) {
-    console.log(text)
     return axios.post(`${config.baseUrl}/feed/${comment_id}/cocomment/`,{
         text,
     },{

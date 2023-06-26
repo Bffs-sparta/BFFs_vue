@@ -64,7 +64,7 @@
               <input
                 autocomplete="off"
                 type="text"
-                placeholder="Search"
+                placeholder=" Feed Search"
                 name="text"
                 class="input"
                 v-model="searchname" @keyup.enter="searchFeed()"
@@ -517,7 +517,7 @@ export default {
         const response = await fetchCocommentCreate(comment.id, this.inputCocomment);
         if (response.status === 201) {
           alert(response.data.message);
-          this.inputComment = "";
+          this.inputCocomment = "";
           const feed_id = this.$route.params.feed_id;
           const community_name = this.$route.params.community_name;
           this.$store.dispatch("FETCH_FEED_DETAIL", { community_name, feed_id });

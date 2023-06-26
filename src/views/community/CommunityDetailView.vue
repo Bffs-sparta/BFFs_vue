@@ -246,8 +246,8 @@ export default {
             return this.fetchCommunityDetail.data?.categories || [];
         },
         forbiddens(){
-            if(this.fetchCommunityDetail.forbiddens){
-                return this.fetchCommunityDetail.data.forbiddens
+            if(this.fetchCommunityDetail.data.forbiddenword){
+                return this.fetchCommunityDetail.data.forbiddenword
             }else{
                 return []
             }

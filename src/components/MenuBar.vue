@@ -16,6 +16,7 @@
                         <li><h3><a>혼자 놀기</a></h3></li>
                         <li><router-link :to="`/profile/${userid}`">내 프로필</router-link></li>
                         <li><router-link :to="`/profile/update/${userid}`">내 프로필 수정하기</router-link></li>
+                        <li><router-link :to="`/profile/${userid}`">내 커뮤니티 관리하기</router-link></li>
                         <li><router-link to="/meetfriend">친구 만나기</router-link></li>
                         <li >
                             <h4>

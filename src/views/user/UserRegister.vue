@@ -22,7 +22,7 @@
         <div class="privacy-policy-form">
             <div class="policy-item">
                 <h3>개인정보 약관 동의</h3>
-                <textarea readonly class="policy-textarea">
+                <div readonly class="policy-textarea"><pre>
 이용자가 제공한 모든 정보는 다음의 목적을 위해 활용하며, 하기 목적 이외의 용도로는 사용되지 않습니다.
 ① 개인정보 수집 항목 및 수집·이용 목적 
   가) 수집 항목 (필수항목)
@@ -36,8 +36,9 @@
   - 회원 탈퇴 신청 시 부터 5년까지 회원 정보 보관 
   - 공동구매 게시글에 대한 분쟁 처리 관련 기록 3년간 보관
 ③ 동의거부관리 
-  - 사용자는 서비스 이용에 필요한 최소한의 개인정보 수집, 이용에 대하여 동의를 거부하실 권리가 있습니다. 다만, 귀하가 개인정보의 수집/이용에 동의를 거부하시는 경우에 사이트의 회원 전용 서비스 이용이 불가능함을 알려드립니다.
-                </textarea>
+  - 사용자는 서비스 이용에 필요한 최소한의 개인정보 수집, 이용에 대하여 동의를 거부하실 권리가 있습니다.
+  - 다만, 귀하가 개인정보의 수집/이용에 동의를 거부하시는 경우에 사이트의 회원 전용 서비스 이용이 불가능함을 알려드립니다.
+                </pre></div>
                 <p class="policy-item-text">본인은 위의 동의서 내용을 충분히 숙지하였으며, 개인정보 수집, 이용, 제공하는 것에 동의합니다.</p>
             </div>
             <div class="policy-checkbox">
@@ -161,17 +162,18 @@ export default {
                 const response = await fetchVerificationEmail(this.otp,this.email)
                 if(response.status === 200){
                     this.modalopen = false;
+                    alert(response.data.message);
                 }
             }catch(error){
-                console.log(error);
+                alert("인증번호가 일치하지 않습니다.");
             }
         },
         async userRegister(){
             try{
                 const response = await fetchSignup(this.email, this.password, this.name, this.age, this.region, this.nickname);
-                if(response.status === 200){
+                if(response.status === 201){
                     alert("회원가입이 완료되었습니다.");
-                    this.$router.push({name: 'Login'});
+                    this.$router.push({name: 'user-login'});
                 }
             }catch(error){
                 console.log(error);
@@ -211,14 +213,16 @@ h1{
 }
 .policy-item {
     justify-content: center;
-    padding-left: 5px;
+    display: grid;
 }
 .policy-textarea {
     width: 100%;
-    max-width: 700px;
-    min-width: 200px;
+    min-width: 680px;
+    /*max-width: 700px;
+    min-width: 200px;*/
     height: 200px;
     resize: none;
+    overflow-x: auto;
 
     background-color: #05060f0a;
     border-radius: .5rem;
@@ -235,7 +239,7 @@ h1{
     display: flex;
     float: right;
     margin: 5px 30px;
-    margin-bottom: 80px;
+    margin-bottom: 50px;
     color: #454545;
 }
 .policy-checkbox p {

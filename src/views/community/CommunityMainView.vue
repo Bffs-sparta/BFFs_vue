@@ -17,7 +17,7 @@
                 <!-- 검색 -->
                 <div class="search-box">
                     <div class="container-input">
-                        <input type="text" placeholder="Search" name="text" class="input" autocomplete="off" v-model="searchname" @keyup.enter="searchCommunity()">
+                        <input type="text" placeholder="Community Search" name="text" class="input" autocomplete="off" v-model="searchname" @keyup.enter="searchCommunity()">
                         <svg fill="#000000" width="20px" height="20px" viewBox="0 0 1920 1920"
                             xmlns="http://www.w3.org/2000/svg">
                             <path

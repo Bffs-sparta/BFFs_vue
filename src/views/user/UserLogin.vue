@@ -34,14 +34,14 @@
                         <font-awesome-icon :icon="['fas', 'user']" size="xs" style="color: #000000;" class="icon"/>
                     </div>
                     <div class="form-input">
-                        <input autocomplete="off" type="email" class="input" placeholder="Email" v-model="email" @keyup.enter="login">
+                        <input autocomplete="off" type="email" class="input" placeholder="Email" v-model="email">
                     </div>
                 </div>
                 <div class="form-item">
                     <div class="form-icon">
                         <font-awesome-icon :icon="['fas', 'lock']" size="xs" style="color: #000000;" class="icon"/>
                     </div>
-                    <form class="form-input">
+                    <form class="form-input" v-on:submit.prevent>
                         <input autocomplete="off" type="password" class="input" placeholder="Password" v-model="password" @keyup.enter="login">
                     </form>
                 </div>
@@ -121,8 +121,6 @@ export default {
     width:100%;
     /*background-color: #9E2067;*/
     /*background-image: url('@/assets/8094129.jpg');*/
-    height: 100vh;
-    overflow: hidden;
     position: relative;
 }
 .back-img {
