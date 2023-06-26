@@ -793,6 +793,13 @@ header > .profile > h3 {
     line-height: 1.5;
     grid-column: 2/4;
     grid-row: 2;
+    overflow: hidden;
+    white-space: normal;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    word-break: keep-all;
 }
 .community-text{
     overflow: hidden;
