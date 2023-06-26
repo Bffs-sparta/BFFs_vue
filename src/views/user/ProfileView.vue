@@ -783,7 +783,8 @@ header > .profile > h3 {
     margin-top: 7px;
     font-size: 0.8rem;
     color: #909090;
-}.new-text-introduction {
+}
+.new-text-introduction {
     margin: 0px 8px 6px 15px;
     height: 100%;
     font-size: 0.8rem;
