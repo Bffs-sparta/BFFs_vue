@@ -783,10 +783,9 @@ header > .profile > h3 {
     margin-top: 7px;
     font-size: 0.8rem;
     color: #909090;
-}
-.new-text-introduction {
+}.new-text-introduction {
     margin: 0px 8px 6px 15px;
-    height: 50%;
+    height: 100%;
     font-size: 0.8rem;
     color: #909090;
     text-indent: 7px;
@@ -799,15 +798,6 @@ header > .profile > h3 {
 }
 .community-text{
     height:50% !important ;
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    word-break: keep-all;
-}
-.community-text{
-    overflow: hidden;
-    white-space: normal;
-    text-overflow: ellipsis;
     display: -webkit-box;
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
