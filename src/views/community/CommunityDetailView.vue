@@ -826,6 +826,7 @@ header >  #menu {
   background-repeat: no-repeat;  
 }
 
+
 .title {
   margin-top: 0.25rem;
   font-size: 1.125rem;
@@ -845,13 +846,35 @@ header >  #menu {
 }
 
 .message {
-    width: 100%;
-    height: 100%;
+    width: 880px;
+    height: 440px;
     overflow: hidden;
     display: -webkit-box;
     -webkit-box-orient: vertical;
     margin-top: 1rem;
     color: rgba(107, 114, 128, 1);
+}
+
+.message >>> img {
+    width: 320px !important;
+    height: 310px!important;
+    object-fit: cover;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    object-fit: cover;
+}
+
+
+
+.message >>>  p {
+  width: 328px;
+  color: #707070;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
 }
 
 .btn {

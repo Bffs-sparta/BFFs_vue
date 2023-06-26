@@ -481,7 +481,7 @@ header > .profile > h3 {
 
     top: 0;
     bottom: 0;
-    height: 100vh;
+
 
     margin: auto;
 
