@@ -30,6 +30,9 @@ export default {
     font-style: normal;
 }
 
+* {
+  font-family: 'SUITE-Regular' !important;
+}
 body {
   -webkit-user-select:none;
   -moz-user-select:none;
