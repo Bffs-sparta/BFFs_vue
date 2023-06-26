@@ -786,18 +786,19 @@ header > .profile > h3 {
 }
 .new-text-introduction {
     margin: 0px 8px 6px 15px;
-    height: 50%;
+    height: 100%;
     font-size: 0.8rem;
     color: #909090;
     text-indent: 7px;
     line-height: 1.5;
     grid-column: 2/4;
     grid-row: 2;
-}
-.community-text{
     overflow: hidden;
     white-space: normal;
     text-overflow: ellipsis;
+}
+.community-text{
+    height:50% !important ;
     display: -webkit-box;
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
