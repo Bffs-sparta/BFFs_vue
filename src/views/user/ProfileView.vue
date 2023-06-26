@@ -23,7 +23,7 @@
                                             <img id="new-card-image" v-if="bookmark.image != null" :src="bookmark.imageurl">
                                             <img id="new-card-image" v-else src="@/assets/comu_image(1).jpg">
                                         </div>
-                                        <span id="new-text-title" class="new-text-title">{{ bookmark.title }}</span>
+                                        <span id="new-text-title" class="new-text-title community-text">{{ bookmark.title }}</span>
                                         <!-- <span id="new-text-region" class="new-text-region">경기</span> -->
                                         <span id="new-text-introduction" class="new-text-introduction">{{ bookmark.introduction }}</span>
                                     </router-link>
@@ -48,7 +48,7 @@
                                         </div>
                                         <span id="new-text-title" class="new-text-title">{{ community.title }}</span>
                                         <!-- <span id="new-text-region" class="new-text-region">경기</span> -->
-                                        <span id="new-text-introduction" class="new-text-introduction">{{ community.introduction }}</span>
+                                        <span id="new-text-introduction" class="new-text-introduction community-text">{{ community.introduction }}</span>
                                         <div class="button-box">
                                             <router-link :to="`/community/manage/${community.communityurl}`" class="visit-button" v-if="userid===profile.id">
                                                 <span>관리</span>
@@ -288,13 +288,6 @@ export default {
 </script>
 
 <style scoped>
-body {
-    margin: 0;
-    padding: 0;
-}
-* {
-    font-family: 'Noto Sans KR', sans-serif;
-}
 a {
     color: inherit;
     text-decoration: none;
@@ -416,7 +409,7 @@ header > .profile > h3 {
 
 .card {
   width: 472px;
-  height: 424px;
+  min-height: 424px;
   background: white;
   padding: .4em;
   border-radius: 6px;
@@ -485,7 +478,6 @@ header > .profile > h3 {
 .mypage {
     width: 1200px;
     margin: auto;
-    margin-top:200px;
     display: grid;
     place-items: start;
     grid-template-rows: (1, 48px);
@@ -757,6 +749,7 @@ header > .profile > h3 {
     grid-template-columns: 120px 150px 30px;
     grid-template-rows: 40px auto;
 }
+
 .new-card-box:hover {
     border: #9E2067, 0.2em solid;
     box-shadow: 0 10px 20px 4px rgba(35, 35, 35, .1);
@@ -798,10 +791,10 @@ header > .profile > h3 {
     color: #909090;
     text-indent: 7px;
     line-height: 1.5;
-    text-overflow: ellipsis;
-    overflow: hidden;
     grid-column: 2/4;
     grid-row: 2;
+}
+.community-text{
     overflow: hidden;
     white-space: normal;
     text-overflow: ellipsis;
