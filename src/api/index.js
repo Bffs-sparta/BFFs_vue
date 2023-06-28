@@ -1,8 +1,8 @@
 import axios from 'axios'
 
 const config = {
-    baseUrl: 'https://api.makebestie.com'
-    // baseUrl: 'http://127.0.0.1:8000'
+    // baseUrl: 'https://api.makebestie.com'
+    baseUrl: 'http://127.0.0.1:8000'
 }
 const access_token = () => {
     return localStorage.getItem('access_token')
@@ -48,7 +48,9 @@ function socialCallback(provider){
 
 // refresh token
 function fetchTokenRefresh(){
-    return axios.get(`${config.baseUrl}/user/refresh/`)
+    return axios.post(`${config.baseUrl}/user/refresh/`,{
+        refresh: localStorage.getItem('refresh_token')
+    })
 }
 
 // 이메일 전송
