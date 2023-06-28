@@ -195,33 +195,24 @@ export default {
     grouppurchase() {
       return this.data?.grouppurchase;
     },
-    comment(){
-      if (Array.isArray(this.data?.comment)) {
-          return this.data?.comment?.map(comment => ({
-            ...comment
-          }))
-        }
-      return [];
-      },
-    },
-    watch: {
-      $route(to) {
-        const grouppurchase_id = to.params.grouppurchase_id;
-        const community_name = to.params.community_name;
-        this.$store.dispatch("FETCH_GROUPPURCHASE_DETAIL", { community_name, grouppurchase_id });
-      }
-    },
-    data() {
+  },
+  watch: {
+    $route(to) {
+      const grouppurchase_id = to.params.grouppurchase_id;
+      const community_name = to.params.community_name;
+      this.$store.dispatch("FETCH_PURCHASE_DETAIL", { community_name, grouppurchase_id });
+    }
+  },
+  data() {
     return {
       userid: "",
       email: "",
-      inputComment: "",
     };
   },
   created() {
     const grouppurchase_id = this.$route.params.grouppurchase_id;
     const community_name = this.$route.params.community_name;
-    this.$store.dispatch("FETCH_GROUPPURCHASE_DETAIL", { community_name, grouppurchase_id});
+    this.$store.dispatch("FETCH_PURCHASE_DETAIL", { community_name, grouppurchase_id});
   },
   mounted() {
     const payload = localStorage.getItem("payload");

@@ -1,101 +1,96 @@
 <template>
     <div class="write-container" v-if="categories.data">
-        <div>
+        <!--<div>
           <h3>카테고리</h3>
           <div class="radio-inputs">
             <label class="radio"  v-for="category,index in categories.data.categories" :key="index">
               <input type="radio" name="radio" v-model="categoryId" :value="category[0]" v-if="index==1" checked="">
               <input type="radio" name="radio" v-model="categoryId" :value="category[0]" v-else>
-              <span class="name">{{ category[3] }}</span>
+              <span class="name">{{ category[1] }}</span>
             </label>
           </div>
-        </div>
-        <div class = "title">
-            <input type="text" id="title" v-model="title" placeholder="제목을 입력해주세요">
-        </div>
-        <vue-editor v-model="content" :useCustomImageHandler="true" @image-added="handleImageAdded"></vue-editor>
-        
+        </div>-->
         <div class="purchase-container">
           <div class="purchase-wrapper">
 
-          <dl class="purchase-form">
-            <span>... 공구 기본 내용 ...</span>
-            <dt class="product-name">상품 이름</dt>
-            <dd class="product-name-text">
-              <div class="input-wrapper">
-                  <input class="gp-input-box" type="text">
-              </div>
-            </dd>
-            <dt class="product-number">상품 수량</dt>
-            <dd class="product-number-text">
-              <div class="input-num-wrapper">
-                <input class="gp-input-num-box" type="number" value="0"> 개
-              </div>
-            </dd>
-            <dt class="product-price">총 가격</dt>
-            <dd type="number" class="product-price-text">
-              <div class="input-num-wrapper">
-                <input class="gp-input-num-box" type="number" value="1000"> 원
-              </div>
-            </dd>
-            <dt class="person-limit">모집 인원</dt>
-            <dd class="person-limit-text">
-              <div class="input-num-wrapper">
-                <input class="gp-input-num-box" type="number" value="0"> 명
-              </div>
-            </dd>
-            <dt class="product-link">상품 상세 url</dt>
-            <dd class="product-link-text">
-              <div class="input-wrapper">
-                <input class="gp-input-box" type="url">
-              </div>
-            </dd>
-            <dt class="open-at">모집 시작시간</dt>
-            <dd class="open-at-text">
-              <div class="input-date-wrapper">
-                <!-- js로 오늘 날짜 가져와서 띄워주어야함 / step 10분 단위로 시간 받기 / min=선택 시간 제한, 현재 시간 넣기 -->
-                <!-- https://sorto.me/docs/Web/HTML/Element/input/datetime-local#%EC%84%A0%ED%83%9D-%EA%B0%80%EB%8A%A5%ED%95%9C-%EB%82%A0%EC%A7%9C-%EB%B0%8F-%EC%8B%9C%EA%B0%84-%EB%B2%94%EC%9C%84-%EC%A0%9C%ED%95%9C%ED%95%98%EA%B8%B0 -->
-                <input class="gp-input-box" type="datetime-local" min="" step="600">
-              </div>
-            </dd>
-            <dt class="close-at">모집 종료 시간</dt>
-            <dd class="close-at-text">
-              <div class="input-date-wrapper">
-                <input class="gp-input-box" type="datetime-local" min="" step="600">
-              </div>
-            </dd>
-          </dl>
+            <dl class="purchase-form">
+              <span>... 공구 기본 내용 ...</span>
+              <dt class="product-name">상품 이름</dt>
+              <dd class="product-name-text">
+                <div class="input-wrapper">
+                    <input class="gp-input-box" type="text">
+                </div>
+              </dd>
+              <dt class="product-number">상품 수량</dt>
+              <dd class="product-number-text">
+                <div class="input-num-wrapper">
+                  <input class="gp-input-num-box" type="number" value="0"> 개
+                </div>
+              </dd>
+              <dt class="product-price">총 가격</dt>
+              <dd type="number" class="product-price-text">
+                <div class="input-num-wrapper">
+                  <input class="gp-input-num-box" type="number" value="1000"> 원
+                </div>
+              </dd>
+              <dt class="person-limit">모집 인원</dt>
+              <dd class="person-limit-text">
+                <div class="input-num-wrapper">
+                  <input class="gp-input-num-box" type="number" value="0"> 명
+                </div>
+              </dd>
+              <dt class="product-link">상품 상세 url</dt>
+              <dd class="product-link-text">
+                <div class="input-wrapper">
+                  <input class="gp-input-box" type="url">
+                </div>
+              </dd>
+              <dt class="open-at">모집 시작시간</dt>
+              <dd class="open-at-text">
+                <div class="input-date-wrapper">
+                  <!-- js로 오늘 날짜 가져와서 띄워주어야함 / step 10분 단위로 시간 받기 / min=선택 시간 제한, 현재 시간 넣기 -->
+                  <!-- https://sorto.me/docs/Web/HTML/Element/input/datetime-local#%EC%84%A0%ED%83%9D-%EA%B0%80%EB%8A%A5%ED%95%9C-%EB%82%A0%EC%A7%9C-%EB%B0%8F-%EC%8B%9C%EA%B0%84-%EB%B2%94%EC%9C%84-%EC%A0%9C%ED%95%9C%ED%95%98%EA%B8%B0 -->
+                  <input class="gp-input-box" type="datetime-local" min="" step="600">
+                </div>
+              </dd>
+              <dt class="close-at">모집 종료 시간</dt>
+              <dd class="close-at-text">
+                <div class="input-date-wrapper">
+                  <input class="gp-input-box" type="datetime-local" min="" step="600">
+                </div>
+              </dd>
+            </dl>
 
-          <dl class="purchase-end-form">
-            <span>... 공구 종료 후 ...</span>
-            <dt class="end-option">공구 미 완료시</dt>
-            <dd class="end-option-text">
-              <!-- select -->
-              <div class="input-wrapper">
-                <select class="gp-select-box" name="order" form="myEndOption">
-                    <option value="continue">공구를 계속 진행할 거예요</option>
-                    <option value="quit">공구를 진행하지 않을 거예요</option>
-                    <option value="discuss">신청한 사람과 논의 후 결정할래요</option>
-                    <option value="maybe">종료 후 고민해보고 결정할래요</option>
-                </select>
+            <dl class="purchase-end-form">
+              <span>... 공구 종료 후 ...</span>
+              <dt class="end-option">공구 미 완료시</dt>
+              <dd class="end-option-text">
+                <!-- select -->
+                <div class="input-wrapper">
+                  <select class="gp-select-box" name="order" form="myEndOption">
+                      <option value="continue">공구를 계속 진행할 거예요</option>
+                      <option value="quit">공구를 진행하지 않을 거예요</option>
+                      <option value="discuss">신청한 사람과 논의 후 결정할래요</option>
+                      <option value="maybe">종료 후 고민해보고 결정할래요</option>
+                  </select>
+                </div>
+              </dd>
+              <dt class="location">만날 위치</dt>
+              <dd class="location-text">
+                <div class="input-wrapper">
+                  <input class="gp-input-box" type="text">
+                </div>
+              </dd>
+              <dt class="meeting-at">만날 시간</dt>
+              <dd class="meeting-at-text">
+                <div class="input-wrapper">
+                  <input class="gp-input-box" type="datetime-local" min="" step="600">
+                </div>
+              </dd>
+              <div class="mapping">
+                지도 api를 넣고 싶다
               </div>
-            </dd>
-            <dt class="location">만날 위치</dt>
-            <dd class="location-text">
-              <div class="input-wrapper">
-                <input class="gp-input-box" type="text">
-              </div>
-            </dd>
-            <dt class="meeting-at">만날 시간</dt>
-            <dd class="meeting-at-text">
-              <div class="input-wrapper">
-                <input class="gp-input-box" type="datetime-local" min="" step="600">
-              </div>
-            </dd>
-            <div class="mapping">
-              지도 api를 넣고 싶다
-            </div>
-          </dl>
+            </dl>
 
           </div>
         </div>
@@ -108,12 +103,11 @@
 </template>
 
 <script>
-import { VueEditor } from "vue2-editor";
 import { mapGetters } from "vuex";
 
 export default {
 	components: {
-		VueEditor,
+
 	},
 	computed: {
 		...mapGetters({"categories":"fetchCommunityCategoryDetail"}),
@@ -145,7 +139,7 @@ export default {
                 this.$router.push({name: "community-detail", params: {name: this.$route.params.community_name}});
               }
           }catch(error){
-              alert('카테고리를 입력해주세요')
+              alert('...구현중입니다...')
           }
       },
       async handleImageAdded(file, Editor, cursorLocation, resetUploader) {

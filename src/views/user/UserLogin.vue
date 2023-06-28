@@ -238,7 +238,7 @@ export default {
     border-radius: 2px;
     border: none;
     margin-right: 2px;
-    opacity: 0.5;
+    opacity: 0.8;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -257,7 +257,7 @@ export default {
     border-radius: 2px;
     border: none;
     padding-left: 15px;
-    opacity: 0.5;
+    opacity: 0.8;
     color: #9E2067;
 }
 
@@ -290,7 +290,7 @@ export default {
 }
 
 .wrap a {
-    color: #BABECC;
+    color: #dddddd;
     text-decoration: none;
     margin-left: 20px;
     margin-right: 20px;
