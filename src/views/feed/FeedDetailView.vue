@@ -15,9 +15,16 @@
           <div class="button-box">
             <div class="bookmark">
               <input
+                v-if = "hasAccessToken"
                 type="checkbox"
                 id="checkboxInput"
                 @click="addBookmark"
+                :checked="bookmark"
+              />
+              <input v-else
+                type="checkbox"
+                id="checkboxInput"
+                @click.prevent.prevent="notlogin"
                 :checked="bookmark"
               />
               <label for="checkboxInput" class="bookmark">
@@ -53,7 +60,7 @@
             <ul class="head-category">
               <div class="category-item-box">
                 <h2 style="color: #909090;">
-                  카테고리명 : {{ feed?.category }}
+                  카테고리명 : {{ feed?.category_name }}
                 </h2>
               </div>
             </ul>
@@ -128,17 +135,9 @@
               </div>
               <div class="function-box">
                 <div class="move-box">
-                  <a class="move-button" @click="moveFeed(data?.previous)"
-                    >≪ 이전 글</a
-                  >
-                  <router-link
-                    :to="`/community/detail/${community.communityurl}`"
-                    class="move-button"
-                    >목록으로</router-link
-                  >
-                  <a class="move-button" @click="moveFeed(data?.next)"
-                    >다음 글 ≫</a
-                  >
+                  <a class="move-button" @click="moveFeed(data?.previous)">≪ 이전 글</a>
+                  <router-link :to="`/community/${communityurl}/category/${feed.category_url}`" class="move-button">목록으로</router-link>
+                  <a class="move-button" @click="moveFeed(data?.next)">다음 글 ≫</a>
                 </div>
                 <div class="like-box">
                   <router-link
@@ -191,7 +190,7 @@
                   0
                 </p>
                 <p v-else style="margin-left: 3px;">
-                  {{ comment?.length || 0 }}
+                  {{ feed.comments_count }}
                 </p>
               </div>
               <textarea
@@ -216,12 +215,12 @@
                   <div>
                     <div class="comment-card">
                       <!-- 댓글 수정용 div. display:none; 토글 필요 -->
-                      <div class="comment-update-box">
+                      <div class="comment-update-box" v-if="comment.commenteditshow">
                         <div class="comment-update-div">
                           <p>댓글 수정</p>
-                          <textarea class="update-textarea"></textarea>
-                          <button type="submit" class="update-submit-button">수정 완료</button>
-                          <button class="update-quit-button">취소</button>
+                          <textarea v-model="inputUpdateComment" class="update-textarea" @keyup.enter="editComment(comment.id)"></textarea>
+                          <button type="submit" class="update-submit-button" @click="editComment(comment.id)">수정 완료</button>
+                          <button class="update-quit-button" @click="commenteditshow(comment)">취소</button>
                         </div>
                       </div>
 
@@ -243,7 +242,7 @@
                       >
                         <button
                           class="comment-edit-btn"
-                          @click="editComment(comment.id)"
+                          @click="commenteditshow(comment)"
                         >
                           <svg
                             class="edit-icon"
@@ -298,12 +297,12 @@
                     <p class="cocomment-deco">|</p>
                     <div class="cocomment-card">
                       <!-- 대댓글 수정용 div. display:none; 토글 필요 -->
-                      <div class="cocomment-update-box">
+                      <div class="cocomment-update-box" v-if="cocomment.cocommenteditshow">
                         <div class="cocomment-update-div">
                           <p>대댓글 수정</p>
-                          <textarea class="update-textarea"></textarea>
-                          <button type="submit" class="coco-update-submit-button">수정 완료</button>
-                          <button class="coco-update-quit-button">취소</button>
+                          <textarea v-model="inputUpdateCocomment" class="update-textarea" @keyup.enter="editCocomment(cocomment.id)"></textarea>
+                          <button type="submit" class="coco-update-submit-button" @click="editCocomment(cocomment.id)">수정 완료</button>
+                          <button class="coco-update-quit-button" @click="cocommenteditshow(cocomment)">취소</button>
                         </div>
                       </div>
 
@@ -315,7 +314,7 @@
                           {{cocomment.text}}
                       </li>
                       <div class="comment-func-box" v-if="userid === cocomment.user_id">
-                        <button class="comment-edit-btn">
+                        <button class="comment-edit-btn" @click="cocommenteditshow(cocomment)">
                           <svg class="edit-icon" viewBox="0 0 512 512" height="17.5" width="15">
                             <path
                                 d="M410.3 231l11.3-11.3-33.9-33.9-62.1-62.1L291.7 89.8l-11.3 11.3-22.6 22.6L58.6 322.9c-10.4 10.4-18 23.3-22.2 37.4L1 480.7c-2.5 8.4-.2 17.5 6.1 23.7s15.3 8.5 23.7 6.1l120.3-35.4c14.1-4.2 27-11.8 37.4-22.2L387.7 253.7 410.3 231zM160 399.4l-9.1 22.7c-4 3.1-8.5 5.4-13.3 6.9L59.4 452l23-78.1c1.4-4.9 3.8-9.4 6.9-13.3l22.7-9.1v32c0 8.8 7.2 16 16 16h32zM362.7 18.7L348.3 33.2 325.7 55.8 314.3 67.1l33.9 33.9 62.1 62.1 33.9 33.9 11.3-11.3 22.6-22.6 14.5-14.5c25-25 25-65.5 0-90.5L453.3 18.7c-25-25-65.5-25-90.5 0zm-47.4 168l-144 144c-6.2 6.2-16.4 6.2-22.6 0s-6.2-16.4 0-22.6l144-144c6.2-6.2 16.4-6.2 22.6 0s6.2 16.4 0 22.6z">
@@ -354,6 +353,7 @@ import {
   fetchCommentEdit,
   fetchCommentDelete,
   fetchCocommentCreate,
+  fetchCocommentEdit,
   fetchCocommentDelete,
 } from "@/api/index.js";
 
@@ -376,14 +376,22 @@ export default {
       if (Array.isArray(this.data?.comment)) {
           return this.data?.comment?.map(comment => ({
             ...comment,
-            cocommentshow: false
+            cocommentshow: false,
+            commenteditshow: false,
+            cocomment: comment.cocomment?.map(cocomment => ({
+              ...cocomment,
+              cocommenteditshow: false
+            }))
           }))
         }
         return [];
     },
     bookmark() {
       return this.community?.is_bookmarked;
-    }
+    },
+    hasAccessToken(){
+      return localStorage.getItem('access_token');
+    },
   },
   watch: {
     $route(to) {
@@ -398,6 +406,8 @@ export default {
       email: "",
       inputComment: "",
       inputCocomment:"",
+      inputUpdateComment: "",
+      inputUpdateCocomment: "",
       searchname: '',
     };
   },
@@ -422,6 +432,7 @@ export default {
           this.community.communityurl
         );
         if (response.status == 200) {
+          this.bookmark = !this.bookmark;
           alert(response.data.msg);
         }
       } catch (error) {
@@ -440,7 +451,7 @@ export default {
   
         }
       } catch (error) {
-        console.log(error);
+        alert(error.response.data.message);
       }
     },
     async deleteFeed() {
@@ -499,10 +510,14 @@ export default {
       try {
         const response = await fetchCommentEdit(
           comment_id,
-          this.inputCocomment
+          this.inputUpdateComment
         );
-        if (response.status === 201) {
+        if (response.status === 200) {
           alert(response.data.message);
+          this.commenteditshow = false;
+          const feed_id = this.$route.params.feed_id;
+          const community_name = this.$route.params.community_name;
+          this.$store.dispatch("FETCH_FEED_DETAIL", { community_name, feed_id });
         }
       } catch (error) {
         console.log(error);
@@ -535,6 +550,16 @@ export default {
       comment.cocommentshow = !comment.cocommentshow;
       this.$forceUpdate()
     },
+    commenteditshow(comment) {
+      this.inputUpdateComment = comment.text;
+      comment.commenteditshow = !comment.commenteditshow;
+      this.$forceUpdate()
+    },
+    cocommenteditshow(cocomment) {
+      this.inputUpdateCocomment = cocomment.text;
+      cocomment.cocommenteditshow = !cocomment.cocommenteditshow;
+      this.$forceUpdate()
+    },
     async createCocomment(comment) {
       try {
         const response = await fetchCocommentCreate(comment.id, this.inputCocomment);
@@ -552,19 +577,23 @@ export default {
         }
       }
     },
-    // async editCocomment(comment_id) {
-    //   try {
-    //     const response = await fetchCommentEdit(
-    //       comment_id,
-    //       this.inputCocomment
-    //     );
-    //     if (response.status === 201) {
-    //       alert(response.data.message);
-    //     }
-    //   } catch (error) {
-    //     console.log(error);
-    //   }
-    // },
+    async editCocomment(comment_id) {
+      try {
+        const response = await fetchCocommentEdit(
+          comment_id,
+          this.inputUpdateCocomment
+        );
+        if (response.status === 200) {
+          alert(response.data.message);
+          this.cocommenteditshow = false;
+          const feed_id = this.$route.params.feed_id;
+          const community_name = this.$route.params.community_name;
+          this.$store.dispatch("FETCH_FEED_DETAIL", { community_name, feed_id });
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    },
     async deleteCocomment(comment_id) {
       try {
         const response = await fetchCocommentDelete(comment_id);
@@ -581,16 +610,15 @@ export default {
     searchFeed() {
         this.$router.push(`/feed/search/${this.searchname}`)
     },
-  }
+    notlogin(){
+      alert('로그인을 해주세요')
+    },
+  },
+
 };
 </script>
 
 <style scoped>
-body {
-  margin: 0;
-  padding: 0;
-}
-
 a {
   text-decoration: none;
   color: #454545;
@@ -1634,12 +1662,12 @@ textarea{
 }
 
 /* comment 수정 내 버튼 - 수정완료 / 취소 */
-.coco-comment-update-div button {
+.cocomment-update-div button {
     height: auto;
     margin-right: 10px;
 }
 .coco-update-submit-button {
-   white-space: nowrap;
+    white-space: nowrap;
     padding: 20px 13px;
     outline: none;
     border: none;

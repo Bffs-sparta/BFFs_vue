@@ -2,6 +2,7 @@ import axios from 'axios'
 
 const config = {
     baseUrl: 'https://api.makebestie.com'
+    // baseUrl: 'http://127.0.0.1:8000'
 }
 const access_token = () => {
     return localStorage.getItem('access_token')
@@ -146,7 +147,16 @@ function fetchGuestBookDelete(profile_id, guestbook_id){
 
 // 커뮤니티 조회, 생성
 function fetchCommunityList() {
-    return axios.get(`${config.baseUrl}/community/`)
+    const token = access_token()
+    if (token) {
+        return axios.get(`${config.baseUrl}/community/`,{
+            headers: {
+                'Authorization': `Bearer ${token}`,
+            }
+        }) 
+    } else {
+        return axios.get(`${config.baseUrl}/community/`)
+    }
 }
 function fetchCommunityCreate(title, communityurl, introduction) {
     return axios.post(`${config.baseUrl}/community/`,{
@@ -168,12 +178,20 @@ function fetchCommunityCategoryDetail(community_name) {
 }
 
 function fetchCommunityCategoryFeed(community_name,category_name) {
-    return axios.get(`${config.baseUrl}/community/${community_name}/category/${category_name}`)
+    const token = access_token()
+    if (token) {
+        return axios.get(`${config.baseUrl}/community/${community_name}/category/${category_name}`,{
+            headers: {
+                'Authorization': `Bearer ${token}`,
+            }
+        }) 
+    } else {
+        return axios.get(`${config.baseUrl}/community/${community_name}/category/${category_name}`)
+    }
 }
 
 // 커뮤니티 수정, 삭제
 function fetchCommunityDetail(community_name) {
-    
     const token = access_token()
     if (token) {
         return axios.get(`${config.baseUrl}/community/${community_name}/`,{
@@ -453,7 +471,20 @@ function fetchCocommentCreate(comment_id,text) {
     })
 }
 
-// 대댓글 수정, 삭제
+// 대댓글 수정
+function fetchCocommentEdit(cocomment_id, text) {
+    return axios.put(`${config.baseUrl}/feed/cocomment/${cocomment_id}/`,{
+        text,
+    },
+    {
+        headers: {
+            'Authorization': `Bearer ${access_token()}`,
+            'Content-Type': 'application/json',
+        }
+    })
+}
+
+// 대댓글 삭제
 function fetchCocommentDelete(cocomment_id) {
     return axios.delete(`${config.baseUrl}/feed/cocomment/${cocomment_id}/`,{
         headers: {
@@ -584,6 +615,7 @@ export {
     fetchCommentEdit,
     fetchCommentDelete,
     fetchCocommentCreate,
+    fetchCocommentEdit,
     fetchCocommentDelete,
     imageUpload,
     fetchCommunityCategoryPagination,

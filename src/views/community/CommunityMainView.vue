@@ -66,7 +66,8 @@
                         </li>
                     </ul>
                     <div class="bookmark" style="z-index: 999;">
-                        <input type="checkbox" id="checkboxInput">
+                        <input v-if = "hasAccessToken" type="checkbox" id="checkboxInput" @click="addBookmark" :checked="bookmark"/>
+                        <input v-else type="checkbox" id="checkboxInput" @click.prevent.prevent="notlogin" :checked="bookmark"/>
                         <label for="checkboxInput" class="bookmark">
                             <svg xmlns="http://www.w3.org/2000/svg" height="1.5em" viewBox="0 0 384 512" class="svgIcon"><path d="M0 48V487.7C0 501.1 10.9 512 24.3 512c5 0 9.9-1.5 14-4.4L192 400 345.7 507.6c4.1 2.9 9 4.4 14 4.4c13.4 0 24.3-10.9 24.3-24.3V48c0-26.5-21.5-48-48-48H48C21.5 0 0 21.5 0 48z"></path></svg>
                         </label>
@@ -161,6 +162,7 @@
 
 <script>
 import { mapGetters } from "vuex";
+import { fetchCommunityBookmark } from "@/api/index.js";
 
 export default {
     data() {
@@ -186,7 +188,6 @@ export default {
             } else {
                 return null; // 또는 다른 적절한 기본 값
             }
-
         },
         popularfeeds() {
             if (Array.isArray(this.fetchCommunityList) && this.fetchCommunityList.length > 0) {
@@ -195,13 +196,37 @@ export default {
                 return null; // 또는 다른 적절한 기본 값
             }
         },
+        bookmark() {
+            return this.popularcommunity?.is_bookmarked;
+        },
+        hasAccessToken(){
+            return localStorage.getItem('access_token');
+        },
     },
     created() {
         this.$store.dispatch("FETCH_COMMUNITY_LIST");
     },    
     methods: {
+        async addBookmark() {
+            try {
+                const response = await fetchCommunityBookmark(
+                    this.popularcommunity.communityurl
+                );
+                if (response.status == 200) {
+                    this.bookmark = !this.bookmark;
+                    alert(response.data.msg);
+                }
+            } catch (error) {
+                if (error.response.status === 401) {
+                    alert("로그인을 해주세요");
+                }
+            }
+        },
         searchCommunity() {
             this.$router.push(`/community/search/${this.searchname}`)
+        },
+        notlogin(){
+            alert('로그인을 해주세요')
         },
     },
 };

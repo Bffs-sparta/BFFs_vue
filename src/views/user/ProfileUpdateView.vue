@@ -168,7 +168,7 @@ export default {
             } catch (error) {
                 console.log(error)
                 if (error.response.status === 400) {
-                    alert("닉네임은 필수입니다!")
+                    alert("닉네임은 필수입니다! (공백 제외 2-8자)")
                 }
             }
         },

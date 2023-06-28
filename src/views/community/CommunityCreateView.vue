@@ -22,7 +22,7 @@
                     <div class="sub-title">
                         <span>
                             <h3>커뮤니티 영어 이름</h3>
-                            <h5>: 영어 이름은 영어와 숫자로 5글자 이상이어야 합니다.</h5>
+                            <h5>: 영어 이름은 영어와 숫자로 5글자 이상이어야 합니다:D<br>(하이픈(-)과 언더스코어(_)는 가능)</h5>
                         </span>
                     </div>
                     <div class="input-box">
@@ -72,8 +72,7 @@ export default {
                 }
             } catch (error) {
                 if (error.response.status === 400) {
-                    alert('내용을 다시 입력해 주세요!')
-                    console.log(error)
+                    alert(error.response.data)
                 }
             }
         },

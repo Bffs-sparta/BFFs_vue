@@ -14,7 +14,8 @@
                 </div>
                 <div class="button-box">
                     <div class="bookmark">
-                        <input type="checkbox" id="checkboxInput" @click="addBookmark">
+                        <input v-if = "hasAccessToken" type="checkbox" id="checkboxInput" @click="addBookmark" :checked="bookmark"/>
+                        <input v-else type="checkbox" id="checkboxInput" @click.prevent.prevent="notlogin" :checked="bookmark"/>
                         <label for="checkboxInput" class="bookmark">
                             <svg xmlns="http://www.w3.org/2000/svg" height="1.5em" viewBox="0 0 384 512" class="svgIcon"><path d="M0 48V487.7C0 501.1 10.9 512 24.3 512c5 0 9.9-1.5 14-4.4L192 400 345.7 507.6c4.1 2.9 9 4.4 14 4.4c13.4 0 24.3-10.9 24.3-24.3V48c0-26.5-21.5-48-48-48H48C21.5 0 0 21.5 0 48z"></path></svg>
                         </label>
@@ -57,8 +58,8 @@
             <div class="main-area">
                 <div class="main-container">
                     <!-- 공지 section -->
-                    <div class="notification-section" v-if="notification_feeds?.length !== 0">
-                        <router-link :to="`/community/detail/${communityurl}/feed/${feed.id}`" class="notification-wrap" v-for="feed, index in notification_feeds" :key="index">
+                    <div class="notification-section" v-if="notification?.length !== 0">
+                        <router-link :to="`/community/detail/${communityurl}/feed/${feed.id}`" class="notification-wrap" v-for="feed, index in notification" :key="index">
                             <div class="notification-list">
                                 <p class="notification-title">[공지]</p>
                                 <p class="notification-text">{{ feed.title }}</p>
@@ -127,7 +128,7 @@ import { fetchCommunityBookmark } from '@/api/index'
 export default {
     data(){
         return{
-            bookmark: false,
+            //bookmark: false,
             searchname: '',
         }
     },
@@ -135,6 +136,12 @@ export default {
         ...mapGetters(['fetchCommunityCategoryDetail']),
         community(){
             return this.fetchCommunityCategoryDetail?.community
+        },
+        notification(){
+            return this.fetchCommunityCategoryDetail?.notification
+        },
+        bookmark(){
+            return this.fetchCommunityCategoryDetail?.community?.is_bookmarked;
         },
         community_name(){
             return this.fetchCommunityCategoryDetail?.community?.title
@@ -157,18 +164,14 @@ export default {
             return this.fetchCommunityCategoryDetail?.feed || [];
         },     
         feeds(){
-            if (Array.isArray(this.fetchCommunityCategoryDetail?.feed?.results) && this.fetchCommunityCategoryDetail?.feed?.results.length > 0) {
-                return [...this.fetchCommunityCategoryDetail?.feed?.results].sort((a, b) => new Date(b.is_notification) - new Date(a.is_notification));
-            } else {
-                return [];
-            }
-        },
-        notification_feeds(){
-            return this.fetchCommunityCategoryDetail?.feed?.results.filter(feed => feed.is_notification) || [];
+            return this.fetchCommunityCategoryDetail?.feed?.results;
         },
         communityurl(){
             return this.$route.params.community_name
-        }
+        },
+        hasAccessToken(){
+            return localStorage.getItem('access_token');
+        },
     },
     created(){
         const community_name = this.$route.params.community_name
@@ -188,10 +191,13 @@ export default {
                 const community_name = this.$route.params.community_name
                 const response = await fetchCommunityBookmark(community_name)
                 if (response.status == 200) {
+                    this.bookmark = !this.bookmark;
                     alert(response.data.msg)
                 }
             } catch (error) {
-                console.log(error)
+                if (error.response.status === 401) {
+                    alert("로그인을 해주세요");
+                }
             }
         },
         pageMove(url){
@@ -212,6 +218,9 @@ export default {
         },
         searchFeed() {
             this.$router.push(`/feed/search/${this.searchname}`)
+        },
+        notlogin(){
+            alert('로그인을 해주세요')
         },
     }
 }

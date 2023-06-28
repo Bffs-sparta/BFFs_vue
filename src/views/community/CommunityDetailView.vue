@@ -10,7 +10,8 @@
                 <p class="head-title">{{ community?.title }} | {{ community?.communityurl }}</p>
                 <div class="button-box">
                     <div class="bookmark">
-                        <input type="checkbox"  @click="addBookmark" id="checkboxInput" :checked="bookmark">
+                        <input v-if = "hasAccessToken" type="checkbox" id="checkboxInput" @click="addBookmark" :checked="bookmark"/>
+                        <input v-else type="checkbox" id="checkboxInput" @click.prevent.prevent="notlogin" :checked="bookmark"/>
                         <label for="checkboxInput" class="bookmark">
                             <svg xmlns="http://www.w3.org/2000/svg" height="1.5em" viewBox="0 0 384 512"
                                 class="svgIcon">
@@ -227,12 +228,13 @@
 
 <script>
 import { mapGetters } from "vuex";
+import { fetchCommunityBookmark } from "@/api/index.js";
 
 export default {
     data(){
         return{
             userid: '',
-            bookmark: false, // 버업없애기용 백에서 bookmark 여부있어야할듯
+            //bookmark: false, // 버업없애기용 백에서 bookmark 여부있어야할듯
         }
     },
     computed: {
@@ -277,6 +279,12 @@ export default {
                 return null;
             }
         },
+        bookmark() {
+            return this.fetchCommunityDetail.data?.is_bookmarked;
+        },
+        hasAccessToken(){
+            return localStorage.getItem('access_token');
+        },
     },
     watch: {
         $route(to) {
@@ -298,9 +306,24 @@ export default {
         }
     },
     methods: {
-        addBookmark(){
-            
-        }
+        async addBookmark() {
+            try {
+                const response = await fetchCommunityBookmark(
+                    this.community_name
+                );
+                if (response.status == 200) {
+                    this.bookmark = !this.bookmark;
+                    alert(response.data.msg);
+                }
+            } catch (error) {
+                if (error.response.status === 401) {
+                    alert("로그인을 해주세요");
+                }
+            }
+        },
+        notlogin(){
+            alert('로그인을 해주세요')
+        },
     },
 }
 </script>

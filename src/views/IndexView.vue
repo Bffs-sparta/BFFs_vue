@@ -54,7 +54,7 @@
                 <a class="alone-text-title" v-else>친구해요 !</a>
               </div>
               <div class="card-subtext">
-                <div style="margin-top:10px; margin-right:20px;">
+                <div class="alone-text-content-wrap">
                   <span class="alone-text-content" style="margin-left:20px;">{{ profile.region }} | </span>
                   <span class="alone-text-content">{{ profile.nickname }}</span>
                 </div>
@@ -358,6 +358,14 @@ img {
 .card-subtext {
   display: flex;
   justify-content: space-between;
+}
+.alone-text-content-wrap {
+  margin-top:10px;
+  margin-right:20px;
+  width: 195px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .alone-text-content {
   text-align: center;
