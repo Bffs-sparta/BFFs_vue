@@ -114,7 +114,6 @@
                                 <li> <a href="#" class="last" @click="numberMove(pagination.last_page)" @click.prevent>≫</a></li>
                             </ul>
                         </div>
-                        <!-- 페이지네이션 여기서 가져왔습니다! https://m.blog.naver.com/my-thing/220857996642 -->
                     </div>
                 </div>
             </div>
@@ -291,6 +290,7 @@ a{
     text-align: center;
     justify-content: center;
     color: white;
+    overflow-y: auto;
 }
 
 .main-area {
