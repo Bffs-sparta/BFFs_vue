@@ -59,7 +59,7 @@ export default {
                 this.$router.push({name: "community-detail", params: {name: this.$route.params.community_name}});
               }
           }catch(error){
-              alert('카테고리를 입력해주세요')
+              alert('금지어가 포함되어 있습니다');
           }
       },
       async handleImageAdded(file, Editor, cursorLocation, resetUploader) {
