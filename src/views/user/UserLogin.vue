@@ -60,8 +60,11 @@
 <script>
 import PasswordResetModal from "@/components/PasswordResetModal.vue";
 import { socialLogin,fetchLogin } from "@/api/index.js";
+import snotifyMixin from '@/mixins/snotifymixin';
+import bus from '@/utils/bus.js';
 
 export default {
+    mixins: [snotifyMixin],
     data(){
         return {
             modalopen: false,
@@ -72,7 +75,7 @@ export default {
     mounted(){
         const social_error = this.$route.query.error
         if(social_error){
-            alert('선택한 이메일은 다른 방법으로 회원가입을 하셨습니다. 다른 방법으로 로그인 해주세요.')
+            this.snotify('warning','선택한 이메일은 다른 방법으로 회원가입을 하셨습니다. 다른 방법으로 로그인 해주세요.')
         }
     },
     methods: {
@@ -101,14 +104,21 @@ export default {
                         return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
                     }).join(''))
                     localStorage.setItem('payload', jsonPayload)
+                    this.snotify('success','로그인 되었습니다.')
                     this.$router.push('/');
                 }
             }catch(error){
-                console.log(error);
+                this.snotify('error','아이디 또는 비밀번호가 일치하지 않습니다.')
                 this.email = '';
                 this.password = '';
             }
-        }
+        },
+        snotify(type,message){
+            bus.$emit('showSnackbar',{
+                type,
+                message
+            });
+        },
     },
     components: {
         PasswordResetModal,
@@ -234,17 +244,18 @@ export default {
 .form-icon {
     width: 50px;
     height: 50px;
-    background-color: #dddddd;
     border-radius: 2px;
     border: none;
     margin-right: 2px;
-    opacity: 0.8;
+    background-color: #dddddd;
+    background-color: rgba( 255, 255, 255, 0.5 );
     display: flex;
     align-items: center;
     justify-content: center;
 }
 
 .form-input {
+    display: block;
     height: 50px;
     width: 100%;
     display: flex;
@@ -252,12 +263,13 @@ export default {
 }
 
 .form-input input {
+    vertical-align: baseline;
     width: 100%;
-    background-color: #dddddd;
     border-radius: 2px;
     border: none;
     padding-left: 15px;
-    opacity: 0.8;
+    background-color: #dddddd;
+    background-color: rgba( 255, 255, 255, 0.5 );
     color: #9E2067;
 }
 

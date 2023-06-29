@@ -93,8 +93,11 @@
                     <li class="location">서울시 송파구 석촌역 7번출구 앞</li>
                     <li class="meeting-at">23.06.28. 오후 7:00</li>
                     <li class="end-option">continue</li>
-
-                    <button class="parti-button">참여할래!</button>
+                    <!-- 지도 api 넣을 예정 -->
+                    <div id="map" class="mapping"></div>
+                    <div class="parti-button-box">
+                      <button class="parti-button">참여할래!</button>
+                    </div>
                   </div>
                 </div>
                 <div class="purchase-submit-box">
@@ -174,11 +177,8 @@
 <script>
 import { mapGetters } from "vuex";
 //import {
-//    fetchGroupPurchaseDetail,
 //    fetchGroupPurchaseJoin,
 //    fetchGroupPurchaseCreate,
-//    fetchGroupPurchaseFeedDetail,
-//    fetchGroupPurchaseJoin,
     //fetchGroupPurchaseSelfEnd,
     //fetchGroupPurchaseCommentCreate,
     //fetchGroupPurchaseCommentEdit,
@@ -188,19 +188,34 @@ import { mapGetters } from "vuex";
 
 export default {
   computed: {
-    ...mapGetters({ data: "fetchPurchaseDetail" }),
+    ...mapGetters({ data: "fetchGroupPurchaseDetail" }),
+    none() {
+      console.log("요청")
+    },
     community() {
       return this.data?.community;
     },
+    communityurl() {
+      return this.data?.community?.communityurl;
+    },
     grouppurchase() {
       return this.data?.grouppurchase;
+    },
+    user() {
+      return this.data?.user;
+    },
+    bookmark() {
+      return this.community?.is_bookmarked;
+    },
+    hasAccessToken(){
+      return localStorage.getItem('access_token');
     },
   },
   watch: {
     $route(to) {
       const grouppurchase_id = to.params.grouppurchase_id;
       const community_name = to.params.community_name;
-      this.$store.dispatch("FETCH_PURCHASE_DETAIL", { community_name, grouppurchase_id });
+      this.$store.dispatch("FETCH_GROUPPURCHASE_DETAIL", { community_name, grouppurchase_id });
     }
   },
   data() {
@@ -212,7 +227,7 @@ export default {
   created() {
     const grouppurchase_id = this.$route.params.grouppurchase_id;
     const community_name = this.$route.params.community_name;
-    this.$store.dispatch("FETCH_PURCHASE_DETAIL", { community_name, grouppurchase_id});
+    this.$store.dispatch("FETCH_GROUPPURCHASE_DETAIL", { community_name, grouppurchase_id });
   },
   mounted() {
     const payload = localStorage.getItem("payload");
@@ -224,7 +239,7 @@ export default {
     }
   },
 //  methods: {
-//   async joinPurchase() {
+//   async joinGroupPurchase() {
 //      try {
 //        const response = await fetchGroupPurchaseJoin(
 //          this.grouppurchase.grouppurchase_id
@@ -445,7 +460,6 @@ body {
     margin-bottom: 6px;
     margin-right: 10px;
     margin-left: auto;
-
 }
 
 #checkboxInput {
@@ -666,8 +680,7 @@ body {
 }
 
 .main-content {
-    margin: auto 50px;
-    padding: 20px 10px 50px 10px;
+    padding: 30px 10px 50px 10px;
     grid-column: 1 / 4;
     grid-row: 3 / 4;
 }
@@ -682,17 +695,17 @@ body {
 .purchase-form-box {
     display: inline-flex;
     list-style-type: none;
-    width: 800px;
+    width: 900px;
     height: 500px auto;
 }
 
 .purchase-form {
     display: grid;
-    grid-template-columns: 100px 20px 300px 100px 200px;
-    grid-template-rows: 60px 50px 30px 30px 40px 30px;
+    grid-template-columns: 100px auto 20px 110px 230px;
+    grid-template-rows: 60px 50px 30px 30px 40px auto 50px;
     grid-gap: 3px;
 
-    padding: 40px 60px 60px 60px;
+    padding: 30px 50px 50px 50px;
     width: 100%;
     height: auto;
     background-color: #f7f7f7;
@@ -750,26 +763,26 @@ body {
     font-size: 1rem;
     font-weight: 500;
     color: #909090;
-    grid-column: 4 / 5;
-    grid-row: 1 / 2;  
+    grid-column: -5 / -6;
+    grid-row: -1 / -2;  
 }
 
 .location-part {
-    margin: auto 0;
+    margin: 0;
     font-size: 1rem;
     font-weight: 500;
     color: #909090;
     grid-column: 4 / 5;
-    grid-row: 2 / 4;  
+    grid-row: 3 / 5;  
 }
 
 .meeting-at-part {
-    margin: auto 0;
+    margin: 0;
     font-size: 1rem;
     font-weight: 500;
     color: #909090;
     grid-column: 4 / 5;
-    grid-row: 4 / 5;  
+    grid-row: 2 / 3;  
 }
 
 .end-option-part {
@@ -777,8 +790,8 @@ body {
     font-size: 1rem;
     font-weight: 500;
     color: #909090;
-    grid-column: 1 / 3;
-    grid-row: 6 / 7;  
+    grid-column: 4 / 5;
+    grid-row: 1 / 2;  
 }
 
 /***** 공구 폼 purchase form 상세 내용 *****/
@@ -822,8 +835,8 @@ body {
     font-size: 1rem;
     font-weight: 500;
 
-    grid-column: 5 / 6;
-    grid-row: 1 / 2;
+    grid-column: -4 / -5;
+    grid-row: -1 / -2;
 }
 
 .person-limit {
@@ -836,35 +849,50 @@ body {
 }
 
 .location {
-    margin: auto 0;
+    margin: 0;
     font-size: 1rem;
     font-weight: 500;
 
     grid-column: 5 / 6;
-    grid-row: 2 / 4;
+    grid-row: 3 / 5;
 }
 
 .meeting-at {
-    margin: auto 0;
+    margin: 0;
     font-size: 1rem;
     font-weight: 500;
 
     grid-column: 5 / 6;
-    grid-row: 4 / 5;
+    grid-row: 2 / 3;
 }
 
 .end-option {
-    margin: auto 0;
+    margin: auto 5px;
     font-size: 1rem;
     font-weight: 500;
 
-    grid-column: 3 / 4;
-    grid-row: 6 / 7;
+    grid-column: 5 / 6;
+    grid-row: 1 / 2;
+}
+
+.mapping {
+    grid-column: 4 / 6;
+    grid-row: 5 / 7;
+    margin-left:auto;
+    margin-right: 20px;
+    margin-bottom: 20px;
+    width: 250px;
+    height: 180px;
+    background-color: #dddddd;
 }
 
 
 /* 공구 신청 버튼 button */
 
+.parti-button-box {
+    grid-column:  -1 / -2;
+    grid-row: -1 / -2;
+}
 .parti-button {
     margin-left: auto;
     margin-right: 30px;

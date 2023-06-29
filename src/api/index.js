@@ -2,7 +2,7 @@ import axios from 'axios'
 
 const config = {
     baseUrl: 'https://api.makebestie.com'
-    //baseUrl: 'http://127.0.0.1:8000'
+    // baseUrl: 'http://127.0.0.1:8000'
 }
 const access_token = () => {
     return localStorage.getItem('access_token')
@@ -430,7 +430,7 @@ function fetchGroupPurchaseDetail(community_name, grouppurchase_id) {
             }
         })
     } else {
-        return axios.get(`${config.baseUrl}/meetai/`)
+        return axios.get(`${config.baseUrl}/community/${community_name}/grouppurchase/${grouppurchase_id}/`)
     }
 }
 
@@ -655,5 +655,5 @@ export {
     //fetchGroupPurchaseCommentEdit,
     //fetchGroupPurchaseCommentDelete,
     fetchMeetAI,
-    fetchMeetAICreate,
+    fetchMeetAICreate
 }
