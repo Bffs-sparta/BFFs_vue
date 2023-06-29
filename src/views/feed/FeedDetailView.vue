@@ -508,6 +508,9 @@ export default {
     },
     async editComment(comment_id) {
       try {
+        if (!this.inputUpdateComment||this.inputUpdateComment=="") {
+          alert("댓글 수정란이 공백입니다!")
+        }
         const response = await fetchCommentEdit(
           comment_id,
           this.inputUpdateComment
@@ -579,6 +582,9 @@ export default {
     },
     async editCocomment(comment_id) {
       try {
+        if (!this.inputUpdateComment||this.inputUpdateComment=="") {
+          alert("댓글 수정란이 공백입니다!")
+        }
         const response = await fetchCocommentEdit(
           comment_id,
           this.inputUpdateCocomment

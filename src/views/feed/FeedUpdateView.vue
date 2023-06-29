@@ -49,12 +49,25 @@ export default {
           const feed_id = this.$route.params.feed_id;
           try{
               const response = await fetchFeedEdit(feed_id, this.title, this.content);
+              if(!this.title || this.title ==="" || !this.content || this.content==="") {
+                alert("제목 혹은 글 내용이 없습니다! 내용을 입력해주세요")
+                return(response.error)
+              }
+          
               if(response.status === 200){
                 alert(response.data.message);
                 this.$router.push({name: "feed-detail", params: {feed_id: feed_id}});
               }
           }catch(error){
               console.log(error);
+              if(!this.title || this.title ==="" || !this.content || this.content==="") {
+                alert("제목 혹은 글 내용이 없습니다! 내용을 입력해주세요")
+                return(error.response)
+              }
+              if(error.response.status === 405) {
+                alert('금지어가 포함되어 있습니다');
+              }
+              else {alert("이상한 일이 발생했습니다. o_O");}
           }
       },
       goBack() {

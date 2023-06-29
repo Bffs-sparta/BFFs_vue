@@ -13,20 +13,22 @@
                         <h3>북마크한 커뮤니티</h3>
                         <div class="main-container">
                             <div class="main-box">
-                                <div class="new-card-wrapper" v-if="bookmark?.length == 0">
-                                    <p>북마크한 커뮤니티가 없습니다</p>
-                                </div>
-                                <div class="new-card-wrapper" v-else>                                    
-                                    <!-- 새 커뮤니티 카드 박스 -->
-                                    <router-link :to="`/community/detail/${bookmark.communityurl}`" class="new-card-box" v-for="(bookmark, index) in bookmark" :key=index>
-                                        <div class="new-card-image">
-                                            <img id="new-card-image" v-if="bookmark.image != null" :src="bookmark.imageurl">
-                                            <img id="new-card-image" v-else src="@/assets/comu_image(1).jpg">
-                                        </div>
-                                        <span id="new-text-title" class="new-text-title community-text">{{ bookmark.title }}</span>
-                                        <!-- <span id="new-text-region" class="new-text-region">경기</span> -->
-                                        <span id="new-text-introduction" class="new-text-introduction">{{ bookmark.introduction }}</span>
-                                    </router-link>
+                                <div class="new-card-container">
+                                    <div class="new-card-wrapper" v-if="bookmark?.length == 0">
+                                        <p>북마크한 커뮤니티가 없습니다</p>
+                                    </div>
+                                    <div class="new-card-wrapper" v-else>                                    
+                                        <!-- 새 커뮤니티 카드 박스 -->
+                                        <router-link :to="`/community/detail/${bookmark.communityurl}`" class="new-card-box" v-for="(bookmark, index) in bookmark" :key=index>
+                                            <div class="new-card-image">
+                                                <img id="new-card-image" v-if="bookmark.image != null" :src="bookmark.imageurl">
+                                                <img id="new-card-image" v-else src="@/assets/comu_image(1).jpg">
+                                            </div>
+                                            <span id="new-text-title" class="new-text-title community-text">{{ bookmark.title }}</span>
+                                            <!-- <span id="new-text-region" class="new-text-region">경기</span> -->
+                                            <span id="new-text-introduction" class="new-text-introduction">{{ bookmark.introduction }}</span>
+                                        </router-link>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -36,31 +38,33 @@
                         <h3>내 커뮤니티</h3>                        
                         <div class="main-container">
                             <div class="main-box">
-                                <div class="new-card-wrapper" v-if="community?.length == 0">
-                                    <p>내 커뮤니티가 없습니다</p>
-                                </div>
-                                <div class="new-card-wrapper" v-else>                                    
-                                    <!-- 새 커뮤니티 카드 박스 -->
-                                    <router-link :to="`/community/detail/${community.communityurl}`" class="new-card-box" v-for="(community, index) in community" :key=index>
-                                        <div class="new-card-image">
-                                            <img id="new-card-image" v-if="community.image != ''" :src="community.imageurl">
-                                            <img id="new-card-image" v-else src="@/assets/comu_image(1).jpg">
-                                        </div>
-                                        <span id="new-text-title" class="new-text-title">{{ community.title }}</span>
-                                        <!-- <span id="new-text-region" class="new-text-region">경기</span> -->
-                                        <span id="new-text-introduction" class="new-text-introduction community-text">{{ community.introduction }}</span>
-                                        <div class="button-box">
-                                            <router-link :to="`/community/manage/${community.communityurl}`" class="visit-button" v-if="userid===profile.id">
-                                                <span>관리</span>
-                                                <svg height="16" width="16" xmlns="http://www.w3.org/2000/svg" version="1.1"
-                                                    viewBox="0 0 1024 1024">
-                                                    <path
-                                                        d="M874.690416 495.52477c0 11.2973-9.168824 20.466124-20.466124 20.466124l-604.773963 0 188.083679 188.083679c7.992021 7.992021 7.992021 20.947078 0 28.939099-4.001127 3.990894-9.240455 5.996574-14.46955 5.996574-5.239328 0-10.478655-1.995447-14.479783-5.996574l-223.00912-223.00912c-3.837398-3.837398-5.996574-9.046027-5.996574-14.46955 0-5.433756 2.159176-10.632151 5.996574-14.46955l223.019353-223.029586c7.992021-7.992021 20.957311-7.992021 28.949332 0 7.992021 8.002254 7.992021 20.957311 0 28.949332l-188.073446 188.073446 604.753497 0C865.521592 475.058646 874.690416 484.217237 874.690416 495.52477z">
-                                                    </path>
-                                                </svg>
-                                            </router-link>
-                                        </div>
-                                    </router-link>
+                                <div class="new-card-container">
+                                    <div class="new-card-wrapper" v-if="community?.length == 0">
+                                        <p>내 커뮤니티가 없습니다</p>
+                                    </div>
+                                    <div class="new-card-wrapper" v-else>                                    
+                                        <!-- 새 커뮤니티 카드 박스 -->
+                                        <router-link :to="`/community/detail/${community.communityurl}`" class="new-card-box" v-for="(community, index) in community" :key=index>
+                                            <div class="new-card-image">
+                                                <img id="new-card-image" v-if="community.image != ''" :src="community.imageurl">
+                                                <img id="new-card-image" v-else src="@/assets/comu_image(1).jpg">
+                                            </div>
+                                            <span id="new-text-title" class="new-text-title">{{ community.title }}</span>
+                                            <!-- <span id="new-text-region" class="new-text-region">경기</span> -->
+                                            <span id="new-text-introduction" class="new-text-introduction community-text">{{ community.introduction }}</span>
+                                            <div class="button-box">
+                                                <router-link :to="`/community/manage/${community.communityurl}`" class="visit-button" v-if="userid===profile.id">
+                                                    <span>관리</span>
+                                                    <svg height="16" width="16" xmlns="http://www.w3.org/2000/svg" version="1.1"
+                                                        viewBox="0 0 1024 1024">
+                                                        <path
+                                                            d="M874.690416 495.52477c0 11.2973-9.168824 20.466124-20.466124 20.466124l-604.773963 0 188.083679 188.083679c7.992021 7.992021 7.992021 20.947078 0 28.939099-4.001127 3.990894-9.240455 5.996574-14.46955 5.996574-5.239328 0-10.478655-1.995447-14.479783-5.996574l-223.00912-223.00912c-3.837398-3.837398-5.996574-9.046027-5.996574-14.46955 0-5.433756 2.159176-10.632151 5.996574-14.46955l223.019353-223.029586c7.992021-7.992021 20.957311-7.992021 28.949332 0 7.992021 8.002254 7.992021 20.957311 0 28.949332l-188.073446 188.073446 604.753497 0C865.521592 475.058646 874.690416 484.217237 874.690416 495.52477z">
+                                                        </path>
+                                                    </svg>
+                                                </router-link>
+                                            </div>
+                                        </router-link>
+                                    </div>
                                 </div>
                             </div>
                         </div> 
@@ -68,27 +72,75 @@
 
                     <div class="community">
                         <h3>내 게시글</h3>
-                        <div class="main-container">
-                            <div class="main-box">
-                                <div class="new-card-wrapper" v-if="feed?.length == 0">
+                        <div class="main-container-2">
+                            <div class="main-box-2">
+                                <div class="new-card-wrapper-2" v-if="feed?.length == 0">
                                     <p>내 게시글이 없습니다</p>
                                 </div>
-                                <div class="new-card-wrapper" v-else>                                    
-                                    <!-- 새 커뮤니티 카드 박스 -->
-                                    <router-link :to="`/community/detail/:community_name/feed/${feed.id}`" class="new-card-box" v-for="(feed, index) in feed" :key=index>
-                                        <div class="new-card-image">
-                                            <img id="new-card-image" v-if="feed.image != null" :src="feed.imageurl">
-                                            <img id="new-card-image" v-else src="@/assets/comu_image(1).jpg">
+                                <div class="new-card-wrapper-2" v-else>  
+                                    <div class="my-feeds-box">
+                                        <div class="main-card-wrapper">
+                                            <!-- 게시글 1개 -->
+                                            <router-link :to="`/community/detail/:community_name/feed/${feed.id}`" v-for="(feed, index) in feed" :key=index>
+                                                <div class="content-card">
+                                                    <div class="feed-card-image">
+                                                        <img id="feed-card-image" v-if="feed.image != null" :src="feed.imageurl">
+                                                        <img id="feed-card-image" v-else src="@/assets/comu_image(1).jpg">
+                                                    </div>
+                                                    <div class="title-box">
+                                                        <span class="content-title">{{ feed.title }}</span>
+                                                    </div>
+                                                    <p class="author">{{ feed.nickname }}</p>
+                                                    <span id="new-text-introduction" class="new-text-introduction"><div v-html="feed.content"></div></span>
+                                                    <p class="content-date">{{ feed.created_at.slice(0,10) }} | {{ feed.created_at.slice(12,19) }}</p>
+                                                    <div class="view-box">
+                                                        <img src="@/assets/view_look.png">
+                                                        <span class="content-count">{{ feed.view_count }}</span> 
+                                                    </div>
+                                                    <div class="like-box">
+                                                        <img src="@/assets/like.png">
+                                                        <span class="content-count">{{ feed.likes_count }}</span>
+                                                    </div>
+                                                    <div class="comment-box">
+                                                        <img src="@/assets/comment.png">
+                                                        <span class="content-count">{{ feed.comments_count }}</span>
+                                                    </div>
+                                                </div>
+                                            </router-link>
                                         </div>
-                                        <span id="new-text-title" class="new-text-title">{{ feed.title }}</span>
-                                        <!-- <span id="new-text-region" class="new-text-region">경기</span> -->
-                                        <span id="new-text-introduction" class="new-text-introduction"><div v-html="feed.content"></div></span>
-                                    </router-link>
+                                    </div>
+                                </div>
+                            </div>
+                        </div> 
+
+                        <h3 class="gp-menu-title">내가 참여 중인 공동구매</h3>
+                        <div class="main-container-3">
+                            <div class="main-box-3">
+                                <div class="new-card-wrapper-2" v-if="feed?.length == 0">
+                                    <p>참여중인 공동구매가 없습니다</p>
+                                </div>
+                                <div class="new-card-wrapper-2" v-else>  
+                                    <div class="my-feeds-box">
+                                        <div class="main-card-wrapper">
+                                            <!-- 공구 게시글 1개 -->
+                                            <router-link :to="`/community/detail/:community_name/feed/${feed.id}`" v-for="(feed, index) in feed" :key=index>
+                                                <div class="gp-content-card">
+                                                    <div class="gp-title-box">
+                                                        <span class="content-title">{{ feed.title }}</span>
+                                                    </div>
+                                                    <span id="gp-product-name" class="gp-product-name"><div v-html="feed.content"></div></span>
+                                                    <li>시작일</li>
+                                                    <p class="gp-content-date">{{ feed.created_at.slice(0,10) }} | {{ feed.created_at.slice(12,19) }}</p>
+                                                    <li>마감일</li>
+                                                    <p class="gp-content-date">{{ feed.created_at.slice(0,10) }} | {{ feed.created_at.slice(12,19) }}</p>
+                                                </div>
+                                            </router-link>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div> 
                     </div>
-
                 </div>
 
                 <div class="user_profile" v-if="profile">
@@ -334,6 +386,8 @@ header >  #menu {
 header > .profile > h3 {
     padding: 48px 0 24px 118px;
 }
+
+
 .quit-button {
  display: flex;
  /* height: 3em; */
@@ -399,8 +453,6 @@ header > .profile > h3 {
     margin: auto;
     margin-top: 40px;
     height: 50%;
-    display: flex;
-    flex-direction: row;
     flex-wrap: wrap;
 }
 
@@ -408,7 +460,6 @@ header > .profile > h3 {
     margin: auto;
     margin-top: 40px;
     height: 50%;
-    display: flex;
     flex-direction: row;
     flex-wrap: wrap;
 }
@@ -417,9 +468,12 @@ header > .profile > h3 {
     margin: auto;
     margin-top: 40px;
     height: 50%;
-    display: flex;
     flex-direction: row;
     flex-wrap: wrap;
+    display: grid;
+    grid-template-columns: 49% 2% 49%;
+    grid-template-rows: 50px auto;
+
 }
 
 
@@ -750,13 +804,21 @@ header > .profile > h3 {
     box-shadow: 0 2px 5px rgba(70, 70, 70, 0.5);
 }
 /***** 새로운 커뮤니티 area *****/
-.new-card-wrapper {
+.new-card-container {
     display: flex;
+    margin-right: auto;
+    width: 800px;
     justify-content: flex-start;
-    flex-direction: row;
-    flex-wrap: wrap;
-    min-width: 800px;
+    padding-right: 30px;
 }
+
+.new-card-wrapper {
+    width: 800px;
+    display: flex;
+    overflow-x: auto;
+    overflow-y: hidden;
+}
+
 .new-card-box {
     width: 300px;
     height: 120px;
@@ -1263,6 +1325,222 @@ header > .profile > h3 {
 }
 .update-quit-button:hover{
     background-color: #c0c0c0;
+}
+
+.main-content-wrapper {
+    display: grid;
+    grid-template-columns: 100%;
+    grid-template-rows: repeat(10, auto);
+    margin-left: 30px;
+}
+
+/* 게시글 area */
+.main-container-2 {
+    grid-column: 1 / 2;
+    grid-row:2 / 3;
+}
+
+.my-feeds-box {
+    margin: 20px 0px;
+    padding: 10px 10px;
+    width: 95%;
+    height: 320px;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+.content-card {
+    width: 350px;
+    height: 50px;
+    padding: 5px;
+    margin-bottom: 7px;
+
+    background: rgb(255, 255, 255);
+    border-radius: 0.4em;
+    box-shadow: 0.3em 0.3em 0.7em #00000015;
+    transition: border 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    border: rgb(250, 250, 250) 0.2em solid;
+    cursor: pointer;
+
+    display: grid;
+    grid-template-columns: 80px auto 55px 55px 55px;
+    grid-template-rows: 20px 30px;
+}
+    
+.content-card:hover {
+    border: #9E2067, 0.2em solid;
+    box-shadow: 0 10px 20px 4px rgba(35, 35, 35, .1);
+}
+
+.feed-card-image {
+    width: 80px;
+    height: 53px;
+    position: relative;
+
+    overflow: hidden;
+    justify-content: center;
+    align-items: center;
+    
+    grid-column: 1 / 2;
+    grid-row: 1 / 3;
+}
+
+.feed-card-image img {
+    height: 120%;
+    position: absolute;
+}
+
+.title-box {
+    margin-left: 20px;
+
+    padding-right: 30px;
+    height: 20px;
+
+    white-space:nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    grid-column: 2 / 3;
+    grid-row: 1 / 2;
+}
+
+.title-box span {
+    color: #454545;
+    font-size: 1rem;
+    font-weight: 600;
+}
+
+.content-date {
+    margin: auto 10px;
+    margin-left:auto;
+
+    color: #909090;
+    font-size: 0.8rem;
+    grid-column: 3 / 6;
+    grid-row: 2 / 3; 
+}
+
+.view-box{
+    display: flex;
+    margin: auto 0px;
+    margin-left: auto;
+    align-items: center;
+    grid-column: 3 / 4;
+    grid-row: 1 / 2;
+}
+
+.view-box img {
+    padding-right: 1px;
+    width: 20px;
+    height: 15px;
+}
+
+.like-box{
+    display: flex;
+    margin: auto 20px;
+    align-items: center;
+    grid-column: 4 / 5;
+    grid-row: 1 / 2;
+}
+
+.like-box img {
+    padding-right: 4px;
+    width: 15px;
+    height: 16px;
+}
+
+.comment-box{
+    display: flex;
+    margin: auto;
+    margin-right: 10px;
+    align-items: center;
+    grid-column: 5 / 6;
+    grid-row:1 / 2;
+}
+
+.comment-box img {
+    padding-right: 4px;
+    width: 15px;
+    height: 15px;
+}
+
+.content-count {
+    justify-content: center;
+    text-align: center;
+    color: #dddddd;
+    font-weight: 400;
+    font-size: 0.8rem;
+    margin-top: 2px;
+}
+
+
+/* 공구 area */
+.main-container-3 {
+    grid-column: 3 / 4;
+    grid-row:2 / 3;
+}
+
+.gp-menu-title {
+    margin-left: 20px;
+    grid-column: 3 / 4;
+    grid-row: 1 / 2;
+}
+
+.gp-content-card {
+    margin: 7px;
+    width: 350px;
+    height: 50px;
+    padding: 5px;
+
+    background: rgb(255, 255, 255);
+    border-radius: 0.4em;
+    box-shadow: 0.3em 0.3em 0.7em #00000015;
+    transition: border 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    border: rgb(250, 250, 250) 0.2em solid;
+    cursor: pointer;
+
+    display: grid;
+    grid-template-columns: 160px 40px auto;
+    grid-template-rows: 25px 25px;
+}
+.gp-content-card:hover {
+    border: #9E2067, 0.2em solid;
+    box-shadow: 0 0px 20px 4px #ffcce4 ;
+}
+.gp-title-box {
+    grid-column: 1 / 2;
+    grid-row: 1 / 2;
+    margin: auto 5px;
+
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+.gp-product-name {
+    list-style-type: none;
+    margin: auto 5px;
+    width: 150px;
+    overflow: hidden;
+    white-space: nowrap;
+    color: #909090;
+    font-size: 0.8rem;
+    grid-column: 1 / 2;
+    grid-row: 2 / 3;
+}
+
+.gp-content-card li {
+    list-style-type: none;
+    margin: auto 0px;
+
+    color: #909090;
+    font-size: 0.8rem;
+}
+
+.gp-content-date {
+    margin: auto 5px;
+    margin-right: 10px;
+    margin-left:auto;
+    color: #909090;
+    font-size: 0.8rem;
 }
 
 </style>

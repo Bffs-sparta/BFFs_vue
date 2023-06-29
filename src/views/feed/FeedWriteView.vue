@@ -60,17 +60,30 @@ export default {
     },
     async writeFeed() {
         try{
-            const response = await this.$store.dispatch("FETCH_FEED_CREATE", {
-              title: this.title,
+          const response = await this.$store.dispatch("FETCH_FEED_CREATE", {
+            title: this.title,
               content: this.content,
               categoryId: this.categoryId,
-            });
-            if(response.status === 201){
-              alert(response.data.message)
-              this.$router.push({name: "community-detail", params: {name: this.$route.params.community_name}});
-            }
+          });
+          if(!this.title || this.title ==="" || !this.content || this.content===" ") {
+            alert("제목 혹은 글 내용이 없습니다! 내용을 입력해주세요")
+            return(response.error)
+          }
+          if(!this.categoryId) {
+            alert("카테고리를 선택해주세요")
+            return(response.error)
+          }
+          
+          if(response.status === 201){
+            alert(response.data.message)
+            this.$router.push({name: "community-detail", params: {name: this.$route.params.community_name}});
+          }
         }catch(error){
+          // console.log(error);
+          if(error.response.status === 405) {
             alert('금지어가 포함되어 있습니다');
+          }
+          else {alert("이상한 일이 발생했습니다. o_O");}
         }
     },
     async handleImageAdded(file, Editor, cursorLocation, resetUploader) {
