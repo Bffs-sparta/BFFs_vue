@@ -95,7 +95,6 @@
                     <button class="btn" @click="userRegister">회원가입</button>
                 </div>
             </div>
-            
         </div>
     </div>
 </template>
@@ -103,8 +102,10 @@
 <script>
 import VerifyModal from "@/components/VerifyModal.vue";
 import  { fetchVerificationEmail,fetchSendEmail,fetchSignup } from "@/api/index.js";
-
+import snotifyMixin from '@/mixins/snotifymixin'
+import bus from '@/utils/bus.js'
 export default {
+    mixins: [snotifyMixin],
     data(){
         return {
             agreecheck: false,
@@ -166,29 +167,34 @@ export default {
                     alert(response.data.message);
                 }
             }catch(error){
-                alert("인증번호가 일치하지 않습니다.");
+                this.snotify("error","인증번호가 일치하지 않습니다.");
             }
         },
         async userRegister(){
             if(!this.agreecheck){
-                alert('개인정보 약관에 동의하셔야 회원가입이 가능합니다.')
+                this.snotify('warning','개인정보 약관에 동의하셔야 회원가입이 가능합니다.')
             } else {
                 try{
                     const response = await fetchSignup(this.email, this.password, this.name, this.age, this.region, this.nickname);
                     if(response.status === 201){
-                        alert("회원가입이 완료되었습니다.");
+                        this.snotify('success',"회원가입이 완료되었습니다.");
                         this.$router.push({name: 'user-login'});
                     }
                 }catch(error){
-                    console.log(error);
+                    this.snotify('warning','입력폼에 빈칸이 있으면 안됩니다!')
                 }
             }            
         },
+        snotify(type,message){
+            bus.$emit('showSnackbar',{
+                type,
+                message
+            });
+        }
     },
     components: {
         VerifyModal,
     }
-
 }
 </script>
 

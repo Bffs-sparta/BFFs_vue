@@ -403,20 +403,35 @@ function fetchGroupPurchaseList(community_name) {
     return axios.get(`${config.baseUrl}/community/${community_name}/grouppurchase/`)
 }
 
-// 공구 상세 페이지
-function fetchGroupPurchaseDetail(community_name, grouppurchase_id) {
-    console.log(community_name, grouppurchase_id)
-    return axios.get(`${config.baseUrl}/community/${community_name}/grouppurchase/${grouppurchase_id}/`)
-}
-
 // 공구 참여
 function fetchGroupPurchaseJoin(grouppurchase_id) {
     return axios.get(`${config.baseUrl}/community/${grouppurchase_id}/join/`)
 }
 
-// 공구 게시글 생성
-function fetchGroupPurchaseCreate(community_name) {
-    return axios.get(`${config.baseUrl}/feed/${community_name}/grouppurchase/`)
+// 공구 생성
+function fetchGroupPurchaseCreate(community_url, title, content, product_name, product_number, product_price, person_limit, link, open_at, close_at, end_option, location, meeting_at) {
+    return axios.post(`${config.baseUrl}/feed/${community_url}/grouppurchase/`,{
+        title, content, product_name, product_number, product_price, person_limit, link, open_at, close_at, end_option, location, meeting_at
+    },{
+        headers: {
+            'Authorization': `Bearer ${access_token()}`,
+            'Content-Type': 'application/json',
+        }
+    })
+}
+
+// 공구 상세
+function fetchGroupPurchaseDetail(community_name, grouppurchase_id) {
+    const token = access_token()
+    if (token) {
+        return axios.get(`${config.baseUrl}/community/${community_name}/grouppurchase/${grouppurchase_id}/`,{
+            headers: {
+                'Authorization': `Bearer ${token}`,
+            }
+        })
+    } else {
+        return axios.get(`${config.baseUrl}/community/${community_name}/grouppurchase/${grouppurchase_id}/`)
+    }
 }
 
 // 공구 게시글 수정
@@ -424,10 +439,15 @@ function fetchGroupPurchaseEdit(grouppurchase_id) {
     return axios.get(`${config.baseUrl}/feed/grouppurchase/${grouppurchase_id}/`)
 }
 
-// 공구 게시글 삭제
+// 공구 삭제
 function fetchGroupPurchaseDelete(grouppurchase_id) {
-    return axios.get(`${config.baseUrl}/feed/grouppurchase/${grouppurchase_id}/`)
+    return axios.delete(`${config.baseUrl}/feed/grouppurchase/${grouppurchase_id}/`,{
+        headers: {
+            'Authorization': `Bearer ${access_token()}`,
+        }
+    })
 }
+
 
 // // 공구 게시글 작성자가 종료
 // function fetchGroupPurchaseSelfEnd(grouppurchase_id) {

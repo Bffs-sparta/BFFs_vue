@@ -10,6 +10,11 @@
             </label>
           </div>
         </div>-->
+        <div class = "title">
+            <input type="text" id="title" v-model="title" placeholder="제목을 입력해주세요">
+        </div>
+        <vue-editor v-model="content" :useCustomImageHandler="true" @image-added="handleImageAdded"></vue-editor>
+
         <div class="purchase-container">
           <div class="purchase-wrapper">
 
@@ -18,31 +23,31 @@
               <dt class="product-name">상품 이름</dt>
               <dd class="product-name-text">
                 <div class="input-wrapper">
-                    <input class="gp-input-box" type="text">
+                    <input class="gp-input-box" type="text" v-model="name">
                 </div>
               </dd>
               <dt class="product-number">상품 수량</dt>
               <dd class="product-number-text">
                 <div class="input-num-wrapper">
-                  <input class="gp-input-num-box" type="number" value="0"> 개
+                  <input class="gp-input-num-box" type="number" v-model="number" min="0"> 개
                 </div>
               </dd>
               <dt class="product-price">총 가격</dt>
               <dd type="number" class="product-price-text">
                 <div class="input-num-wrapper">
-                  <input class="gp-input-num-box" type="number" value="1000"> 원
+                  <input class="gp-input-num-box" type="number" v-model="price" min="0"> 원
                 </div>
               </dd>
               <dt class="person-limit">모집 인원</dt>
               <dd class="person-limit-text">
                 <div class="input-num-wrapper">
-                  <input class="gp-input-num-box" type="number" value="0"> 명
+                  <input class="gp-input-num-box" type="number" v-model="person" min="0"> 명 (본인 제외)
                 </div>
               </dd>
               <dt class="product-link">상품 상세 url</dt>
               <dd class="product-link-text">
                 <div class="input-wrapper">
-                  <input class="gp-input-box" type="url">
+                  <input class="gp-input-box" type="url" v-model="link">
                 </div>
               </dd>
               <dt class="open-at">모집 시작시간</dt>
@@ -50,13 +55,13 @@
                 <div class="input-date-wrapper">
                   <!-- js로 오늘 날짜 가져와서 띄워주어야함 / step 10분 단위로 시간 받기 / min=선택 시간 제한, 현재 시간 넣기 -->
                   <!-- https://sorto.me/docs/Web/HTML/Element/input/datetime-local#%EC%84%A0%ED%83%9D-%EA%B0%80%EB%8A%A5%ED%95%9C-%EB%82%A0%EC%A7%9C-%EB%B0%8F-%EC%8B%9C%EA%B0%84-%EB%B2%94%EC%9C%84-%EC%A0%9C%ED%95%9C%ED%95%98%EA%B8%B0 -->
-                  <input class="gp-input-box" type="datetime-local" min="" step="600">
+                  <input class="gp-input-box" type="datetime-local" v-model="open_at" min="" step="600">
                 </div>
               </dd>
               <dt class="close-at">모집 종료 시간</dt>
               <dd class="close-at-text">
                 <div class="input-date-wrapper">
-                  <input class="gp-input-box" type="datetime-local" min="" step="600">
+                  <input class="gp-input-box" type="datetime-local" v-model="close_at" min="" step="600">
                 </div>
               </dd>
             </dl>
@@ -67,7 +72,7 @@
               <dd class="end-option-text">
                 <!-- select -->
                 <div class="input-wrapper">
-                  <select class="gp-select-box" name="order" form="myEndOption">
+                  <select class="gp-select-box" name="order" form="myEndOption" v-model="end_option">
                       <option value="continue">공구를 계속 진행할 거예요</option>
                       <option value="quit">공구를 진행하지 않을 거예요</option>
                       <option value="discuss">신청한 사람과 논의 후 결정할래요</option>
@@ -78,13 +83,13 @@
               <dt class="location">만날 위치</dt>
               <dd class="location-text">
                 <div class="input-wrapper">
-                  <input class="gp-input-box" type="text">
+                  <input class="gp-input-box" type="text" v-model="location">
                 </div>
               </dd>
               <dt class="meeting-at">만날 시간</dt>
               <dd class="meeting-at-text">
                 <div class="input-wrapper">
-                  <input class="gp-input-box" type="datetime-local" min="" step="600">
+                  <input class="gp-input-box" type="datetime-local" v-model="meeting_at" min="" step="600">
                 </div>
               </dd>
               <div class="mapping">
@@ -103,11 +108,12 @@
 </template>
 
 <script>
+import { VueEditor } from "vue2-editor";
 import { mapGetters } from "vuex";
 
 export default {
 	components: {
-
+    VueEditor,
 	},
 	computed: {
 		...mapGetters({"categories":"fetchCommunityCategoryDetail"}),
@@ -120,7 +126,16 @@ export default {
 		return {
 			title:'',
 			content: "",
-			categoryId: "",
+      name: '',
+      number: '',
+      price: '',
+      person: '',
+      link: '',
+      open_at: '',
+      close_at: '',
+      end_option: 'continue',
+      location: '',
+      meeting_at: '',
 		};
 	},
     methods: {
@@ -129,10 +144,21 @@ export default {
       },
       async writeFeed() {
           try{
-              const response = await this.$store.dispatch("FETCH_FEED_CREATE", {
+              const community_url = this.$route.params.community_name
+              const response = await this.$store.dispatch("FETCH_GROUPPURCHASE_CREATE", {
+                community_url,
                 title: this.title,
                 content: this.content,
-                categoryId: this.categoryId,
+                name: this.name,
+                number: this.number,
+                price: this.price,
+                person: this.person,
+                link: this.link,
+                open_at: this.open_at,
+                close_at: this.close_at,
+                end_option: this.end_option,
+                location: this.location,
+                meeting_at: this.meeting_at,
               });
               if(response.status === 201){
                 alert(response.data.message)

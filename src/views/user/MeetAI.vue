@@ -66,7 +66,7 @@
                         <div class="input-text-info">
                             <p> 개인 정보 등 민감 정보를 입력하지 않도록 주의하세요!</p>
                         </div>
-                        <textarea autocomplete="off" class="input-text" placeholder="말을 걸어보세요:)" v-model="text" @keyup.enter="createConversation()"></textarea>
+                        <textarea autocomplete="off" class="input-text" placeholder="말을 걸어보세요:)" v-model="text" @keyup.enter="createConversation()" :disabled="isDisabled"></textarea>
                         <button class="submit-button" @click="createConversation()" :disabled="isDisabled">입 력</button>
                     </div>
                 </div>
@@ -104,37 +104,34 @@ export default {
             this.$router.push('/')
         },
         async createConversation() {
-        try {
-            if (!this.text || this.text==="") {
-                alert("하고싶은 말을 적어주세요:");
-                return response.error
-            }
-            
-            this.conversation.push(this.text);
-            
-            if (this.isCreateConversation) return;
-            this.isDisabled = true;
-            
-            if (this.conversation.length === 0) {
-                this.firstloader = true;
-            } else {
-                this.loadershow = true;
-            }
-
-            this.text = '';
-
-            const response = await fetchMeetAICreate(this.text);
-            if (response.status === 200) {
-                this.firstloader = this.loadershow = false;
-                this.conversation.push(response.data.ai);
+            try {
+                if (!this.text || this.text==="") {
+                    alert("하고싶은 말을 적어주세요:");
+                    return response.error
                 }
+                
+                this.conversation.push(this.text);
+                this.isDisabled = true;
+                
+                if (this.conversation.length === 0) {
+                    this.firstloader = true;
+                } else {
+                    this.loadershow = true;
+                }
+
+                this.text = '';
+
+                const response = await fetchMeetAICreate(this.text);
+                    if (response.status === 200) {
+                        this.firstloader = this.loadershow = false;
+                        this.conversation.push(response.data.ai);
+                        this.isDisabled = false;
+                    }
             } catch (error) {
                 console.log(error)
                 if (error.response.status === 500) {
                     alert('잠시 후 다시 시도해 주세요!')
                 }
-            } finally {
-                this.isDisabled = false;
             }
         },
     },

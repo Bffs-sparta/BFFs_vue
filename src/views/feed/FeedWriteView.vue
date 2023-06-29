@@ -12,14 +12,15 @@
         </div>
 
         <div v-if="editoropen" @close="editoropen=false">
-          <div class = "title">
-              <input type="text" id="title" v-model="title" placeholder="제목을 입력해주세요">
-          </div>
-          <vue-editor v-model="content" :useCustomImageHandler="true" @image-added="handleImageAdded"></vue-editor>
-          <div class="submit-box">
-            <button class="create-button" @click="writeFeed">생성하기</button>
-            <button class="quit-button" @click="goBack">취소하기</button>
-          </div>
+            <div class = "title">
+                <input type="text" id="title" v-model="title" placeholder="제목을 입력해주세요">
+            </div>
+            <vue-editor v-model="content" :useCustomImageHandler="true" @image-added="handleImageAdded"></vue-editor>
+            <div class="submit-box">
+              <button class="create-button" @click="writeFeed">생성하기</button>
+              <button class="quit-button" @click="goBack">취소하기</button>
+              <vue-snotify></vue-snotify>
+            </div>
         </div>
         
         <purchase-write v-if="purchaseopen" @close="purchaseopen=false"></purchase-write>
@@ -42,6 +43,7 @@ export default {
 	created() {
 		const community_name = this.$route.params.community_name;
 		this.$store.dispatch("FETCH_COMMUNITY_CATEGORY_DETAIL", community_name);
+
 	},
 	data() {
 		return {
@@ -82,7 +84,6 @@ export default {
         }
     },
     changeIndex(index) {
-      console.log(index)
       if (index===2) {
         this.purchaseopen = true;
         this.editoropen = false;

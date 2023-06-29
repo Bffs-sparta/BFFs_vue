@@ -5,18 +5,26 @@
       <router-view id="app_content"></router-view>
       <footer-bar id="footer"></footer-bar>
     </div>
+    <vue-snotify></vue-snotify>
   </div>
 </template>
 
 <script>
 import NavBar from './components/NavBar.vue'
 import FooterBar from './components/FooterBar.vue'
-
+import bus from '@/utils/bus.js'
+import snotity from '@/mixins/snotifymixin.js'
 export default {
+  mixins: [snotity],
   components: {
     NavBar,
     FooterBar,
   },
+  created(){
+    bus.$on('showSnackbar', ({type, message}) => {
+      this.snotify(type,message)
+    })
+  }
 }
 
 </script>
@@ -58,5 +66,16 @@ body {
 }
 #footer{
   flex-shrink: 0;
+}
+.snotify{
+  opacity: 0.95;
+}
+.snotifyToast__inner {
+  min-height:48px !important;
+}
+.snotify-icon{
+  right: 0px !important; 
+  height: 60% !important;
+  background-repeat: no-repeat;
 }
 </style>
