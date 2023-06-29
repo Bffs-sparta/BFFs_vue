@@ -48,7 +48,9 @@ function socialCallback(provider){
 
 // refresh token
 function fetchTokenRefresh(){
-    return axios.get(`${config.baseUrl}/user/refresh/`)
+    return axios.post(`${config.baseUrl}/user/refresh/`,{
+        refresh: localStorage.getItem('refresh_token')
+    })
 }
 
 // 이메일 전송

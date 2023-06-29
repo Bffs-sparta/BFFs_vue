@@ -2,6 +2,7 @@ import {
     fetchProfile,
     fetchAllProfile,
     fetchMeetAI,
+    fetchTokenRefresh
 }from '@/api/index.js'
 
 
@@ -74,6 +75,14 @@ const actions={
             console.log(error)
         }
     },
+    async TokenRefresh() {
+        try {
+            const response = await fetchTokenRefresh()
+            return response
+        } catch (error) {
+            console.log(error)
+        }
+    }
 }
 export default {
     state,
