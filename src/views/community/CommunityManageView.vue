@@ -158,7 +158,7 @@
             <div class="submit-box">
                 <button class="create-button" @click="communityEdit()">저장하기</button>
                 <button class="create-button" @click="communityDeleteCheck()">삭제하기</button>
-                <button class="quit-button">취소하기</button>
+                <button class="quit-button" @click="goback()">취소하기</button>
             </div>
         </section>
     </div>
@@ -168,7 +168,7 @@
 import { mapGetters } from "vuex";
 import { fetchForbiddenCreate, fetchForbiddenDelete, fetchSubAdminCreate, fetchSubAdminDelete, 
     fetchCommunityEdit, fetchCommunityDelete} from "@/api/index.js";
-
+import bus from "@/utils/bus";
 export default {
     data() {
         return {
@@ -191,6 +191,9 @@ export default {
         this.$store.dispatch("FETCH_USER_LIST", community_name);
     },
     methods: {
+        goback() {
+            this.$router.go(-1)
+        },
         async forbidden() {
             try {
                 const community_name = this.$route.params.name
@@ -198,9 +201,10 @@ export default {
                 if (response.status === 201) {
                     this.fetchCommunityDetail.data.forbiddenword.push(this.word);
                     this.word = '';
+                    this.snotify('success','금지어 추가 완료')
                 }
             } catch (error) {
-                alert(error.response.data.msg)
+                this.snotify("error",error.response.data.msg)
             }
         },
         async forbiddenDelete(word) {
@@ -208,10 +212,11 @@ export default {
                 const community_name = this.$route.params.name
                 const response = await fetchForbiddenDelete(community_name, word)
                 if (response.status === 200) {
+                    this.snotify('success','금지어 삭제 완료')
                     this.fetchCommunityDetail.data.forbiddenword.splice(this.fetchCommunityDetail.data.forbiddenword.indexOf(word), 1);
                 }
             } catch (error) {
-                alert(error.response.data.msg)
+                this.snotify('error',error.response.data.msg)
             }
         },
         async createSubadmin(id) {
@@ -222,9 +227,10 @@ export default {
                     const index = this.fetchCommunityAdmin.findIndex(item => item.id === id || item.user_id === id);
                     const removeuser= this.fetchCommunityAdmin.splice(index, 1);
                     this.fetchCommunityDetail.data.admin.splice(this.fetchCommunityDetail.data.admin.length, 0, ...removeuser)
+                    this.snotify('success','관리자 등록 완료')
                 }
             } catch (error) {
-                alert(error.response.data.msg)
+                this.snotify('error',error.response.data.msg)
             }
         },
         async deleteSubadmin(id) {
@@ -235,9 +241,10 @@ export default {
                     const index = this.fetchCommunityDetail.data.admin.findIndex(item => item.user_id === id || item.id === id);
                     const removeuser = this.fetchCommunityDetail.data.admin.splice(index, 1);
                     this.fetchCommunityAdmin.splice(this.fetchCommunityAdmin.length, 0, ...removeuser)
+                    this.snotify("success", "관리자 삭제 완료")
                 }
             } catch (error) {
-                alert(error.response.data.msg)
+                this.snotify("error",error.response.data.msg)
             }
         },
         InputImage(event) {
@@ -264,10 +271,11 @@ export default {
 
                 const response = await fetchCommunityEdit(community_name, formData)
                 if (response.status === 200) {
-                    this.$router.go()
+                    this.snotify('success','수정이 완료되었습니다.');
+                    this.$router.push(`/community/detail/${community_name}`)
                 }
             } catch (error) {
-                alert(error.response.data.msg)
+                this.snotify('error',error.response.data.msg)
             }
         },
         searchUser() {
@@ -286,13 +294,19 @@ export default {
                 const community_name = this.$route.params.name
                 const response = await fetchCommunityDelete(community_name)
                 if (response.status === 204) {
-                    alert("삭제가 완료되었습니다.")
+                    this.snotify("success","삭제가 완료되었습니다.")
                     this.$router.push('/')
                 }
             } catch (error) {
-                alert(error.response.data.msg)
+                this.snotify("error",error.response.data.msg)
             }
         },
+        snotify(type,message){
+            bus.$emit('showSnackbar',{
+                type,
+                message
+            });
+        }
     }
 }
 </script>

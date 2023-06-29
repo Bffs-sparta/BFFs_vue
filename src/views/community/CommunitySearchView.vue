@@ -73,6 +73,7 @@
 
 <script>
 import { mapGetters } from "vuex";
+import bus from '@/utils/bus.js';
 
 export default {
     data() {
@@ -93,13 +94,24 @@ export default {
     methods: {
         searchCommunity() {
             const name = this.searchname
-            this.$store.dispatch("search_community", name)
+            if(name==''){
+                this.snotify('warning','검색어를 입력해주세요.');
+            }
+            else{
+                this.$store.dispatch("search_community", name)
 
-            if (this.fetchSearchCommunity?.length === 0) {
-                alert("찾으시는 검색 결과가 없습니다")
-                this.searchname = '';
+                if (this.fetchSearchCommunity?.length === 0) {
+                    alert("찾으시는 검색 결과가 없습니다")
+                    this.searchname = '';
+                }
             }
         },
+        snotify(type,message){
+            bus.$emit('showSnackbar',{
+                type,
+                message
+            });
+        }
     },
 }
 </script>

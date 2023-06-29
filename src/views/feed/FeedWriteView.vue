@@ -31,6 +31,7 @@
 import { VueEditor } from "vue2-editor";
 import { mapGetters } from "vuex";
 import PurchaseWrite from "@/components/PurchaseWrite.vue"
+import bus from "@/utils/bus.js";
 
 export default {
 	components: {
@@ -64,26 +65,18 @@ export default {
             title: this.title,
               content: this.content,
               categoryId: this.categoryId,
-          });
-          if(!this.title || this.title ==="" || !this.content || this.content===" ") {
-            alert("제목 혹은 글 내용이 없습니다! 내용을 입력해주세요")
-            return(response.error)
-          }
-          if(!this.categoryId) {
-            alert("카테고리를 선택해주세요")
-            return(response.error)
-          }
-          
-          if(response.status === 201){
-            alert(response.data.message)
-            this.$router.push({name: "community-detail", params: {name: this.$route.params.community_name}});
-          }
+            });
+            if(response && response.status === 201){
+              this.snotify('success',response.data.message)
+              this.$router.push({name: "community-detail", params: {name: this.$route.params.community_name}});
+            }
         }catch(error){
-          // console.log(error);
-          if(error.response.status === 405) {
-            alert('금지어가 포함되어 있습니다');
+          if(error.response.status == 400){
+            this.snotify('error',error.response.data.message)
           }
-          else {alert("이상한 일이 발생했습니다. o_O");}
+          else{
+            this.snotify('error','카테고리를 입력해주세요')
+          }
         }
     },
     async handleImageAdded(file, Editor, cursorLocation, resetUploader) {
@@ -105,6 +98,12 @@ export default {
         this.editoropen = true;
       }
     },
+    snotify(type,message){
+        bus.$emit('showSnackbar',{
+            type,
+            message
+        });
+    }
   },
 }
 

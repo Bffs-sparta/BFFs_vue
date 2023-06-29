@@ -67,7 +67,6 @@ const actions ={
         const title = feedData.title
         const content = feedData.content
         const category_id = feedData.categoryId
-
         const response = await fetchFeedCreate(category_id,title, content)
         return response
     },
