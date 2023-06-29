@@ -121,8 +121,8 @@
                          <li class="submit-help-text">
                          ⚠ 1 이상 입력 가능합니다!
                          </li>
-                         <input type="number" v-model="submitnumber" min="1" class="purchase-submit-input" >
-                         <button class="submit-button">신 청</button>
+                         <input type="number" v-model="submitnumber" min="1" class="purchase-submit-input">
+                         <button class="submit-button" @click="grouppurchaseJoin()">신 청</button>
                      </div>
                  </div>
                  <div class="function-box">
@@ -143,15 +143,8 @@
               <div class="sub-input-wrapper">
                 <div class="sub-text-info">
                   <p>댓글 |</p>
-                  <p
-                    v-if="comment &&comment == '아직 댓글이 없습니다'"
-                    style="margin-left: 3px;"
-                  >
-                    0
-                  </p>
-                  <p v-else style="margin-left: 3px;">
-                    {{ feed.comment_count }}
-                  </p>
+                  <p v-if="comment &&comment == '아직 댓글이 없습니다'" style="margin-left: 3px;">0</p>
+                  <p v-else style="margin-left: 3px;">{{ feed.comment_count }}</p>
                 </div>
                 <textarea
                   v-model="inputComment"
@@ -245,25 +238,26 @@
         </section>
       </main>
     </div>
-  </template>
-  
-  <script>
-  import { mapGetters } from "vuex";
-  import bus from '@/utils/bus.js'
-  import {
-    fetchCommunityBookmark,
-    fetchFeedNotification,
-    fetchGroupPurchaseDelete,
-    fetchCommentCreate,
-    fetchCommentEdit,
-    fetchCommentDelete,
-  } from "@/api/index.js";
-  
-  export default {
+</template>
+
+<script>
+import { mapGetters } from "vuex";
+import bus from '@/utils/bus.js'
+import {
+fetchCommunityBookmark,
+fetchGroupPurchaseJoin,
+fetchGroupPurchaseDelete,
+fetchGroupPurchaseSelfEnd,
+fetchCommentCreate,
+fetchCommentEdit,
+fetchCommentDelete,
+} from "@/api/index.js";
+
+export default {
     computed: {
         ...mapGetters({ data: "fetchGroupPurchaseDetail" }),
         feed() {
-          return this.data?.grouppurchase;
+            return this.data?.grouppurchase;
         },
         community() {
             return this.data?.community;
@@ -271,9 +265,6 @@
         communityurl() {
             return this.data?.community?.communityurl;
         },
-        //grouppurchase() {
-        //    return this.data?.grouppurchase;
-        //},
         //user() {
         //    return this.data?.user;
         //},
@@ -283,72 +274,62 @@
         hasAccessToken(){
             return localStorage.getItem('access_token');
         },
-      // ...mapGetters({ data: "fetchFeedDetail" }),
-      // community() {
-      //   return this.data?.community;
-      // },
-      // communityurl() {
-      //   return this.data?.community?.communityurl;
-      // },
-      // feed() {
-      //   return this.data?.feed;
-      // },
-      // feedadmin() {
-      //   return this.data.admin.map(admin => admin.user_id);
-      // },
-      // comment(){
-      //   if (Array.isArray(this.data?.comment)) {
-      //       return this.data?.comment?.map(comment => ({
-      //         ...comment,
-      //         cocommentshow: false,
-      //         commenteditshow: false,
-      //         cocomment: comment.cocomment?.map(cocomment => ({
-      //           ...cocomment,
-      //           cocommenteditshow: false
-      //         }))
-      //       }))
-      //     }
-      //     return [];
-      // },
-      // bookmark() {
-      //   return this.community?.is_bookmarked;
-      // },
-      // hasAccessToken(){
-      //   return localStorage.getItem('access_token');
-      // },
+        // ...mapGetters({ data: "fetchFeedDetail" }),
+        // community() {
+        //   return this.data?.community;
+        // },
+        // communityurl() {
+        //   return this.data?.community?.communityurl;
+        // },
+        // feed() {
+        //   return this.data?.feed;
+        // },
+        // feedadmin() {
+        //   return this.data.admin.map(admin => admin.user_id);
+        // },
+        comment(){
+            if (Array.isArray(this.data?.comment)) {
+                return this.data?.comment?.map(comment => ({
+                    ...comment,
+                    commenteditshow: false,
+                }))
+            }
+            return [];
+        },
     },
     watch: {
-      $route(to) {
-        const grouppurchase_id = to.params.grouppurchase_id;
-        const community_name = to.params.community_name;
-        this.$store.dispatch("FETCH_GROUPPURCHASE_DETAIL", { community_name, grouppurchase_id });
-      }
+        $route(to) {
+            const grouppurchase_id = to.params.grouppurchase_id;
+            const community_name = to.params.community_name;
+            this.$store.dispatch("FETCH_GROUPPURCHASE_DETAIL", { community_name, grouppurchase_id });
+        }
     },
     data() {
-      return {
-        submitopen: false,
-        userid: "",
-        email: "",
-        inputComment: "",
-        inputCocomment:"",
-        inputUpdateComment: "",
-        inputUpdateCocomment: "",
-        searchname: '',
-      };
+        return {
+            submitopen: false,
+            submitnumber: 1,
+            userid: "",
+            email: "",
+            inputComment: "",
+            inputCocomment:"",
+            inputUpdateComment: "",
+            inputUpdateCocomment: "",
+            searchname: '',
+        };
     },
     created() {
-      const grouppurchase_id = this.$route.params.grouppurchase_id;
-      const community_name = this.$route.params.community_name;
-      this.$store.dispatch("FETCH_GROUPPURCHASE_DETAIL", { community_name, grouppurchase_id });
+        const grouppurchase_id = this.$route.params.grouppurchase_id;
+        const community_name = this.$route.params.community_name;
+        this.$store.dispatch("FETCH_GROUPPURCHASE_DETAIL", { community_name, grouppurchase_id });
     },
     mounted() {
-      const payload = localStorage.getItem("payload");
-      if (payload) {
-        const { user_id } = JSON.parse(payload);
-        const { email } = JSON.parse(payload);
-        this.userid = user_id;
-        this.email = email;
-      }
+        const payload = localStorage.getItem("payload");
+        if (payload) {
+            const { user_id } = JSON.parse(payload);
+            const { email } = JSON.parse(payload);
+            this.userid = user_id;
+            this.email = email;
+        }
     },
     methods: {
         submitOpen() {
@@ -369,17 +350,16 @@
             }
             }
         },
-        async addNotification() {
+        async endPurchase() {
             try {
-            const feed_id = this.$route.params.feed_id;
-            const response = await fetchFeedNotification(this.community.communityurl, feed_id);
-            if (response.status === 200) {
+            const grouppurchase_id = this.$route.params.grouppurchase_id;
+            const response = await fetchGroupPurchaseSelfEnd(grouppurchase_id);
+            if (response.status === 202) {
                 this.snotify('success',response.data.message);
                 this.feed.is_notification = !this.feed.is_notification;
-        
             }
             } catch (error) {
-            this.snotify('error',error.response.data.message);
+                this.snotify('error',error.response.data.message);
             }
         },
         async deleteFeed() {
@@ -398,6 +378,18 @@
             }
             } catch (error) {
             this.snotify('error','게시글 삭제에 실패했습니다');
+            }
+        },
+        async grouppurchaseJoin() {
+            try {
+            const grouppurchase_id = this.$route.params.grouppurchase_id;
+            const response = await fetchGroupPurchaseJoin(grouppurchase_id, this.submitnumber);
+            if (response.status === 201) {
+                this.snotify('success',response.data.message);
+                this.submitopen = false;
+            }
+            } catch (error) {
+                this.snotify('error',error.response.data.message);
             }
         },
         async createComment() {
