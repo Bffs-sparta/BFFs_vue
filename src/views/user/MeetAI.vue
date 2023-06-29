@@ -78,6 +78,7 @@
 <script>
 import { fetchMeetAICreate } from "@/api/index.js";
 import { mapGetters } from "vuex";
+import bus from '@/utils/bus.js'
 
 export default {
     computed: {
@@ -106,8 +107,7 @@ export default {
         async createConversation() {
             try {
                 if (!this.text || this.text==="") {
-                    alert("하고싶은 말을 적어주세요:");
-                    return response.error
+                    return this.snotify('info',"하고싶은 말을 적어주세요");
                 }
                 
                 this.conversation.push(this.text);
@@ -122,18 +122,23 @@ export default {
                 this.text = '';
 
                 const response = await fetchMeetAICreate(this.text);
-                    if (response.status === 200) {
-                        this.firstloader = this.loadershow = false;
-                        this.conversation.push(response.data.ai);
-                        this.isDisabled = false;
-                    }
+                if (response.status === 200) {
+                    this.firstloader = this.loadershow = false;
+                    this.conversation.push(response.data.ai);
+                    this.isDisabled = false;
+                }
             } catch (error) {
-                console.log(error)
-                if (error.response.status === 500) {
-                    alert('잠시 후 다시 시도해 주세요!')
+                if (error.response.status == 500) {
+                    this.snotify('warning','잠시 후 다시 시도해 주세요!')
                 }
             }
         },
+        snotify(type,message){
+            bus.$emit('showSnackbar',{
+                type,
+                message
+            });
+        }
     },
 }
 </script>
@@ -150,7 +155,6 @@ body {
     margin: auto;
     position: relative;
     background: #000000;
-        
     overflow: hidden;
     justify-content: center;
     align-items: center;

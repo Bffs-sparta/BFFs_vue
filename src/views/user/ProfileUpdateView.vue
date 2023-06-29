@@ -96,6 +96,7 @@
 <script>
 import { mapGetters } from "vuex";
 import { fetchProfileEdit } from "@/api/index.js";
+import bus from '@/utils/bus.js'
 
 export default {
     computed: {
@@ -135,7 +136,6 @@ export default {
             this.profile.profileimageurl = event.target.files[0]
             const reader = new FileReader();
             reader.onload = (event) => {
-                console.log(event)
                 this.profile.profileimageurl = event.target.result;
             }
             reader.readAsDataURL(this.profile.profileimageurl)
@@ -162,16 +162,23 @@ export default {
                 const user_id = this.$route.params.id
                 const response = await fetchProfileEdit(user_id, formData)
                 if (response.status === 200) {
-                    alert(response.data.message)
+                    this.snotify('success',response.data.message)
                     this.$router.push(`/profile/${user_id}`)
                 }
             } catch (error) {
-                console.log(error)
                 if (error.response.status === 400) {
-                    alert("닉네임은 필수입니다! (공백 제외 2-8자)")
+                    this.snotify("warning","닉네임은 필수입니다! (공백 제외 2-8자)")
+                }else{
+                    this.snotify("warning","서버에 문제가 생겼습니다. 잠시 후 다시 시도해주세요.")
                 }
             }
         },
+        snotify(type,message){
+            bus.$emit('showSnackbar',{
+                type,
+                message
+            });
+        }
     },
 }
 </script>

@@ -11,7 +11,7 @@
                     <div class="sub-title">
                         <span>
                             <h3>커뮤니티 이름</h3>
-                            <h5>: 커뮤니티 이름은 변경할 수 없습니다. 신중하게 결정해주세요:D<br>(공백, 특수문자 제외)</h5>
+                            <h5>: 커뮤니티 이름은 변경할 수 없습니다. 신중하게 결정해주세요:D<br>(2글자 이상 / 공백, 특수문자 제외)</h5>
                         </span>
                     </div>
                     <div class="input-box">
@@ -51,6 +51,7 @@
 
 <script>
 import  { fetchCommunityCreate } from "@/api/index.js";
+import bus from '@/utils/bus.js'
 
 export default {
     data() {
@@ -68,14 +69,19 @@ export default {
             try {
                 const response = await fetchCommunityCreate(this.title, this.communityurl, this.introduction)
                 if (response.status === 202) {
+                    this.snotify('success','커뮤니티 생성 신청이 완료되었습니다.')
                     this.$router.push(`/community/detail/${this.communityurl}`)
                 }
             } catch (error) {
-                if (error.response.status === 400) {
-                    alert(error.response.data)
-                }
+                this.snotify('error',error.response.data)
             }
         },
+        snotify(type,message){
+            bus.$emit('showSnackbar',{
+                type,
+                message
+            });
+        }
     }
 }
 </script>

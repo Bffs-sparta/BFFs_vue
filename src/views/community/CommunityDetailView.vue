@@ -131,10 +131,7 @@
                                     <p class="name">{{feed.nickname}}</p>
                                 </div>
                             </div>
-                            
                             <p v-html="feed.content" class="message"></p>
-                                
-                            
                             <div class="button-group">
                                 <div class="with-text-view-box">
                                     <svg class="icon" width="20" height="15" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12,21.35L10.55,20.03C5.4,15.36 2,12.27 2,8.5C2,5.41 4.42,3 7.5,3C9.24,3 10.91,3.81 12,5.08C13.09,3.81 14.76,3 16.5,3C19.58,3 22,5.41 22,8.5C22,12.27 18.6,15.36 13.45,20.03L12,21.35Z"></path></svg>
@@ -151,34 +148,7 @@
                             </div>          
                         </router-link>
                     </div>
-                    <!--<div class="posts">
-                        <div class="card">
-                            <div class="header">
-                                <div class="image"></div>
-                                <div>
-                                    <p class="title">unity</p>
-                                    <p class="name">John Doe</p>
-                                </div>
-                            </div>
-
-                            <p class="message">
-                            Lorem ipsum dolor sit amet consectetur adipisicing elit. Deserunt
-                            voluptatem alias ut provident sapiente repellendus.
-                            </p>
-                            <div class="button-group">
-                                <button class="btn">
-                                    <svg class="icon" width="20" height="15" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12,21.35L10.55,20.03C5.4,15.36 2,12.27 2,8.5C2,5.41 4.42,3 7.5,3C9.24,3 10.91,3.81 12,5.08C13.09,3.81 14.76,3 16.5,3C19.58,3 22,5.41 22,8.5C22,12.27 18.6,15.36 13.45,20.03L12,21.35Z"></path></svg>
-                                </button>
-                                <img src="@/assets/comment.png" alt="댓글 아이콘 이미지">
-                                <div class="with-text-view-box">
-                                    <img src="@/assets/view_look.png" alt="조회수 아이콘 이미지">
-                                    <span class="with-text-view-content">00</span> 
-                                </div>
-                            </div>
-                        </div>
-                    </div>-->
                 </section>
-
 
                 <section class="main-section">
                     <div class="main-container">
@@ -199,11 +169,6 @@
                                 </div>
                             </div>
                             <div v-html="feed.content" class="message"></div>
-                            <!-- <p class="message">
-                                
-                            Lorem ipsum dolor sit amet consectetur adipisicing elit. Deserunt
-                            voluptatem alias ut provident sapiente repellendus.
-                            </p> -->
                             <div class="button-group">
                                 <div class="with-text-view-box">
                                     <svg class="icon" width="20" height="15" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12,21.35L10.55,20.03C5.4,15.36 2,12.27 2,8.5C2,5.41 4.42,3 7.5,3C9.24,3 10.91,3.81 12,5.08C13.09,3.81 14.76,3 16.5,3C19.58,3 22,5.41 22,8.5C22,12.27 18.6,15.36 13.45,20.03L12,21.35Z"></path></svg>
@@ -229,12 +194,11 @@
 <script>
 import { mapGetters } from "vuex";
 import { fetchCommunityBookmark } from "@/api/index.js";
-
+import bus from "@/utils/bus.js";
 export default {
     data(){
         return{
             userid: '',
-            //bookmark: false, // 버업없애기용 백에서 bookmark 여부있어야할듯
         }
     },
     computed: {
@@ -260,9 +224,13 @@ export default {
         },
         adminids(){
             const adminIds = [];
-            for (const admin of this.fetchCommunityDetail.data?.admin) {
-                adminIds.push(admin.user_id);
+            const adminList = this.fetchCommunityDetail.data?.admin
+            if(adminList) {
+                for (const admin of adminList) {
+                    adminIds.push(admin.user_id);
+                }
             }
+
             return adminIds;
         },
         popularfeeds(){
@@ -279,8 +247,13 @@ export default {
                 return null;
             }
         },
-        bookmark() {
-            return this.fetchCommunityDetail.data?.is_bookmarked;
+        bookmark: {
+            get(){
+                return this.fetchCommunityDetail?.data?.is_bookmarked;
+            },
+            set(value){
+                this.fetchCommunityDetail.data.is_bookmarked = value;
+            }
         },
         hasAccessToken(){
             return localStorage.getItem('access_token');
@@ -313,17 +286,23 @@ export default {
                 );
                 if (response.status == 200) {
                     this.bookmark = !this.bookmark;
-                    alert(response.data.msg);
+                    this.snotify('success',response.data.msg);
                 }
             } catch (error) {
                 if (error.response.status === 401) {
-                    alert("로그인을 해주세요");
+                    this.snotify('error',"로그인을 해주세요");
                 }
             }
         },
         notlogin(){
-            alert('로그인을 해주세요')
+            this.snotify('error','로그인을 해주세요')
         },
+        snotify(type,message){
+            bus.$emit('showSnackbar',{
+                type,
+                message
+            });
+        }
     },
 }
 </script>

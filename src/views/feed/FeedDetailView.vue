@@ -344,6 +344,7 @@
 
 <script>
 import { mapGetters } from "vuex";
+import bus from '@/utils/bus.js'
 import {
   fetchCommunityBookmark,
   fetchFeedNotification,
@@ -433,11 +434,11 @@ export default {
         );
         if (response.status == 200) {
           this.bookmark = !this.bookmark;
-          alert(response.data.msg);
+          this.snotify('info',response.data.msg);
         }
       } catch (error) {
         if (error.response.status === 401) {
-          alert("로그인을 해주세요");
+          this.snotify('warning',"로그인을 해주세요");
         }
       }
     },
@@ -446,12 +447,12 @@ export default {
         const feed_id = this.$route.params.feed_id;
         const response = await fetchFeedNotification(this.community.communityurl, feed_id);
         if (response.status === 200) {
-          alert(response.data.message);
+          this.snotify('success',response.data.message);
           this.feed.is_notification = !this.feed.is_notification;
   
         }
       } catch (error) {
-        alert(error.response.data.message);
+        this.snotify('error',error.response.data.message);
       }
     },
     async deleteFeed() {
@@ -459,14 +460,14 @@ export default {
         const feed_id = this.$route.params.feed_id;
         const response = await fetchFeedDelete(feed_id);
         if (response.status === 200) {
-          alert(response.data.message);
+          this.snotify('success',response.data.message);
           this.$router.push({
             name: "community-detail",
             params: { name: this.community.communityurl }
           });
         }
       } catch (error) {
-        console.log(error);
+        this.snotify('error','게시글 삭제에 실패했습니다');
       }
     },
     async toggleLike() {
@@ -474,7 +475,7 @@ export default {
         const feed_id = this.$route.params.feed_id;
         const response = await fetchFeedLike(feed_id);
         if (response.status === 200) {
-          alert(response.data);
+          this.snotify('success',response.data);
           this.feed.like_bool = !this.feed.like_bool;
           if(this.feed.like_bool){
             this.feed.likes_count+=1;
@@ -484,7 +485,7 @@ export default {
         }
       } catch (error) {
         if (error.response.status === 401) {
-          alert("로그인을 해주세요");
+          this.snotify('error',"로그인을 해주세요");
         }
       }
     },
@@ -493,7 +494,7 @@ export default {
         const feed_id = this.$route.params.feed_id;
         const response = await fetchCommentCreate(feed_id, this.inputComment);
         if (response.status === 201) {
-          alert(response.data.message);
+          this.snotify('success',response.data.message);
           this.inputComment = "";
           const feed_id = this.$route.params.feed_id;
           const community_name = this.$route.params.community_name;
@@ -501,7 +502,7 @@ export default {
         }
       } catch (error) {
         if (error.response.status === 401) {
-          alert("로그인을 해주세요");
+            this.snotify('error',"로그인을 해주세요");
           this.inputComment = '';
         }
       }
@@ -516,14 +517,14 @@ export default {
           this.inputUpdateComment
         );
         if (response.status === 200) {
-          alert(response.data.message);
+          this.snotify('success',response.data.message);
           this.commenteditshow = false;
           const feed_id = this.$route.params.feed_id;
           const community_name = this.$route.params.community_name;
           this.$store.dispatch("FETCH_FEED_DETAIL", { community_name, feed_id });
         }
       } catch (error) {
-        console.log(error);
+        this.snotify('error','댓글 수정에 실패했습니다');
       }
     },
     async deleteComment(comment) {
@@ -546,7 +547,7 @@ export default {
           params: { community_name: this.community.communityurl, feed_id: id }
         });
       } else {
-        alert("게시글이 존재하지않습니다");
+        this.snotify("error","게시글이 존재하지않습니다");
       }
     },
     cocommentShow(comment) {
@@ -567,7 +568,7 @@ export default {
       try {
         const response = await fetchCocommentCreate(comment.id, this.inputCocomment);
         if (response.status === 201) {
-          alert(response.data.message);
+          this.snotify('success',response.data.message);
           this.inputCocomment = "";
           const feed_id = this.$route.params.feed_id;
           const community_name = this.$route.params.community_name;
@@ -575,7 +576,7 @@ export default {
         }
       } catch (error) {
         if (error.response.status === 401) {
-          alert("로그인을 해주세요");
+          this.snotify('error','로그인을 해주세요');
           this.inputCocomment = '';
         }
       }
@@ -590,7 +591,7 @@ export default {
           this.inputUpdateCocomment
         );
         if (response.status === 200) {
-          alert(response.data.message);
+          this.snotify('success',response.data.message);
           this.cocommenteditshow = false;
           const feed_id = this.$route.params.feed_id;
           const community_name = this.$route.params.community_name;
@@ -604,7 +605,7 @@ export default {
       try {
         const response = await fetchCocommentDelete(comment_id);
         if (response.status === 200) {
-          alert(response.data.message);
+          this.snotify('success',response.data.message);
           const feed_id = this.$route.params.feed_id;
           const community_name = this.$route.params.community_name;
           this.$store.dispatch("FETCH_FEED_DETAIL", { community_name, feed_id });
@@ -614,11 +615,21 @@ export default {
       }
     },
     searchFeed() {
-        this.$router.push(`/feed/search/${this.searchname}`)
+        if(this.searchname ==''){
+            this.snotify('error','검색어를 입력해주세요');
+        }else{
+            this.$router.push(`/feed/search/${this.searchname}`)
+        }
     },
     notlogin(){
-      alert('로그인을 해주세요')
+      this.snotify('error','로그인을 해주세요');
     },
+    snotify(type,message){
+      bus.$emit('showSnackbar',{
+                type,
+                message
+            });
+        }
   },
 
 };

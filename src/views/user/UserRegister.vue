@@ -139,9 +139,10 @@ export default {
                 const response = await fetchSendEmail(this.email);
                 if(response.status === 200){
                     this.modalopen = true;
+                    this.snotify("success",response.data.message);
                 }
             }catch(error){
-                console.log(error);
+                this.snotify("error",error.response.data.error);
             }
         },
         handleInput(index){
@@ -164,7 +165,7 @@ export default {
                 const response = await fetchVerificationEmail(this.otp,this.email)
                 if(response.status === 200){
                     this.modalopen = false;
-                    alert(response.data.message);
+                    this.snotify("success",response.data.message);
                 }
             }catch(error){
                 this.snotify("error","인증번호가 일치하지 않습니다.");

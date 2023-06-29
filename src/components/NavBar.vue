@@ -44,6 +44,8 @@
 import jwt_decode from "jwt-decode";
 import MenuBar from './MenuBar.vue'
 import { mapGetters } from 'vuex'
+import bus from '@/utils/bus.js'
+
 export default {
   components: {
     MenuBar,
@@ -87,40 +89,16 @@ export default {
           });
         }
         
-        const access = localStorage.getItem("access_token");
-        this.loginuser = access !== null ? true : false;
-
-        const payload = localStorage.getItem("payload");
-        if (payload) {
-          const { user_id } = JSON.parse(payload);
-          this.userid = user_id;
-        }
+        this.checkLogin();
       } else {
-        if(localStorage.getItem("access_token")){
-          const access = localStorage.getItem("access_token");
-          this.loginuser = access !== null ? true : false;
-
-          const payload = localStorage.getItem("payload");
-          if (payload) {
-            const { user_id } = JSON.parse(payload);
-            this.userid = user_id;
-          }
-        }
+        this.checkLogin();
         next();
       }
     });
     
   },
   mounted() {
-    const access = localStorage.getItem('access_token')
-    this.loginuser = access !== null ? true : false;
-
-    const payload = localStorage.getItem('payload');
-    if (payload) {
-      const { user_id } = JSON.parse(payload);
-      this.userid = user_id;
-    }
-
+    this.checkLogin();
   },
   methods: {
     menuShow() {
@@ -130,8 +108,26 @@ export default {
         localStorage.removeItem('access_token');
         localStorage.removeItem('refresh_token');
         localStorage.removeItem('payload');
-        this.$router.go();
+        this.$router.push('/').catch(() => {});
+        this.checkLogin();
+        this.snotify('success','로그아웃 되었습니다.');
     },
+    checkLogin(){
+      const access = localStorage.getItem('access_token')
+      this.loginuser = access !== null ? true : false;
+
+      const payload = localStorage.getItem('payload');
+      if (payload) {
+        const { user_id } = JSON.parse(payload);
+        this.userid = user_id;
+      }
+    },
+    snotify(type,message){
+        bus.$emit('showSnackbar',{
+            type,
+            message
+        });
+    }
   },
 }
 </script>

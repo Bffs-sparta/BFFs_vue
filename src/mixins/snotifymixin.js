@@ -2,13 +2,14 @@
 export default {
     methods: {
         snotify(status,message){
+            this.$snotify.clear();
             if(status == 'success'){
                 this.$snotify.success(message, {
                     timeout: 2000,
                     showProgressBar: false,
                     closeOnClick: false,
                     pauseOnHover: true,
-                    position:'centerBottom',
+                    position:'centerTop',
                 });
             }
             else if(status == 'error'){
@@ -17,7 +18,7 @@ export default {
                     showProgressBar: false,
                     closeOnClick: false,
                     pauseOnHover: true,
-                    position:'centerBottom',
+                    position:'centerTop',
                 });
             }
             else if(status=='warning'){
@@ -26,7 +27,16 @@ export default {
                     showProgressBar: false,
                     closeOnClick: false,
                     pauseOnHover: true,
-                    position:'centerBottom',
+                    position:'centerTop',
+                });
+            }
+            else if(status=='info'){
+                this.$snotify.info(message, {
+                    timeout: 2000,
+                    showProgressBar: false,
+                    closeOnClick: false,
+                    pauseOnHover: true,
+                    position:'centerTop',
                 });
             }
         }

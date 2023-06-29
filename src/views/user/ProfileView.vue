@@ -240,6 +240,7 @@
 <script>
 import { mapGetters } from "vuex";
 import  {  fetchGuestBook, fetchGuestBookEdit, fetchGuestBookDelete, fetchProfileDelete } from "@/api/index.js";
+import bus from '@/utils/bus.js'
 
 export default {
     computed: {
@@ -304,23 +305,25 @@ export default {
                 const profile_id = this.$route.params.id;
                 const response = await fetchGuestBook(profile_id, this.inputComment)
                 if (response.status === 200) {
-                    alert('방명록을 작성했습니다.')
+                    this.snotify('success','방명록을 작성했습니다.')
                     const user_id = this.$route.params.id
                     this.$store.dispatch("FETCH_USER_PROFILE", user_id);
                     this.inputComment='';
                 }
             } catch (error) {
                 if (error.response.status === 401) {
-                alert("로그인을 해주세요");
-        }
+                    this.snotify('warning',"로그인을 해주세요");
+                }else{
+                    this.snotify('error','방명록 작성에 실패했습니다.')
+                }
             } 
         },
         async editComment(guestbook_id) {
             try {
                 const profile_id = this.$route.params.id;
                 const response = await fetchGuestBookEdit(profile_id, guestbook_id, this.inputUpdateComment)
-                if (response.status === 201) {
-                    alert('방명록 수정이 완료되었습니다.')
+                if (response.status === 200) {
+                    this.snotify('success','방명록 수정이 완료되었습니다.')
                     this.commenteditshow = false;
                     const user_id = this.$route.params.id
                     this.$store.dispatch("FETCH_USER_PROFILE", user_id);
@@ -337,10 +340,10 @@ export default {
                     console.log(response)
                     const user_id = this.$route.params.id
                     this.$store.dispatch("FETCH_USER_PROFILE", user_id);
-                    alert('방명록 삭제가 완료되었습니다.')
+                    this.snotify('success','방명록 삭제가 완료되었습니다.')
                 }
             } catch (error) {
-                console.log(error)
+                this.snotify('error','방명록 삭제에 실패했습니다.')
             } 
         },
         deleteUserCheck() {
@@ -353,11 +356,17 @@ export default {
             try {                
                 const response = await fetchProfileDelete(this.userid)
                 if (response.status === 204) {
-                    alert(response.data.message)
+                    this.snotify('info',response.data.message)
                 }
             } catch (error) {
-                console.log(error)
+                this.snotify('error','계정 비활성화에 실패했습니다.')
             } 
+        },
+        snotify(type,message){
+            bus.$emit('showSnackbar',{
+                type,
+                message
+            });
         },
     },
 }

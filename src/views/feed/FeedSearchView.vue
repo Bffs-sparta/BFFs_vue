@@ -65,7 +65,7 @@
 
 <script>
 import { mapGetters } from "vuex";
-
+import bus from '@/utils/bus.js';
 export default {
     data() {
         return{
@@ -84,14 +84,24 @@ export default {
     },
     methods: {
         searchFeed() {
-            const name = this.searchname
-            this.$store.dispatch("search_feed", name);
+            if(this.searchname==''){
+                this.snotify('warning','검색어를 입력해주세요')
+            }else{
+                const name = this.searchname
+                this.$store.dispatch("search_feed", name);
 
-            if (this.fetchSearchFeed?.results?.length === 0) {
-                alert("찾으시는 검색 결과가 없습니다")
-                this.searchname = '';
+                if (this.fetchSearchFeed?.results?.length === 0) {
+                    this.snotify('error',"찾으시는 검색 결과가 없습니다")
+                    this.searchname = '';
+                }
             }
         },
+        snotify(type,message){
+            bus.$emit('showSnackbar',{
+                type,
+                message
+            });
+        }
     },
 }
 </script>

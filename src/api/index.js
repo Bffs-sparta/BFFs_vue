@@ -1,8 +1,8 @@
 import axios from 'axios'
 
 const config = {
-    baseUrl: 'https://api.makebestie.com'
-    // baseUrl: 'http://127.0.0.1:8000'
+    // baseUrl: 'https://api.makebestie.com'
+    baseUrl: 'http://127.0.0.1:8000'
 }
 const access_token = () => {
     return localStorage.getItem('access_token')
@@ -398,7 +398,7 @@ function fetchFeedNotification(community_name, feed_id) {
     })
 }
 
-// 공구 전체 리스트 조회
+// 공구 커뮤니티 리스트 조회
 function fetchGroupPurchaseList(community_name) {
     return axios.get(`${config.baseUrl}/community/${community_name}/grouppurchase/`)
 }

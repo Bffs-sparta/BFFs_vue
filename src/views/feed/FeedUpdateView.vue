@@ -16,6 +16,7 @@
 <script>
 import { VueEditor } from "vue2-editor";
 import { fetchFeedDetail,fetchFeedEdit } from "@/api";
+import bus from "@/utils/bus.js";
 export default {
   components: {
       VueEditor
@@ -55,10 +56,11 @@ export default {
               }
           
               if(response.status === 200){
-                alert(response.data.message);
+                this.snotify("success",response.data.message);
                 this.$router.push({name: "feed-detail", params: {feed_id: feed_id}});
               }
           }catch(error){
+              //this.snotify("error",'수정에 실패하였습니다.');
               console.log(error);
               if(!this.title || this.title ==="" || !this.content || this.content==="") {
                 alert("제목 혹은 글 내용이 없습니다! 내용을 입력해주세요")
@@ -73,6 +75,12 @@ export default {
       goBack() {
         this.$router.go(-1);
       },
+      snotify(type,message){
+          bus.$emit('showSnackbar',{
+              type,
+              message
+          });
+      }
   }
 }
 </script>

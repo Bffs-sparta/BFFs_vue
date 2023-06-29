@@ -3,6 +3,8 @@
 </template>
 
 <script>
+import bus from '@/utils/bus.js'
+
 export default {
     created(){
         const access_token = this.$route.query.access_token;
@@ -15,7 +17,16 @@ export default {
             return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
         }).join(''))
         localStorage.setItem('payload', jsonPayload)
+        this.snotify('success','소셜 로그인에 성공하였습니다.')
         this.$router.push('/');
+    },
+    methods:{
+        snotify(type,message){
+            bus.$emit('showSnackbar',{
+                type,
+                message
+            });
+        }
     }
 }
 </script>

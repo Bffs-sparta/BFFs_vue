@@ -163,7 +163,7 @@
 <script>
 import { mapGetters } from "vuex";
 import { fetchCommunityBookmark } from "@/api/index.js";
-
+import bus from "@/utils/bus.js";
 export default {
     data() {
         return {
@@ -213,12 +213,13 @@ export default {
                     this.popularcommunity.communityurl
                 );
                 if (response.status == 200) {
+                    console.log(this.bookmark)
                     this.bookmark = !this.bookmark;
-                    alert(response.data.msg);
+                    this.snotify('success',response.data.message);
                 }
             } catch (error) {
                 if (error.response.status === 401) {
-                    alert("로그인을 해주세요");
+                    this.snotify('warning',"로그인을 해주세요");
                 }
             }
         },
@@ -226,8 +227,14 @@ export default {
             this.$router.push(`/community/search/${this.searchname}`)
         },
         notlogin(){
-            alert('로그인을 해주세요')
+            this.snotify('warning','로그인을 해주세요')
         },
+        snotify(type,message){
+            bus.$emit('showSnackbar',{
+                type,
+                message
+            });
+        }
     },
 };
 </script>
@@ -457,13 +464,11 @@ a {
     grid-row: 1 / 5;
 
     transition: transform 1s;
-    /*filter: brightness(70%);*/
     transition: all ease 0.5s;
 }
 .random-card-image-box img {
     min-height: 200px;
     min-width: 200px;
-    /*filter: brightness(70%);*/
     z-index: 2;
 }
 
@@ -471,16 +476,6 @@ a {
     filter: brightness(70%);
     z-index: 0;
 }
-/* .random-card-image-box:hover {
-    transition: transform 1s;
-    filter: brightness(70%);
-    transition: all ease 0.5s;
-}
-.random-comu-info:hover {
-    opacity: 1;
-    filter: brightness(100%);
-    z-index: 1;
-}*/
 .random-comu-info {
     position: absolute;
     color: white;

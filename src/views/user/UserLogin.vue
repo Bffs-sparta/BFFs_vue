@@ -89,7 +89,7 @@ export default {
                     window.location.href= response.data.url;
                 }
             }catch(error){
-                console.log(error);
+                this.snotify('error','로그인에 실패하였습니다.')
             }
         },
         async login(){
