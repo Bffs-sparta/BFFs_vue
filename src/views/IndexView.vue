@@ -5,8 +5,11 @@
         <div class="title">
           <img src="@/assets/BFF.png" alt="Best Friend Forever" />
         </div>
-        <div class="text">
-          <h4>당신의 찐친을 만나보세요</h4>
+        <div class="intro-title">
+          <h2>당신의 찐친을 만나보세요</h2>
+        </div>
+        <div class="intro-text"> 
+          <h4>대화를 함께할 AI 친구</h4><h4>자유로운 커뮤니티 생성</h4><h4>친구와 함께하는 공동구매</h4>
         </div>
       </div>
     </div>
@@ -195,7 +198,7 @@ img {
   background-image: url("@/assets/bc2.png");
   background-size: cover;
   background-repeat: no-repeat;
-  opacity: 0.5;
+  opacity: 0.55;
   display: flex;
   flex-wrap: wrap;
   align-items: center;
@@ -204,9 +207,37 @@ img {
   height: 648px;
 }
 
+.title {
+  display: flex;
+}
+
+.title img {
+  margin: 0px auto;
+}
+
 .visual > .inner > .text {
   color: #fff;
   text-align: center;
+}
+
+.inner {
+  margin-top: 100px;
+}
+
+.intro-title {
+  width: 240px;
+  margin: auto;
+  color: #909090;
+}
+
+.intro-text {
+  color: #909090;
+  display: flex;
+  padding-bottom: 50px;
+}
+
+.intro-text h4 {
+  margin: 0px 15px;
 }
 
 .main-area {
@@ -286,14 +317,40 @@ img {
   display: flex;
   align-items: center;
   float: left;
-  padding: 20px;
-  font-weight: 700;
+  padding: 20px 0px;
+  --width: 340px;
+  --timing: 2s;
+  width: var(--width);
+  transition: all 0.2s;
 }
+.main-ai-box:hover {
+  animation: var(--timing) linear dance6123 infinite;
+  transform: scale(1.1) translateY(0px);
+}
+
+@keyframes dance6123 {
+  to {
+    background-position: var(--width);
+  }
+}
+
 .main-ai-box img {
   clear: both;
   margin-left: 10px;
   width: 40px;
   height: auto;
+}
+.main-ai-box a {
+  font-size: 1.8rem;
+  padding-left: 0px;
+}
+.main-ai-box a:hover {
+  border: none;
+  background-color: #fff2fa;
+  box-shadow: 0 0 5px rgb(250, 250, 250),
+            0 0 25px #ffedf8,
+            0 0 50px #ffe6f4,
+            0 0 100px #ffffff;
 }
 .play-button {
   margin-left: -100px;
@@ -301,7 +358,7 @@ img {
   height: auto;
 }
 .play-button:hover {
-  transform: scale(1.2);
+  transform: scale(1.25);
   cursor: pointer;
 }
 /***** 혼자 놀기 *****/

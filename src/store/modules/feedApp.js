@@ -10,7 +10,7 @@ import{
 const state ={
     feed: [],
     feeddetail: {},
-    purchasedetail: {},
+    // purchasedetail: {},
 }
 
 const getters ={
@@ -20,9 +20,9 @@ const getters ={
     fetchFeedDetail(state) {
         return state.feeddetail
     },
-    fetchGroupPurchaseDetail(state) {
-        return state.purchasedetail
-    },
+    // fetchGroupPurchaseDetail(state) {
+    //     return state.purchasedetail
+    // },
 }
 
 const mutations ={
@@ -32,9 +32,9 @@ const mutations ={
     SET_FEED_DETAIL(state, feeddetail) {
         state.feeddetail = feeddetail
     },
-    SET_GROUPPURCHASE_DETAIL(state, purchasedetail) {
-        state.purchasedetail = purchasedetail
-    },
+    // SET_GROUPPURCHASE_DETAIL(state, purchasedetail) {
+    //     state.purchasedetail = purchasedetail
+    // },
 }
 const actions ={
     async FETCH_FEED_ALL(context) {
@@ -56,16 +56,12 @@ const actions ={
         }
     },
     async FETCH_FEED_CREATE(context, feedData) {
-        try {
-            const title = feedData.title
-            const content = feedData.content
-            const category_id = feedData.categoryId
+        const title = feedData.title
+        const content = feedData.content
+        const category_id = feedData.categoryId
 
-            const response = await fetchFeedCreate(category_id,title, content)
-            return response
-        } catch (error) {
-            console.log(error)
-        }
+        const response = await fetchFeedCreate(category_id,title, content)
+        return response
     },
     async FETCH_IMAGE_UPLOAD(context, formData) {
         try {

@@ -116,7 +116,7 @@
                 <section class="main-section">
                     <div class="main-container">
                         <div class="subtitle">
-                            <h3>Popular Posts</h3>
+                            <h2>인기 많은 게시글</h2>
                         </div>
                     </div>
                 </section>
@@ -183,7 +183,7 @@
                 <section class="main-section">
                     <div class="main-container">
                         <div class="subtitle">
-                            <h3>New Posts</h3>
+                            <h2>새로운 게시글</h2>
                         </div>
                     </div>
                 </section>
@@ -582,7 +582,8 @@ header >  #menu {
 
 .main-container {
     margin: 20px 30px;
-    padding: 30px;
+    padding: 0px 30px;
+    padding-top: 30px;
 }
 
 
@@ -795,11 +796,10 @@ header >  #menu {
 .card {
   background-color: rgba(243, 244, 246, 1);
   padding: 2rem;
-  max-width: 320px;
+  max-width: 280px;
+  max-height: 350px;
   border-radius: 10px;
   box-shadow: 0 20px 30px -20px rgba(5, 5, 5, 0.24);
-  
-
 }
 
 .card > .button-group {
@@ -868,8 +868,8 @@ header >  #menu {
 }
 
 .message {
-    width: 880px;
-    height: 440px;
+    width: 480px;
+    height: 250px;
     overflow: hidden;
     display: -webkit-box;
     -webkit-box-orient: vertical;

@@ -97,6 +97,7 @@
                     <div id="map" class="mapping"></div>
                     <div class="parti-button-box">
                       <button class="parti-button">참여할래!</button>
+                      <button class="joined-check-button">신청확인</button>
                     </div>
                   </div>
                 </div>
@@ -109,6 +110,9 @@
                   </li>
                   <input type="number" value="1" class="purchase-submit-input" >
                   <button class="submit-button">신 청</button>
+                </div>
+                <div class="purchase-joined-box">
+                  <li class="joined-user-info">joined user 정보 추가</li>
                 </div>
               </div>
               <div class="function-box">
@@ -175,7 +179,7 @@
 </template>
 
 <script>
-import { mapGetters } from "vuex";
+// import { mapGetters } from "vuex";
 //import {
 //    fetchGroupPurchaseJoin,
 //    fetchGroupPurchaseCreate,
@@ -186,58 +190,58 @@ import { mapGetters } from "vuex";
 //} from "@/api/index.js";
 
 
-export default {
-  computed: {
-    ...mapGetters({ data: "fetchGroupPurchaseDetail" }),
-    none() {
-      console.log("요청")
-    },
-    community() {
-      return this.data?.community;
-    },
-    communityurl() {
-      return this.data?.community?.communityurl;
-    },
-    grouppurchase() {
-      return this.data?.grouppurchase;
-    },
-    user() {
-      return this.data?.user;
-    },
-    bookmark() {
-      return this.community?.is_bookmarked;
-    },
-    hasAccessToken(){
-      return localStorage.getItem('access_token');
-    },
-  },
-  watch: {
-    $route(to) {
-      const grouppurchase_id = to.params.grouppurchase_id;
-      const community_name = to.params.community_name;
-      this.$store.dispatch("FETCH_GROUPPURCHASE_DETAIL", { community_name, grouppurchase_id });
-    }
-  },
-  data() {
-    return {
-      userid: "",
-      email: "",
-    };
-  },
-  created() {
-    const grouppurchase_id = this.$route.params.grouppurchase_id;
-    const community_name = this.$route.params.community_name;
-    this.$store.dispatch("FETCH_GROUPPURCHASE_DETAIL", { community_name, grouppurchase_id });
-  },
-  mounted() {
-    const payload = localStorage.getItem("payload");
-    if (payload) {
-      const { user_id } = JSON.parse(payload);
-      const { email } = JSON.parse(payload);
-      this.userid = user_id;
-      this.email = email;
-    }
-  },
+// export default {
+//   computed: {
+//     ...mapGetters({ data: "fetchGroupPurchaseDetail" }),
+//     none() {
+//       console.log("요청")
+//     },
+//     community() {
+//       return this.data?.community;
+//     },
+//     communityurl() {
+//       return this.data?.community?.communityurl;
+//     },
+//     grouppurchase() {
+//       return this.data?.grouppurchase;
+//     },
+//     user() {
+//       return this.data?.user;
+//     },
+//     bookmark() {
+//       return this.community?.is_bookmarked;
+//     },
+//     hasAccessToken(){
+//       return localStorage.getItem('access_token');
+//     },
+//   },
+//   watch: {
+//     $route(to) {
+//       const grouppurchase_id = to.params.grouppurchase_id;
+//       const community_name = to.params.community_name;
+//       this.$store.dispatch("FETCH_GROUPPURCHASE_DETAIL", { community_name, grouppurchase_id });
+//     }
+//   },
+//   data() {
+//     return {
+//       userid: "",
+//       email: "",
+//     };
+//   },
+//   created() {
+//     const grouppurchase_id = this.$route.params.grouppurchase_id;
+//     const community_name = this.$route.params.community_name;
+//     this.$store.dispatch("FETCH_GROUPPURCHASE_DETAIL", { community_name, grouppurchase_id });
+//   },
+//   mounted() {
+//     const payload = localStorage.getItem("payload");
+//     if (payload) {
+//       const { user_id } = JSON.parse(payload);
+//       const { email } = JSON.parse(payload);
+//       this.userid = user_id;
+//       this.email = email;
+//     }
+//   },
 //  methods: {
 //   async joinGroupPurchase() {
 //      try {
@@ -313,7 +317,7 @@ export default {
 //     }
 //    },
 //  },
-}
+// }
 
 </script>
 
@@ -890,6 +894,7 @@ body {
 /* 공구 신청 버튼 button */
 
 .parti-button-box {
+    display: flex;
     grid-column:  -1 / -2;
     grid-row: -1 / -2;
 }
@@ -1019,6 +1024,58 @@ body {
 
 .submit-button:active {
     transform: translate(0, 3px);
+}
+
+
+.joined-check-button {
+    height: 40px;
+    padding: 0px 20px;
+    outline: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1.0rem;
+    font-weight: 500;
+    color: hsl(0, 0%, 100%);
+    border-radius: 5px;
+    text-transform: uppercase;
+    transition: all 0.2s ease-in-out;
+    position: relative;
+    background-color: #dddddd;
+}
+.joined-check-button:active {
+    transform: translate(0, 3px);
+    transition-duration: .1s;
+}
+.joined-check-button:hover{
+    background-color: #c0c0c0;
+}
+
+/* joined-box area */
+
+.purchase-joined-box {
+    display: inline-flex;
+    list-style-type: none;
+    width: 400px;
+    height: 300px auto;
+    margin: 50px 160px;
+
+    display: grid;
+    grid-template-columns: 100%;
+    grid-template-rows: repeat(auto, 30px);
+    grid-gap: 5px;
+    
+    padding: 30px 40px ;
+    height: auto;
+    background-color: #dddddd;
+    color: #454545;
+    box-shadow:#909090 0px -2px 0px inset;
+}
+
+.joined-user-info {
+    list-style-type: none;
+    font-size: 1.05rem;
+    font-weight: 600;
+    padding: 10px;
 }
 
 /* 목록 ~ 버튼 area */
