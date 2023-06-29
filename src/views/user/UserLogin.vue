@@ -234,17 +234,19 @@ export default {
 .form-icon {
     width: 50px;
     height: 50px;
-    background-color: #dddddd;
     border-radius: 2px;
     border: none;
     margin-right: 2px;
     opacity: 0.5;
+    background-color: #dddddd;
+    background-color: rgba( 255, 255, 255, 0.5 );
     display: flex;
     align-items: center;
     justify-content: center;
 }
 
 .form-input {
+    display: block;
     height: 50px;
     width: 100%;
     display: flex;
@@ -252,12 +254,13 @@ export default {
 }
 
 .form-input input {
+    vertical-align: baseline;
     width: 100%;
-    background-color: #dddddd;
     border-radius: 2px;
     border: none;
     padding-left: 15px;
-    opacity: 0.5;
+    background-color: #dddddd;
+    background-color: rgba( 255, 255, 255, 0.5 );
     color: #9E2067;
 }
 
