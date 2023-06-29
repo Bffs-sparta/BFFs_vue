@@ -114,10 +114,6 @@ export default {
             }
         }
     },
-    data() {
-        return {
-        }
-    },
     created() {
         const target_user = this.$route.params.id
         this.$store.dispatch("FETCH_USER_PROFILE", target_user);

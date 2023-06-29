@@ -20,7 +20,7 @@
                             <svg xmlns="http://www.w3.org/2000/svg" height="1.5em" viewBox="0 0 384 512" class="svgIcon"><path d="M0 48V487.7C0 501.1 10.9 512 24.3 512c5 0 9.9-1.5 14-4.4L192 400 345.7 507.6c4.1 2.9 9 4.4 14 4.4c13.4 0 24.3-10.9 24.3-24.3V48c0-26.5-21.5-48-48-48H48C21.5 0 0 21.5 0 48z"></path></svg>
                         </label>
                     </div>
-                    <router-link :to="`/${communityurl}/write`">
+                    <router-link :to="`/${community_url}/write`">
                         <button class="Btn">글 쓰기
                             <svg class="Btn-svg" viewBox="0 0 512 512">
                                 <path
@@ -57,18 +57,6 @@
         <section class="main-section">
             <div class="main-area">
                 <div class="main-container">
-                    <!-- 공지 section -->
-                    <div class="notification-section" v-if="notification?.length !== 0">
-                        <router-link :to="`/community/detail/${communityurl}/feed/${feed.id}`" class="notification-wrap" v-for="feed, index in notification" :key="index">
-                            <div class="notification-list">
-                                <p class="notification-title">[공지]</p>
-                                <p class="notification-text">{{ feed.title }}</p>
-                                <p class="notification-comment">({{ feed.comments_count }})</p>
-                                <p class="notification-author">- {{ feed.nickname }}</p>
-                            </div>
-                            <p class="notification-date">{{ feed.created_at.slice(0, 10) }}</p>
-                        </router-link>
-                    </div>
                     <!-- category list 내용 -->
                     <div class="main-content-wrapper" v-if="feeds?.length === 0">
                         <h1 style="color:#707070; margin: 0 auto;">아직 게시글이 없습니다</h1>
@@ -76,7 +64,33 @@
                     <div class="main-content-wrapper" v-else>
                         <!-- 게시글 1개 -->
                         <div  v-for="feed,index in feeds" :key="index">
-                            <router-link :to="`/community/detail/${communityurl}/feed/${feed.id}`">
+                            <router-link :to="`/community/detail/${community_url}/purchase/${feed.id}`" v-if="category_url === 'groupbuy'">
+                                <div class="content-card">
+                                    <div class="image-box">
+                                        <img class="content-image" src="@/assets/room_image(3).jpg">
+                                    </div>
+                                    <div class="title-box">
+                                        <span class="content-title">
+                                            <span style="color: #9E2067;">[{{ feed.grouppurchase_status }}]</span>
+                                            {{ feed.title }}</span>
+                                    </div>
+                                    <p class="author">{{ feed.nickname }}</p>
+                                    <p class="content-date">{{ feed.created_at.slice(0,10) }} | {{ feed.created_at.slice(12,19) }}</p>
+                                    <div class="view-box">
+                                        <font-awesome-icon :icon="['fas', 'user']" size="xs" style="color: #909090;" class="icon"/>
+                                        <span class="content-count" style="margin-left: 5px;"><span style="color: #9E2067;">{{ feed.joined_user_count }} </span><span>/</span><span style="color: #9E2067;"> {{ feed.person_limit }}</span></span> 
+                                    </div>
+                                    <div class="like-box">
+                                        <img src="@/assets/view_look.png">
+                                        <span class="content-count">{{ feed.view_count }}</span>
+                                    </div>
+                                    <div class="comment-box">
+                                        <img src="@/assets/comment.png">
+                                        <span class="content-count">{{ feed.comments_count }}</span>
+                                    </div>
+                                </div>
+                            </router-link>
+                            <router-link :to="`/community/detail/${community_url}/feed/${feed.id}`" v-else>
                                 <div class="content-card">
                                     <div class="image-box">
                                         <img class="content-image" src="@/assets/room_image(3).jpg">
@@ -124,6 +138,7 @@
 <script>
 import { mapGetters } from 'vuex'
 import { fetchCommunityBookmark } from '@/api/index'
+import bus from '@/utils/bus'
 export default {
     data(){
         return{
@@ -132,12 +147,9 @@ export default {
         }
     },
     computed:{
-        ...mapGetters(['fetchCommunityCategoryDetail']),
+        ...mapGetters(['fetchCommunityCategoryDetail', 'fetchGroupPurchaseList']),
         community(){
             return this.fetchCommunityCategoryDetail?.community
-        },
-        notification(){
-            return this.fetchCommunityCategoryDetail?.notification
         },
         bookmark(){
             return this.fetchCommunityCategoryDetail?.community?.is_bookmarked;
@@ -153,6 +165,9 @@ export default {
             return this.fetchCommunityCategoryDetail?.category_name
             //return this.$route.params.category_name
         },
+        category_url(){
+            return this.$route.params.category_name
+        },
         categories(){
             return this.fetchCommunityCategoryDetail?.categories?.categories
         },
@@ -163,10 +178,12 @@ export default {
             return this.fetchCommunityCategoryDetail?.feed || [];
         },     
         feeds(){
-            return this.fetchCommunityCategoryDetail?.feed?.results;
-        },
-        communityurl(){
-            return this.$route.params.community_name
+            const category_name= this.$route.params.category_name
+            if (category_name === 'groupbuy') {
+                return this.fetchGroupPurchaseList?.data;
+            } else {
+                return this.fetchCommunityCategoryDetail?.feed?.results;
+            }
         },
         hasAccessToken(){
             return localStorage.getItem('access_token');
@@ -175,52 +192,64 @@ export default {
     created(){
         const community_name = this.$route.params.community_name
         const category_name= this.$route.params.category_name
-        this.$store.dispatch('FETCH_COMMUNITY_CATEGORY_FEED',{community_name,category_name})
+        if (category_name === 'groupbuy') {
+            this.$store.dispatch('FETCH_GROUPPURCHASE_LIST',community_name)
+            this.$store.dispatch('FETCH_COMMUNITY_CATEGORY_FEED',{community_name,category_name})
+        } else {
+            this.$store.dispatch('FETCH_COMMUNITY_CATEGORY_FEED',{community_name,category_name})
+        }
     },
     watch: {
         $route(){
             const community_name = this.$route.params.community_name
             const category_name= this.$route.params.category_name
-            this.$store.dispatch('FETCH_COMMUNITY_CATEGORY_FEED',{community_name,category_name})
+            if (category_name === 'groupbuy') {
+                this.$store.dispatch('FETCH_GROUPPURCHASE_LIST',community_name)
+                this.$store.dispatch('FETCH_COMMUNITY_CATEGORY_FEED',{community_name,category_name})
+            } else {
+                this.$store.dispatch('FETCH_COMMUNITY_CATEGORY_FEED',{community_name,category_name})
+            }
         },
     },    
     methods:{
+        // isTimeBeforeOpen(open_at) {
+        //     const currentTime = new Date();
+        //     return currentTime < new Date(open_at);
+        // },
+        // isTimeAfterClose(close_at) {
+        //     const currentTime = new Date();
+        //     return currentTime > new Date(close_at);
+        // },
         async addBookmark() {
             try {
                 const community_name = this.$route.params.community_name
                 const response = await fetchCommunityBookmark(community_name)
                 if (response.status == 200) {
                     this.bookmark = !this.bookmark;
-                    alert(response.data.msg)
+                    this.snotify('success',response.data.msg)
                 }
             } catch (error) {
                 if (error.response.status === 401) {
-                    alert("로그인을 해주세요");
+                    this.snotify('error',"로그인을 해주세요");
                 }
             }
         },
-        pageMove(url){
-            if(url){
-                this.$store.dispatch('FETCH_COMMUNITY_CATEGORY_PAGINATION',url)
-            }
-        },
-        numberMove(page){
-            if(page == 1){
-                const community_name = this.$route.params.community_name
-                const category_name= this.$route.params.category_name
-                this.$store.dispatch('FETCH_COMMUNITY_CATEGORY_FEED',{community_name,category_name})
-            }else{
-                const url = this.pagination.url+'?page='+page
-                console.log(url)
-                this.$store.dispatch('FETCH_COMMUNITY_CATEGORY_PAGINATION',url)
-            }
-        },
         searchFeed() {
-            this.$router.push(`/feed/search/${this.searchname}`)
+            if(this.searchname==''){
+                this.snotify('warning','검색어를 입력해주세요')
+            }else{
+                this.$router.push(`/feed/search/${this.searchname}`)
+            }
         },
         notlogin(){
-            alert('로그인을 해주세요')
+            this.snotify('error','로그인을 해주세요')
         },
+        snotify(type,message){
+            bus.$emit('showSnackbar',{
+                type,
+                message
+            });
+        }
     }
 }
 </script>
@@ -321,47 +350,6 @@ a{
     font-size: 24px;
     font-weight: 700;
     color: #707070;
-}
-
-.notification-section {
-    width: 95%;
-    margin-top: -50px;
-    padding: 20px;
-}
-
-.notification-wrap {
-    height: 30px;
-    display: flex;
-    justify-content: space-between;
-}
-
-.notification-list {
-    display: flex;
-}
-
-.notification-title {
-    color:#9E2067;
-    font-weight: bold;
-}
-
-.notification-text {
-    color:#454545;
-    margin-left: 5px;
-}
-
-.notification-comment {
-    color:#9E2067;
-    margin-left: 5px;
-}
-
-.notification-author {
-    color:#454545;
-    margin-left: 5px;
-}
-
-.notification-date {
-    color:#909090;
-    margin-right: 30px;
 }
 
 /***** 버튼 css *****/
