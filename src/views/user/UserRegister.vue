@@ -46,10 +46,10 @@
                 <!-- 함수에서 get할때 날짜 불러다 넣어주기, user 정보에 boolean으로 함께 저장되도록 하기 -->
                 <p>2023년 06월 26일</p>
                 <p>동의</p>
-                <input type="radio" name="policy-check" id="agree_check" />
+                <input type="radio" name="policy-check" id="agree_check" v-model="agreecheck" :value="true"/>
                 <!-- 거부할 시 '동의가 필요하다'는 alert 띄워주기 -->
                 <p>거부</p>
-                <input type="radio" name="policy-check" id="disagree_check" />
+                <input type="radio" name="policy-check" id="disagree_check" v-model="agreecheck" :value="false"/>
             </div>
         </div>        
         <div class="register-container">
@@ -107,6 +107,7 @@ import  { fetchVerificationEmail,fetchSendEmail,fetchSignup } from "@/api/index.
 export default {
     data(){
         return {
+            agreecheck: false,
             inputType: 'password',
             visiable: false,
             modalopen: false,
@@ -169,16 +170,20 @@ export default {
             }
         },
         async userRegister(){
-            try{
-                const response = await fetchSignup(this.email, this.password, this.name, this.age, this.region, this.nickname);
-                if(response.status === 201){
-                    alert("회원가입이 완료되었습니다.");
-                    this.$router.push({name: 'user-login'});
+            if(!this.agreecheck){
+                alert('개인정보 약관에 동의하셔야 회원가입이 가능합니다.')
+            } else {
+                try{
+                    const response = await fetchSignup(this.email, this.password, this.name, this.age, this.region, this.nickname);
+                    if(response.status === 201){
+                        alert("회원가입이 완료되었습니다.");
+                        this.$router.push({name: 'user-login'});
+                    }
+                }catch(error){
+                    console.log(error);
                 }
-            }catch(error){
-                console.log(error);
-            }
-        }
+            }            
+        },
     },
     components: {
         VerifyModal,

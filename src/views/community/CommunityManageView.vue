@@ -74,7 +74,7 @@
                 <div class="main-container">
                     <div class="sub-title2">
                         <span>
-                            <h3>회원 관리하기</h3>
+                            <h3>관리자 등록 삭제</h3>
                             <div class="member-wrapper">
                                 <div class="search-area">
                                     <div class="admin-box">
@@ -110,7 +110,7 @@
                                     </div>
                                 </div>
                                 <div class="search-area">
-                                    <h3>새로운 관리자 등록하기</h3>
+                                    <h3>새로운 관리자 찾기</h3>
                                     <div class="search-box">
                                         <div class="container-input">
                                             <input type="text" placeholder="User Search" name="text" class="input"
@@ -200,7 +200,7 @@ export default {
                     this.word = '';
                 }
             } catch (error) {
-                console.log(error)
+                alert(error.response.data.msg)
             }
         },
         async forbiddenDelete(word) {
@@ -211,7 +211,7 @@ export default {
                     this.fetchCommunityDetail.data.forbiddenword.splice(this.fetchCommunityDetail.data.forbiddenword.indexOf(word), 1);
                 }
             } catch (error) {
-                console.log(error)
+                alert(error.response.data.msg)
             }
         },
         async createSubadmin(id) {
@@ -224,7 +224,7 @@ export default {
                     this.fetchCommunityDetail.data.admin.splice(this.fetchCommunityDetail.data.admin.length, 0, ...removeuser)
                 }
             } catch (error) {
-                console.log(error)
+                alert(error.response.data.msg)
             }
         },
         async deleteSubadmin(id) {
@@ -237,7 +237,7 @@ export default {
                     this.fetchCommunityAdmin.splice(this.fetchCommunityAdmin.length, 0, ...removeuser)
                 }
             } catch (error) {
-                console.log(error)
+                alert(error.response.data.msg)
             }
         },
         InputImage(event) {
@@ -267,7 +267,7 @@ export default {
                     this.$router.go()
                 }
             } catch (error) {
-                console.log(error)
+                alert(error.response.data.msg)
             }
         },
         searchUser() {
@@ -290,7 +290,7 @@ export default {
                     this.$router.push('/')
                 }
             } catch (error) {
-                console.log(error)
+                alert(error.response.data.msg)
             }
         },
     }

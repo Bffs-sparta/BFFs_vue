@@ -18,7 +18,7 @@ import MeetFriendView from '../views/feed/MeetFriendView.vue'
 import FeedUpdateView from '../views/feed/FeedUpdateView.vue'
 import FeedDetailView from '../views/feed/FeedDetailView.vue'
 import FeedSearchView from '../views/feed/FeedSearchView.vue'
-import PurchaseWriteView from '../views/feed/PurchaseWriteView.vue'
+import PurchaseWrite from '@/components/PurchaseWrite.vue'
 import PurchaseUpdateView from '../views/feed/PurchaseUpdateView.vue'
 import PurchaseDetail from '../views/feed/PurchaseDetail.vue'
 
@@ -150,7 +150,7 @@ export const router = new VueRouter({
         {
             path:'/community/:community_name/purchase/write',
             name:'purchase-create',
-            component:PurchaseWriteView,
+            component:PurchaseWrite,
             beforeEnter: (to, from, next) => {
                 if (localStorage.getItem('access_token')) {
                     next()
@@ -158,7 +158,7 @@ export const router = new VueRouter({
                     alert('로그인이 필요해요!')
                     next('/user/login')
                 }
-            } 
+            }
         },
         {
             path:'/community/update/purchase/:purchase_id',

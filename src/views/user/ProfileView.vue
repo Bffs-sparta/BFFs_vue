@@ -107,9 +107,6 @@
                                 <div class="author"> By <span class="name">{{ profile.user_name }}</span></div>
                                 <div class="author"> 가입일 <span class="name">{{ profile.created_at.slice(0, 10) }}</span></div>
                             </div>
-                            <!-- <div class="change" v-if="userid===profile.id">
-                                <button class="quit-button"><router-link :to="`/profile/update/${profile.id}`">회원 정보 수정</router-link></button>
-                            </div> -->
                             <div class="guestbook-comment" v-if="userid===profile.id">
                                 <div class="submit-box">
                                     <router-link :to="`/profile/update/${profile.id}`" class="Btn" @click="editProfile()">수정
@@ -146,13 +143,23 @@
                             </div>
                             <div v-else>
                                 <div class="comment-card" v-for="(guestbook, index) in guestbook" :key="index">
+                                    <!-- 댓글 수정용 div. display:none; 토글 필요 -->
+                                    <div class="comment-update-box" v-if="guestbook.commenteditshow">
+                                        <div class="comment-update-div">
+                                        <p>댓글 수정</p>
+                                        <textarea v-model="inputUpdateComment" class="update-textarea" @keyup.enter="editComment(guestbook.id)"></textarea>
+                                        <button type="submit" class="update-submit-button" @click="editComment(guestbook.id)">수정 완료</button>
+                                        <button class="update-quit-button" @click="commenteditshow(guestbook)">취소</button>
+                                        </div>
+                                    </div>
+
                                     <li class="comment-author"><router-link :to="`/profile/${guestbook.user}`">{{ guestbook.nickname }}</router-link></li>
                                     <li class="comment-date">작성일 {{ guestbook.created_at.slice(5, 10) }} 수정일 {{ guestbook.updated_at.slice(5, 10) }}</li>
                                     <li class="comment-text">
                                         {{ guestbook.comment }}
                                     </li>
                                     <div class="comment-func-box" v-if="userid===guestbook.user">
-                                        <button class="comment-edit-btn" @click="editComment(guestbook.id)">
+                                        <button class="comment-edit-btn" @click="commenteditshow(guestbook)">
                                             <svg class="edit-icon" viewBox="0 0 512 512" height="17.5" width="15">
                                                 <path
                                                     d="M410.3 231l11.3-11.3-33.9-33.9-62.1-62.1L291.7 89.8l-11.3 11.3-22.6 22.6L58.6 322.9c-10.4 10.4-18 23.3-22.2 37.4L1 480.7c-2.5 8.4-.2 17.5 6.1 23.7s15.3 8.5 23.7 6.1l120.3-35.4c14.1-4.2 27-11.8 37.4-22.2L387.7 253.7 410.3 231zM160 399.4l-9.1 22.7c-4 3.1-8.5 5.4-13.3 6.9L59.4 452l23-78.1c1.4-4.9 3.8-9.4 6.9-13.3l22.7-9.1v32c0 8.8 7.2 16 16 16h32zM362.7 18.7L348.3 33.2 325.7 55.8 314.3 67.1l33.9 33.9 62.1 62.1 33.9 33.9 11.3-11.3 22.6-22.6 14.5-14.5c25-25 25-65.5 0-90.5L453.3 18.7c-25-25-65.5-25-90.5 0zm-47.4 168l-144 144c-6.2 6.2-16.4 6.2-22.6 0s-6.2-16.4 0-22.6l144-144c6.2-6.2 16.4-6.2 22.6 0s6.2 16.4 0 22.6z">
@@ -197,8 +204,14 @@ export default {
         feed() {
             return this.data.feed;
         },
-        guestbook() {
-            return this.data.guestbook;
+        guestbook(){
+            if (Array.isArray(this.data?.guestbook)) {
+                return this.data?.guestbook?.map(guestbook => ({
+                    ...guestbook,
+                    commenteditshow: false,
+                    }))
+                }
+                return [];
         },
         guestbook_length() {
             return this.guestbook?.length;
@@ -208,6 +221,7 @@ export default {
         return {
             userid: '',
             inputComment: '',
+            inputUpdateComment: "",
         }
     },
     created() {
@@ -228,6 +242,11 @@ export default {
         }
     },
     methods: {
+        commenteditshow(guestbook) {
+            this.inputUpdateComment = guestbook.comment;
+            guestbook.commenteditshow = !guestbook.commenteditshow;
+            this.$forceUpdate()
+        },
         async createComment() {
             try {
                 const profile_id = this.$route.params.id;
@@ -246,9 +265,13 @@ export default {
         },
         async editComment(guestbook_id) {
             try {
-                const response = await fetchGuestBookEdit(guestbook_id, guestbook_id, this.inputCocomment)
+                const profile_id = this.$route.params.id;
+                const response = await fetchGuestBookEdit(profile_id, guestbook_id, this.inputUpdateComment)
                 if (response.status === 201) {
                     alert('방명록 수정이 완료되었습니다.')
+                    this.commenteditshow = false;
+                    const user_id = this.$route.params.id
+                    this.$store.dispatch("FETCH_USER_PROFILE", user_id);
                 }
             } catch (error) {
                 console.log(error)
@@ -256,7 +279,6 @@ export default {
         },
         async deleteComment(guestbook_id) {
             try {
-                
                 const profile_id = this.$route.params.id;
                 const response = await fetchGuestBookDelete(profile_id, guestbook_id)
                 if (response.status === 204) {
@@ -331,14 +353,6 @@ header > .profile > h3 {
  margin-left: 5px;
  font-size: 20px;
  transition: all 0.4s ease-in;
-}
-.quit-button:hover > svg {
- font-size: 1.2em;
- transform: translateX(-5px);
-}
-.quit-button:hover {
- box-shadow: 9px 9px 33px #d1d1d1, -9px -9px 33px #ffffff;
- transform: translateY(-2px);
 }
 
 /***** 버튼 css *****/
@@ -560,13 +574,16 @@ header > .profile > h3 {
     margin: auto;
     margin-right: 44px;
 }
- .user-guestbook  {
+.user-guestbook  {
     height: 24px;
     top: 0;
     bottom: 0;
     margin: auto;
- }
+}
 
+.user_profile {
+    margin-top: 40px;
+}
 
  /*.user-guestbook > .submit-box > .create-button {
     white-space: nowrap;
@@ -1007,6 +1024,7 @@ header > .profile > h3 {
   grid-template-columns: 120px auto 200px;
   grid-template-rows: 30px auto;
   grid-gap: 4px;
+  position: relative;
 
   padding: 10px 20px;
   width: auto;
@@ -1148,4 +1166,103 @@ header > .profile > h3 {
   top: -160%;
   cursor: pointer;
 }
+
+/* comment 수정 div, textarea, button */
+.comment-update-box {
+    /* display: none; */
+    
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+}
+
+.comment-update-div{
+    display: flex;
+    width: 100%;
+    height: 100%;
+    background-color: #f5f5f5;
+    box-shadow:#dddddd 0px -2px 0px inset;
+    align-items: center;
+    justify-content: space-evenly;
+}
+.comment-update-div p {
+    color: #909090;
+    font-size: 0.9rem;
+    margin: 0px 15px;
+}
+
+/* 댓글 수정 textarea */
+.update-textarea {
+    width: 70%;
+    height: 65%;
+    margin-right: 20px;
+    resize: none;
+    overflow: auto;
+    padding: 0.5rem 0.8rem;
+
+    border-radius: .3rem;
+    border: 2px solid transparent;
+    font-size: 1rem;
+    transition: border-color .3s cubic-bezier(.25,.01,.25,1) 0s, color .3s cubic-bezier(.25,.01,.25,1) 0s;
+}
+
+.update-textarea:hover, .update-textarea:focus, .input {
+    outline: none;
+    border-color: #9E2067;
+}
+
+/* comment 수정 내 버튼 - 수정완료 / 취소 */
+.comment-update-div button {
+    margin-right: 10px;
+}
+
+.update-submit-button {
+    white-space: nowrap;
+    padding: 20px 13px;
+    outline: none;
+    border: none;
+    cursor: pointer;
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: hsl(0, 0%, 100%);
+    border-radius: 5px;
+    text-transform: uppercase;
+    transition: all 0.2s ease-in-out;
+    position: relative;
+    background-color: #9E2067;
+    box-shadow: 0 2px 5px rgba(70, 70, 70, 0.5);
+}
+.update-submit-button:hover{
+    background-color: #c3348e;
+}
+.update-submit-button:active {
+    transform: translate(0, 3px);
+    transition-duration: .1s;
+}
+
+.update-quit-button {
+    white-space: nowrap;
+    padding: 20px 25px;
+    outline: none;
+    border: none;
+    cursor: pointer;
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: hsl(0, 0%, 100%);
+    border-radius: 5px;
+    text-transform: uppercase;
+    transition: all 0.2s ease-in-out;
+    position: relative;
+    background-color: #dddddd;
+    box-shadow: 0 2px 5px rgba(131, 131, 131, 0.5);
+}
+.update-quit-button:active {
+    transform: translate(0, 3px);
+    transition-duration: .1s;
+}
+.update-quit-button:hover{
+    background-color: #c0c0c0;
+}
+
 </style>

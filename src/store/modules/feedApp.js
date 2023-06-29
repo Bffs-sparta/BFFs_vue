@@ -3,11 +3,13 @@ import{
     fetchFeedDetail,
     fetchFeedCreate,
     imageUpload,
+    fetchPurchaseDetail,
 } from '@/api/index.js'
 
 const state ={
     feed: [],
     feeddetail: {},
+    purchasedetail: {},
 }
 
 const getters ={
@@ -17,6 +19,9 @@ const getters ={
     fetchFeedDetail(state) {
         return state.feeddetail
     },
+    fetchPurchaseDetail(state) {
+        return state.purchasedetail
+    },
 }
 
 const mutations ={
@@ -25,6 +30,9 @@ const mutations ={
     },
     SET_FEED_DETAIL(state, feeddetail) {
         state.feeddetail = feeddetail
+    },
+    SET_PURCHASE_DETAIL(state, purchasedetail) {
+        state.purchasedetail = purchasedetail
     },
 }
 const actions ={
@@ -61,6 +69,15 @@ const actions ={
     async FETCH_IMAGE_UPLOAD(context, formData) {
         try {
             const response = await imageUpload(formData)
+            return response
+        } catch (error) {
+            console.log(error)
+        }
+    },
+    async FETCH_PURCHASE_DETAIL(context, id) {
+        try {
+            const response = await fetchPurchaseDetail(id)
+            context.commit('SET_PURCHASE_DETAIL', response.data)
             return response
         } catch (error) {
             console.log(error)

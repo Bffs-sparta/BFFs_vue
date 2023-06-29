@@ -237,7 +237,6 @@ export default {
     border-radius: 2px;
     border: none;
     margin-right: 2px;
-    opacity: 0.5;
     background-color: #dddddd;
     background-color: rgba( 255, 255, 255, 0.5 );
     display: flex;
@@ -293,7 +292,7 @@ export default {
 }
 
 .wrap a {
-    color: #BABECC;
+    color: #dddddd;
     text-decoration: none;
     margin-left: 20px;
     margin-right: 20px;

@@ -3,31 +3,38 @@
         <div>
           <h3>카테고리</h3>
           <div class="radio-inputs">
-            <label class="radio"  v-for="category,index in categories.data.categories" :key="index">
+            <label class="radio"  v-for="category,index in categories.data.categories" :key="index" @change="changeIndex(index)">
               <input type="radio" name="radio" v-model="categoryId" :value="category[0]" v-if="index==1" checked="">
               <input type="radio" name="radio" v-model="categoryId" :value="category[0]" v-else>
               <span class="name">{{ category[1] }}</span>
             </label>
           </div>
         </div>
-        <div class = "title">
-            <input type="text" id="title" v-model="title" placeholder="제목을 입력해주세요">
-        </div>
-        <vue-editor v-model="content" :useCustomImageHandler="true" @image-added="handleImageAdded"></vue-editor>
-        <div class="submit-box">
+
+        <div v-if="editoropen" @close="editoropen=false">
+          <div class = "title">
+              <input type="text" id="title" v-model="title" placeholder="제목을 입력해주세요">
+          </div>
+          <vue-editor v-model="content" :useCustomImageHandler="true" @image-added="handleImageAdded"></vue-editor>
+          <div class="submit-box">
             <button class="create-button" @click="writeFeed">생성하기</button>
             <button class="quit-button" @click="goBack">취소하기</button>
+          </div>
         </div>
+        
+        <purchase-write v-if="purchaseopen" @close="purchaseopen=false"></purchase-write>
     </div>
 </template>
 
 <script>
 import { VueEditor } from "vue2-editor";
 import { mapGetters } from "vuex";
+import PurchaseWrite from "@/components/PurchaseWrite.vue"
 
 export default {
 	components: {
-		VueEditor
+		VueEditor,
+    PurchaseWrite,
 	},
 	computed: {
 		...mapGetters({"categories":"fetchCommunityCategoryDetail"}),
@@ -41,38 +48,50 @@ export default {
 			title:'',
 			content: "",
 			categoryId: "",
+      purchaseopen: false,
+      editoropen: true,
 		};
 	},
-    methods: {
-      goBack(){
-        this.$router.go(-1);
-      },
-      async writeFeed() {
-          try{
-              const response = await this.$store.dispatch("FETCH_FEED_CREATE", {
-                title: this.title,
-                content: this.content,
-                categoryId: this.categoryId,
-              });
-              if(response.status === 201){
-                alert(response.data.message)
-                this.$router.push({name: "community-detail", params: {name: this.$route.params.community_name}});
-              }
-          }catch(error){
-              alert('카테고리를 입력해주세요')
-          }
-      },
-      async handleImageAdded(file, Editor, cursorLocation, resetUploader) {
-          const formData = new FormData();
-          formData.append("image", file);
-          const response = await this.$store.dispatch("FETCH_IMAGE_UPLOAD", formData)
-          if(response.status === 201){
-              const imageUrl = response.data.image_url;
-              Editor.insertEmbed(cursorLocation, "image", imageUrl);
-              resetUploader();
-          }
-      },
+  methods: {
+    goBack(){
+      this.$router.go(-1);
     },
+    async writeFeed() {
+        try{
+            const response = await this.$store.dispatch("FETCH_FEED_CREATE", {
+              title: this.title,
+              content: this.content,
+              categoryId: this.categoryId,
+            });
+            if(response.status === 201){
+              alert(response.data.message)
+              this.$router.push({name: "community-detail", params: {name: this.$route.params.community_name}});
+            }
+        }catch(error){
+            alert('금지어가 포함되어 있습니다');
+        }
+    },
+    async handleImageAdded(file, Editor, cursorLocation, resetUploader) {
+        const formData = new FormData();
+        formData.append("image", file);
+        const response = await this.$store.dispatch("FETCH_IMAGE_UPLOAD", formData)
+        if(response.status === 201){
+            const imageUrl = response.data.image_url;
+            Editor.insertEmbed(cursorLocation, "image", imageUrl);
+            resetUploader();
+        }
+    },
+    changeIndex(index) {
+      console.log(index)
+      if (index===2) {
+        this.purchaseopen = true;
+        this.editoropen = false;
+      } else {
+        this.purchaseopen = false;
+        this.editoropen = true;
+      }
+    },
+  },
 }
 
 </script>
