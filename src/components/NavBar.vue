@@ -41,6 +41,7 @@
 </template>
 
 <script>
+import jwt_decode from "jwt-decode";
 import MenuBar from './MenuBar.vue'
 import { mapGetters } from 'vuex'
 export default {
@@ -61,28 +62,54 @@ export default {
   computed:{
     ...mapGetters(['menubar']),
   },
-  created(){
+  created() {
     this.$router.beforeEach((to, from, next) => {
       const currentTime = Math.floor(Date.now() / 1000);
-      const { exp } = JSON.parse(localStorage.getItem('payload') || '{}');
-      if(exp<currentTime){
-        localStorage.removeItem('access_token');
-        localStorage.removeItem('refresh_token');
-        localStorage.removeItem('payload');
-        alert('로그인 시간이 만료되었습니다.');
-        next(false)
-        const access = localStorage.getItem('access_token')
+      const exp = localStorage.getItem("access_token") ? jwt_decode(localStorage.getItem("access_token")).exp : null;
+      if (exp && exp < currentTime) {
+        const refresh = localStorage.getItem("refresh_token");
+        const refresh_decode = jwt_decode(refresh);
+        if (refresh_decode.exp < currentTime) {
+          localStorage.removeItem("access_token");
+          localStorage.removeItem("refresh_token");
+          localStorage.removeItem("payload");
+          alert("로그인 시간이 만료되었습니다.");
+          next(false);
+        } else {
+          this.$store.dispatch("TokenRefresh").then((response) => {
+            if (response.status == 200) {
+              localStorage.setItem("access_token", response.data.access);
+              next();
+            } else {
+              alert("로그인 시간이 만료되었습니다.");
+              next(false);
+            }
+          });
+        }
+        
+        const access = localStorage.getItem("access_token");
         this.loginuser = access !== null ? true : false;
 
-        const payload = localStorage.getItem('payload');
+        const payload = localStorage.getItem("payload");
         if (payload) {
           const { user_id } = JSON.parse(payload);
           this.userid = user_id;
         }
-      }else{
-        next()
+      } else {
+        if(localStorage.getItem("access_token")){
+          const access = localStorage.getItem("access_token");
+          this.loginuser = access !== null ? true : false;
+
+          const payload = localStorage.getItem("payload");
+          if (payload) {
+            const { user_id } = JSON.parse(payload);
+            this.userid = user_id;
+          }
+        }
+        next();
       }
-    })
+    });
+    
   },
   mounted() {
     const access = localStorage.getItem('access_token')
