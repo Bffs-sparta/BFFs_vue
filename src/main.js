@@ -10,11 +10,11 @@ import { library } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
 /* import specific icons */
-import { faUser,faEnvelope,faLock,faMapLocationDot,faSignature,faTrash,faBan,faMinus } from '@fortawesome/free-solid-svg-icons' 
+import { faUser,faEnvelope,faLock,faMapLocationDot,faSignature,faTrash,faBan,faMinus,faCartShopping,faXmark} from '@fortawesome/free-solid-svg-icons' 
 import { faEye,faEyeSlash } from '@fortawesome/free-regular-svg-icons' 
 import 'vue-snotify/styles/material.css'; 
 /* add icons to the library */
-library.add(faUser,faEnvelope,faLock,faEye,faEyeSlash,faMapLocationDot,faSignature,faTrash,faBan,faMinus)
+library.add(faUser,faEnvelope,faLock,faEye,faEyeSlash,faMapLocationDot,faSignature,faTrash,faBan,faMinus,faCartShopping,faXmark)
 
 /* add font awesome icon component */
 Vue.component('font-awesome-icon', FontAwesomeIcon)

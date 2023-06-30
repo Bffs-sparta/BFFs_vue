@@ -8,6 +8,7 @@
 
 <script>
 import jwt_decode from "jwt-decode";
+import bus from '@/utils/bus.js'
 export default {
   created() {
     const currentTime = Math.floor(Date.now() / 1000);
@@ -33,6 +34,24 @@ export default {
         this.checkLogin();
       }
   },
+  methods:{
+    checkLogin(){
+      const access = localStorage.getItem('access_token')
+      this.loginuser = access !== null ? true : false;
+
+      const payload = localStorage.getItem('payload');
+      if (payload) {
+        const { user_id } = JSON.parse(payload);
+        this.userid = user_id;
+      }
+    },
+    snotify(type,message){
+        bus.$emit('showSnackbar',{
+            type,
+            message
+        });
+    }
+  }
 };
 </script>
 

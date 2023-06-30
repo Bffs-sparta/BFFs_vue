@@ -1,14 +1,28 @@
 <template>
     <div>
+        <div class='modal-wrap' v-if='profileModal'>
+            <div class="modal-back" @click='closeModal'></div>
+            <div class='profile-modal'>
+                <div class='modal-header'>
+                    <div @click='closeModal'>
+                        <font-awesome-icon :icon="['fas', 'xmark']" size="2xl" style="color: #fffff;" />
+                    </div>
+                </div>
+                <div class='modal-body'>
+                    <img :src="profile.profileimageurl" v-if="profile.profileimage !== null && profile.profileimage.includes('profile_img')"/>
+                    <img :src="profile.profileimageurl.slice(33)" v-else-if="profile.profileimage !== null"/>
+                    <img src="@/assets/room_image(5).jpg" v-else />
+                </div>
+            </div>
+        </div>
+        <div class="inner">
         <Transition name="fade">
             <password-withdrawal-modal v-if="modalopen" @close="modalopen=false"></password-withdrawal-modal>
         </Transition>
         <div class="modal-overlay" v-if="modalopen" @click="modalopen=false"></div>
         <div class="inner">
-
             <div class="mypage">
                 <div class="list">
-
                     <div class="bookmark">
                         <h3>북마크한 커뮤니티</h3>
                         <div class="main-container">
@@ -143,8 +157,8 @@
                 <div class="user_profile" v-if="profile">
                     <div class="card">
                         <div class="card-image">
-                            <img :src="profile.profileimageurl" v-if="profile.profileimage !== null && profile.profileimage.includes('profile_img')"/>
-                            <img :src="profile.profileimageurl.slice(33)" v-else-if="profile.profileimage !== null"/>
+                            <img :src="profile.profileimageurl" v-if="profile.profileimage !== null && profile.profileimage.includes('profile_img')" @click='openModal'/>
+                            <img :src="profile.profileimageurl.slice(33)" v-else-if="profile.profileimage !== null" @click='openModal'/>
                             <img src="@/assets/room_image(5).jpg" v-else />
                         </div>
                             <div class="category"> {{ profile.nickname }} | {{ profile.region }} </div>
@@ -277,6 +291,7 @@ export default {
             userid: '',
             inputComment: '',
             inputUpdateComment: "",
+            profileModal: false,
             modalopen: false,
             password:'',
         }
@@ -375,6 +390,12 @@ export default {
                 message
             });
         },
+        openModal(){
+            this.profileModal = true;
+        },
+        closeModal(){
+            this.profileModal = false;
+        },
     },
     components: {
         PasswordWithdrawalModal,
@@ -383,6 +404,25 @@ export default {
 </script>
 
 <style scoped>
+.modal-back{
+    background-color: rgba(0, 0, 0, 0.5);
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 9999;
+}
+.profile-modal{
+    z-index: 99999;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+.modal-header{
+    float:right;
+}
 a {
     color: inherit;
     text-decoration: none;
@@ -657,6 +697,46 @@ header > .profile > h3 {
 .user_profile {
     margin-top: 40px;
 }
+.user_profile .card .card-image{
+    cursor: pointer;
+}
+ /*.user-guestbook > .submit-box > .create-button {
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    outline: none;
+    border: none;
+    cursor: pointer;
+    padding: 20px 28px 25px;
+    font-size: 8px;
+    font-weight: 700;
+    color: hsl(0, 0%, 100%);
+    border-radius: 5px;
+    text-transform: uppercase;
+    transition: all 0.2s ease-in-out;
+    position: relative;
+    background-color: #a92278;
+    box-shadow: 0 2px 5px rgba(70, 70, 70, 0.5);
+}
+.writer > .guestbook-comment {
+    position: relative;
+    display: flex;
+    align-items: center;
+    width: 928px; 
+    height: 84px;     
+    margin: 0 auto; 
+}
+.writer > .guestbook-comment > p {
+        margin-left: 12px;
+}
+.writer > .guestbook-comment >.submit-box {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    height: 41px;  
+    right: 4px;
+    margin: auto;
+    margin-right: 44px;
+}*/
 
 .guestbook-comment > .submit-box {
     display: flex;
