@@ -60,7 +60,7 @@ export default {
                   }
               }
           }catch(error){
-              if(error.response.status == 400){
+              if(error.response.status == 405){
                   this.snotify('error',error.response.data.message)
               }
               else{

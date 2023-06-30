@@ -71,7 +71,7 @@ export default {
               this.$router.push({name: "community-detail", params: {name: this.$route.params.community_name}});
             }
         }catch(error){
-          if(error.response.status == 400){
+          if(error.response.status == 405){
             this.snotify('error',error.response.data.message)
           }
           else{
