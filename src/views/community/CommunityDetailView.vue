@@ -776,7 +776,7 @@ header >  #menu {
   background-color: rgba(243, 244, 246, 1);
   padding: 2rem;
   max-width: 280px;
-  max-height: 350px;
+  max-height: 390px;
   border-radius: 10px;
   box-shadow: 0 20px 30px -20px rgba(5, 5, 5, 0.24);
 }

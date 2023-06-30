@@ -221,7 +221,8 @@ img {
 }
 
 .inner {
-  margin-top: 100px;
+  position: absolute;
+  margin-top: 140px;
 }
 
 .intro-title {
@@ -258,7 +259,7 @@ img {
 }
 
 .main-box {
-  margin: 30px 40px 40px 30px;
+  margin: 50px 40px 40px 30px;
 }
 
 .card-container {
@@ -325,7 +326,7 @@ img {
 }
 .main-ai-box:hover {
   animation: var(--timing) linear dance6123 infinite;
-  transform: scale(1.1) translateY(0px);
+  transform: scale(1.25) translateY(0px);
 }
 
 @keyframes dance6123 {
@@ -363,6 +364,7 @@ img {
 }
 /***** 혼자 놀기 *****/
 .alone-card-box {
+  margin: 15px;
   margin-right: 40px;
   width: 260px;
   height: 280px;
@@ -375,7 +377,7 @@ img {
 }
 
 .alone-card-box:hover {
-  box-shadow: 0 10px 20px 4px rgba(35, 35, 35, 0.1);
+  box-shadow: 0 10px 20px 3px rgba(35, 35, 35, 0.1);
 }
 .card-image {
   margin: 0 auto;
@@ -459,7 +461,8 @@ img {
 /***** 같이 놀기 card area *****/
 .with-card-container {
   width: 1200;
-  margin-top: 20px;
+  margin:15px;
+  margin-top: 70px;
   /* 그리드로 카드 자리 지정 */
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(500px, auto));

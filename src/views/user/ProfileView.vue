@@ -1,10 +1,6 @@
 <template>
     <div>
         <div class="inner">
-            <!-- <button>
-                <svg height="16" width="16" xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 1024 1024"><path d="M874.690416 495.52477c0 11.2973-9.168824 20.466124-20.466124 20.466124l-604.773963 0 188.083679 188.083679c7.992021 7.992021 7.992021 20.947078 0 28.939099-4.001127 3.990894-9.240455 5.996574-14.46955 5.996574-5.239328 0-10.478655-1.995447-14.479783-5.996574l-223.00912-223.00912c-3.837398-3.837398-5.996574-9.046027-5.996574-14.46955 0-5.433756 2.159176-10.632151 5.996574-14.46955l223.019353-223.029586c7.992021-7.992021 20.957311-7.992021 28.949332 0 7.992021 8.002254 7.992021 20.957311 0 28.949332l-188.073446 188.073446 604.753497 0C865.521592 475.058646 874.690416 484.217237 874.690416 495.52477z"></path></svg>
-            <span>뒤로</span>
-            </button> -->
 
             <div class="mypage">
                 <div class="list">
@@ -25,7 +21,6 @@
                                                 <img id="new-card-image" v-else src="@/assets/comu_image(1).jpg">
                                             </div>
                                             <span id="new-text-title" class="new-text-title community-text">{{ bookmark.title }}</span>
-                                            <!-- <span id="new-text-region" class="new-text-region">경기</span> -->
                                             <span id="new-text-introduction" class="new-text-introduction">{{ bookmark.introduction }}</span>
                                         </router-link>
                                     </div>
@@ -50,7 +45,6 @@
                                                 <img id="new-card-image" v-else src="@/assets/comu_image(1).jpg">
                                             </div>
                                             <span id="new-text-title" class="new-text-title">{{ community.title }}</span>
-                                            <!-- <span id="new-text-region" class="new-text-region">경기</span> -->
                                             <span id="new-text-introduction" class="new-text-introduction community-text">{{ community.introduction }}</span>
                                             <div class="button-box">
                                                 <router-link :to="`/community/manage/${community.communityurl}`" class="visit-button" v-if="userid===profile.id">
@@ -85,12 +79,11 @@
                                                 <div class="content-card">
                                                     <div class="feed-card-image">
                                                         <img id="feed-card-image" v-if="feed.image != null" :src="feed.imageurl">
-                                                        <img id="feed-card-image" v-else src="@/assets/comu_image(1).jpg">
+                                                        <img id="feed-card-image" v-else src="@/assets/feed_image(1).jpg">
                                                     </div>
                                                     <div class="title-box">
                                                         <span class="content-title">{{ feed.title }}</span>
                                                     </div>
-                                                    <p class="author">{{ feed.nickname }}</p>
                                                     <span id="new-text-introduction" class="new-text-introduction"><div v-html="feed.content"></div></span>
                                                     <p class="content-date">{{ feed.created_at.slice(0,10) }} | {{ feed.created_at.slice(12,19) }}</p>
                                                     <div class="view-box">
@@ -123,16 +116,16 @@
                                     <div class="my-feeds-box">
                                         <div class="main-card-wrapper">
                                             <!-- 공구 게시글 1개 -->
-                                            <router-link :to="`/community/detail/:community_name/feed/${feed.id}`" v-for="(feed, index) in feed" :key=index>
+                                            <router-link :to="`/community/detail/${grouppurchase.community_url}/groupbuy/${grouppurchase.id}`" v-for="(grouppurchase, index) in grouppurchase" :key=index>
                                                 <div class="gp-content-card">
                                                     <div class="gp-title-box">
-                                                        <span class="content-title">{{ feed.title }}</span>
+                                                        <span class="content-title">{{ grouppurchase.title }}</span>
                                                     </div>
-                                                    <span id="gp-product-name" class="gp-product-name"><div v-html="feed.content"></div></span>
+                                                    <span id="gp-product-name" class="gp-product-name"><div v-html="grouppurchase.product_name"></div></span>
                                                     <li>시작일</li>
-                                                    <p class="gp-content-date">{{ feed.created_at.slice(0,10) }} | {{ feed.created_at.slice(12,19) }}</p>
+                                                    <p class="gp-content-date">{{ grouppurchase.open_at.slice(0,10) }} | {{ grouppurchase.open_at.slice(12,19) }}</p>
                                                     <li>마감일</li>
-                                                    <p class="gp-content-date">{{ feed.created_at.slice(0,10) }} | {{ feed.created_at.slice(12,19) }}</p>
+                                                    <p class="gp-content-date">{{ grouppurchase.close_at.slice(0,10) }} | {{ grouppurchase.close_at.slice(12,19) }}</p>
                                                 </div>
                                             </router-link>
                                         </div>
@@ -186,18 +179,18 @@
                         <button class="input-button" @click="createComment()">입 력</button>
                     </div>
 
-                    <div class="sub-content-wrapper">
-                        <!-- 댓글 1개 묶음 -->
-                        <div class="comment-box">
-                            <!-- comment 내용 -->
+                    <div class="sub-content-wrapper-0">
+                        <!-- guestbook 1개 묶음 -->
+                        <div class="guestbook-box">
+                            <!-- guestbook 내용 -->
                             <div v-if="guestbook_length === 0">
                                 <p>첫 방명록을 작성해 보세요!</p>
                             </div>
                             <div v-else>
-                                <div class="comment-card" v-for="(guestbook, index) in guestbook" :key="index">
+                                <div class="guestbook-card" v-for="(guestbook, index) in guestbook" :key="index">
                                     <!-- 댓글 수정용 div. display:none; 토글 필요 -->
-                                    <div class="comment-update-box" v-if="guestbook.commenteditshow">
-                                        <div class="comment-update-div">
+                                    <div class="guestbook-update-box" v-if="guestbook.commenteditshow">
+                                        <div class="guestbook-update-div">
                                         <p>댓글 수정</p>
                                         <textarea v-model="inputUpdateComment" class="update-textarea" @keyup.enter="editComment(guestbook.id)"></textarea>
                                         <button type="submit" class="update-submit-button" @click="editComment(guestbook.id)">수정 완료</button>
@@ -205,20 +198,20 @@
                                         </div>
                                     </div>
 
-                                    <li class="comment-author"><router-link :to="`/profile/${guestbook.user}`">{{ guestbook.nickname }}</router-link></li>
-                                    <li class="comment-date">작성일 {{ guestbook.created_at.slice(5, 10) }} 수정일 {{ guestbook.updated_at.slice(5, 10) }}</li>
-                                    <li class="comment-text">
+                                    <li class="guestbook-author"><router-link :to="`/profile/${guestbook.user}`">{{ guestbook.nickname }}</router-link></li>
+                                    <li class="guestbook-date">작성일 {{ guestbook.created_at.slice(5, 10) }} 수정일 {{ guestbook.updated_at.slice(5, 10) }}</li>
+                                    <li class="guestbook-text">
                                         {{ guestbook.comment }}
                                     </li>
-                                    <div class="comment-func-box" v-if="userid===guestbook.user">
-                                        <button class="comment-edit-btn" @click="commenteditshow(guestbook)">
+                                    <div class="guestbook-func-box" v-if="userid===guestbook.user">
+                                        <button class="guestbook-edit-btn" @click="commenteditshow(guestbook)">
                                             <svg class="edit-icon" viewBox="0 0 512 512" height="17.5" width="15">
                                                 <path
                                                     d="M410.3 231l11.3-11.3-33.9-33.9-62.1-62.1L291.7 89.8l-11.3 11.3-22.6 22.6L58.6 322.9c-10.4 10.4-18 23.3-22.2 37.4L1 480.7c-2.5 8.4-.2 17.5 6.1 23.7s15.3 8.5 23.7 6.1l120.3-35.4c14.1-4.2 27-11.8 37.4-22.2L387.7 253.7 410.3 231zM160 399.4l-9.1 22.7c-4 3.1-8.5 5.4-13.3 6.9L59.4 452l23-78.1c1.4-4.9 3.8-9.4 6.9-13.3l22.7-9.1v32c0 8.8 7.2 16 16 16h32zM362.7 18.7L348.3 33.2 325.7 55.8 314.3 67.1l33.9 33.9 62.1 62.1 33.9 33.9 11.3-11.3 22.6-22.6 14.5-14.5c25-25 25-65.5 0-90.5L453.3 18.7c-25-25-65.5-25-90.5 0zm-47.4 168l-144 144c-6.2 6.2-16.4 6.2-22.6 0s-6.2-16.4 0-22.6l144-144c6.2-6.2 16.4-6.2 22.6 0s6.2 16.4 0 22.6z">
                                                 </path>
                                             </svg>
                                         </button>
-                                        <button class="comment-delete-btn" @click="deleteComment(guestbook.id)">
+                                        <button class="guestbook-delete-btn" @click="deleteComment(guestbook.id)">
                                             <svg viewBox="0 0 15 17.5" height="17.5" width="15"
                                                 xmlns="http://www.w3.org/2000/svg" class="delete-icon">
                                                 <path transform="translate(-2.5 -1.25)"
@@ -269,6 +262,9 @@ export default {
         guestbook_length() {
             return this.guestbook?.length;
         },
+        grouppurchase() {
+            return this.data.joined_grouppurchase;
+        }
     },
     data() {
         return {
@@ -648,44 +644,6 @@ header > .profile > h3 {
     margin-top: 40px;
 }
 
- /*.user-guestbook > .submit-box > .create-button {
-    white-space: nowrap;
-    text-overflow: ellipsis;
-    outline: none;
-    border: none;
-    cursor: pointer;
-    padding: 20px 28px 25px;
-    font-size: 8px;
-    font-weight: 700;
-    color: hsl(0, 0%, 100%);
-    border-radius: 5px;
-    text-transform: uppercase;
-    transition: all 0.2s ease-in-out;
-    position: relative;
-    background-color: #a92278;
-    box-shadow: 0 2px 5px rgba(70, 70, 70, 0.5);
-}
-.writer > .guestbook-comment {
-    position: relative;
-    display: flex;
-    align-items: center;
-    width: 928px; 
-    height: 84px;     
-    margin: 0 auto; 
-}
-.writer > .guestbook-comment > p {
-        margin-left: 12px;
-}
-.writer > .guestbook-comment >.submit-box {
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    height: 41px;  
-    right: 4px;
-    margin: auto;
-    margin-right: 44px;
-}*/
-
 .guestbook-comment > .submit-box {
     display: flex;
 }
@@ -708,8 +666,6 @@ header > .profile > h3 {
     margin-right:28px;
 }
 
-
-
 .input-box {
     display: flex;
     justify-content: center;
@@ -727,8 +683,6 @@ header > .profile > h3 {
     font-size: 1rem;
     transition: border-color .3s cubic-bezier(.25,.01,.25,1) 0s, color .3s cubic-bezier(.25,.01,.25,1) 0s,background .2s cubic-bezier(.25,.01,.25,1) 0s;
 }
-
-
 .create-button {
     margin-right: 30px;
     outline: none;
@@ -751,7 +705,6 @@ header > .profile > h3 {
 .create-button::before {
     transition: all 0.2s ease-in-out;
   }
-  
 .create-button::before {
     z-index: -1;
     position: absolute;
@@ -793,8 +746,7 @@ header > .profile > h3 {
     background-size: 0% 0%;
     transition: background-position 0.5s ease-in-out,
       background-size 0.75s ease-in-out;
-  }
-
+}
 
 .quit-button {
     width: 100px;
@@ -812,6 +764,7 @@ header > .profile > h3 {
     background-color: #909090;
     box-shadow: 0 2px 5px rgba(70, 70, 70, 0.5);
 }
+
 /***** 새로운 커뮤니티 area *****/
 .new-card-container {
     display: flex;
@@ -976,7 +929,6 @@ header > .profile > h3 {
     transition-duration: .3s;
     box-shadow: 0 2px 5px rgba(70, 70, 70, 0.5);
 }
-
 .Btn-svg {
     width: 13px;
     position: absolute;
@@ -1005,7 +957,6 @@ header > .profile > h3 {
 }
 
 /* sub-content! 댓글 input area */
-
 .sub-input-wrapper {
     margin: 0px 0px 50px 0px;
     display: grid;
@@ -1074,28 +1025,29 @@ header > .profile > h3 {
 
 /* 댓글 내용 area */
 
-.sub-content-wrapper {
+.sub-content-wrapper-0 {
   display: grid;
   grid-gap: 15px;
   grid-template-columns: 1fr;
   grid-template-rows: repeat(auto, 100%);
 }
 
-.comment-box {
+.guestbook-box {
   display: block;
   list-style-type: none;
   width: auto;
   height: 80px auto;
 }
-.comment-box div p {
+.guestbook-box div p {
   text-align: center;
 }
-.comment-card {
+.guestbook-card {
   display: grid;
   grid-template-columns: 120px auto 200px;
   grid-template-rows: 30px auto;
   grid-gap: 4px;
   position: relative;
+  margin-bottom: 4px;
 
   padding: 10px 20px;
   width: auto;
@@ -1105,13 +1057,13 @@ header > .profile > h3 {
   box-shadow: #dddddd 0px -2px 0px inset;
 }
 
-.comment-author {
+.guestbook-author {
   margin: auto 0;
   grid-column: 1 / 2;
   grid-row: 1 / 2;
 }
 
-.comment-date {
+.guestbook-date {
   margin-left: auto;
   margin-top: 5px;
   grid-column: 3 / 4;
@@ -1119,20 +1071,20 @@ header > .profile > h3 {
   font-size: 13px;
 }
 
-.comment-text {
+.guestbook-text {
   grid-column: 1 / 3;
   grid-row: 2 / 3;
 }
 
-.comment-func-box {
+.guestbook-func-box {
   display: flex;
   grid-column: 3 / 4;
   grid-row: 2 / 3;
 }
 
-/* comment 수정 버튼 */
+/* guestbook 수정 버튼 */
 
-.comment-edit-btn {
+.guestbook-edit-btn {
   background-color: transparent;
   position: relative;
   border: none;
@@ -1141,7 +1093,7 @@ header > .profile > h3 {
   margin-right: 5px;
 }
 
-.comment-edit-btn::after {
+.guestbook-edit-btn::after {
   content: "수정";
   white-space: nowrap;
   margin-top: 10px;
@@ -1168,33 +1120,33 @@ header > .profile > h3 {
   transition: 0.2s linear;
 }
 
-.comment-edit-btn:hover > .edit-icon {
+.guestbook-edit-btn:hover > .edit-icon {
   transform: scale(1.3);
   cursor: pointer;
 }
 
-.comment-edit-btn:hover > .edit-icon path {
+.guestbook-edit-btn:hover > .edit-icon path {
   fill: rgb(34, 64, 115);
   cursor: pointer;
 }
 
-.comment-edit-btn:hover::after {
+.guestbook-edit-btn:hover::after {
   visibility: visible;
   opacity: 1;
   top: -160%;
   cursor: pointer;
 }
 
-/* comment 삭제 버튼 */
+/* guestbook 삭제 버튼 */
 
-.comment-delete-btn {
+.guestbook-delete-btn {
   background-color: transparent;
   position: relative;
   border: none;
   margin-top: auto;
 }
 
-.comment-delete-btn::after {
+.guestbook-delete-btn::after {
   content: "삭제";
   white-space: nowrap;
   margin-top: 10px;
@@ -1221,25 +1173,25 @@ header > .profile > h3 {
   transition: 0.2s linear;
 }
 
-.comment-delete-btn:hover > .delete-icon {
+.guestbook-delete-btn:hover > .delete-icon {
   transform: scale(1.3);
   cursor: pointer;
 }
 
-.comment-delete-btn:hover > .delete-icon path {
+.guestbook-delete-btn:hover > .delete-icon path {
   fill: rgb(168, 7, 7);
   cursor: pointer;
 }
 
-.comment-delete-btn:hover::after {
+.guestbook-delete-btn:hover::after {
   visibility: visible;
   opacity: 1;
   top: -160%;
   cursor: pointer;
 }
 
-/* comment 수정 div, textarea, button */
-.comment-update-box {
+/* guestbook 수정 div, textarea, button */
+.guestbook-update-box {
     /* display: none; */
     
     position: absolute;
@@ -1248,7 +1200,7 @@ header > .profile > h3 {
     z-index: 1;
 }
 
-.comment-update-div{
+.guestbook-update-div{
     display: flex;
     width: 100%;
     height: 100%;
@@ -1257,7 +1209,7 @@ header > .profile > h3 {
     align-items: center;
     justify-content: space-evenly;
 }
-.comment-update-div p {
+.guestbook-update-div p {
     color: #909090;
     font-size: 0.9rem;
     margin: 0px 15px;
@@ -1283,8 +1235,8 @@ header > .profile > h3 {
     border-color: #9E2067;
 }
 
-/* comment 수정 내 버튼 - 수정완료 / 취소 */
-.comment-update-div button {
+/* guestbook 수정 내 버튼 - 수정완료 / 취소 */
+.guestbook-update-div button {
     margin-right: 10px;
 }
 
@@ -1362,7 +1314,7 @@ header > .profile > h3 {
     width: 350px;
     height: 50px;
     padding: 5px;
-    margin-bottom: 7px;
+    margin: 7px;
 
     background: rgb(255, 255, 255);
     border-radius: 0.4em;
