@@ -506,7 +506,7 @@ header >  #menu {
     background: rgb(0, 0, 0);
 
     display: grid;
-    grid-template-columns: 75% 25%;
+    grid-template-columns: 50% 50%;
     grid-template-rows: 100px 50px;
 }
 

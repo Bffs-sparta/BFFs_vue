@@ -89,7 +89,7 @@
                      <div class="purchase-form-box">
                          <div class="purchase-form">
                              <li class="product-name-part">이름</li>
-                             <li class="product-number-part">인당 수량</li>
+                             <li class="product-number-part">구매 수량</li>
                              <li class="link-part">상품 link</li>
                              <li class="open-at-part">모집 시작</li>
                              <li class="close-at-part">모집 끝</li>
@@ -99,32 +99,68 @@
                              <li class="end-option-part">공구 모집 실패 시</li>
 
                              <li class="product-name">{{ feed?.product_name }}</li>
-                             <li class="product-number">{{ feed?.product_number }}</li>
+                             <li class="product-number">{{ feed?.purchase_quantity }} / {{ feed?.product_number }} 개</li>
                              <li class="link"><a :href="feed.link">{{ feed?.link }}</a></li>
-                             <li class="open-at">{{ feed.open_at.slice(0, 10) }} {{ feed.open_at.slice(11, 20) }}</li>
-                             <li class="close-at">{{ feed.close_at.slice(0, 10) }} {{ feed.close_at.slice(11, 20) }}</li>
+                             <li class="open-at">{{ feed.open_at.slice(0, 10) }} {{ feed.open_at.slice(11, 16) }}</li>
+                             <li class="close-at">{{ feed.close_at.slice(0, 10) }} {{ feed.close_at.slice(11, 16) }}</li>
                              <li class="person-limit">{{ feed.joined_user_count }} / {{ feed.person_limit }} 명</li>
                              <li class="location">{{ feed.location }}</li>
-                             <li class="meeting-at">{{ feed.meeting_at.slice(0, 10) }} {{ feed.meeting_at.slice(11, 20) }}</li>
+                             <li class="meeting-at">{{ feed.meeting_at.slice(0, 10) }} {{ feed.meeting_at.slice(11, 16) }}</li>
                              <li class="end-option">{{ feed.end_choice }}</li>
                              <!-- 지도 api 넣을 예정 -->
                              <div id="map" class="mapping"></div>
                              <div class="parti-button-box">
-                                 <button class="parti-button" @click="submitOpen()">참여할래!</button>
+                                 <button class="party-button" @click="submitOpen()">
+                                    <p>Subscribe</p>
+                                    <svg stroke-width="2" stroke="currentColor" viewBox="0 0 24 24" fill="none" class="h-6 w-6" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M14 5l7 7m0 0l-7 7m7-7H3" stroke-linejoin="round" stroke-linecap="round"></path>
+                                    </svg>
+                                </button>
                              </div>
                          </div>
                      </div>
                      <div class="purchase-submit-box" v-if="submitopen">
-                         <li class="submit-part">
-                         수량 입력
-                         </li>
-                         <li class="submit-help-text">
-                         ⚠ 1 이상 입력 가능합니다!
-                         </li>
-                         <input type="number" v-model="submitnumber" min="1" class="purchase-submit-input">
-                         <button class="submit-button" @click="grouppurchaseJoin()">신 청</button>
+                        <li class="submit-part" v-if="joined_users_id.includes(userid)">수량 수정</li>
+                        <li class="submit-part" v-else>신청 수량</li>
+                        <li class="submit-help-text">⚠ 1 이상 입력 가능</li>
+                        <input type="number" v-model="submitnumber" min="1" class="purchase-submit-input">
+                        <button class="submit-button" @click="grouppurchaseJoin()" v-if="joined_users_id.includes(userid)">수 정</button>
+                        <button class="submit-button" @click="grouppurchaseJoin()" v-else>신 청</button>
                      </div>
                  </div>
+
+                <div class="main">
+                    <ul class="top-bar">
+                        <li>
+                            <button class="btn minimize" @click="userlistshow=true">
+                                <svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 512 512"><path d="M.3 89.5C.1 91.6 0 93.8 0 96V224 416c0 35.3 28.7 64 64 64l384 0c35.3 0 64-28.7 64-64V224 96c0-35.3-28.7-64-64-64H64c-2.2 0-4.4 .1-6.5 .3c-9.2 .9-17.8 3.8-25.5 8.2C21.8 46.5 13.4 55.1 7.7 65.5c-3.9 7.3-6.5 15.4-7.4 24zM48 224H464l0 192c0 8.8-7.2 16-16 16L64 432c-8.8 0-16-7.2-16-16l0-192z"></path></svg>
+                            </button>
+                        </li>
+                        <li>
+                            <button class="btn close" @click="userlistshow=false">
+                                <svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 384 512"><path d="M342.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L192 210.7 86.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L146.7 256 41.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 301.3 297.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L237.3 256 342.6 150.6z"></path></svg>
+                            </button>
+                        </li>
+                    </ul>
+                    <div class="user-list" v-if="userlistshow">
+                        <div class="currentplaying">
+                            <p class="heading">공구 참여중인 유저 목록</p>
+                        </div>
+                        <div class="songs">
+                            <router-link :to="`/profile/${user.user}`" class="loader" v-for="user,index in joined_users" :key='index'>
+                                <div class="song">
+                                    <div class="song-name">
+                                        <p class="name">{{ user.nickname }} ({{ user.region }})</p>
+                                        <p class="name"><font-awesome-icon :icon="['fas', 'cart-shopping']" /> {{ user.product_quantity }}</p>
+                                    </div>
+                                    <p class="artist">참여 날짜 : {{ user.created_at.slice(0, 10) }}</p>
+                                </div>
+                                <div class="albumcover"><img :src="user.profileimage.indexOf('profile_img') ? user.profileimage: 'https://api.makebestie.com/media/'+user.profileimage" alt=""></div>
+                            </router-link>
+                        </div>
+                    </div>
+                </div>
+
                  <div class="function-box">
                    <div class="move-box">
                     <router-link :to="`/community/${communityurl}/category/${feed.category_url}`" class="move-button">목록으로</router-link>
@@ -295,6 +331,12 @@ export default {
             }
             return [];
         },
+        joined_users(){
+            return this.data?.grouppurchase?.joined_users;
+        },
+        joined_users_id(){
+            return this.data?.grouppurchase?.joined_users.map(user => user.user);
+        },
     },
     watch: {
         $route(to) {
@@ -312,6 +354,7 @@ export default {
             inputComment: "",
             inputUpdateComment: "",
             searchname: '',
+            userlistshow: true,
         };
     },
     created() {
@@ -383,12 +426,19 @@ export default {
             try {
             const grouppurchase_id = this.$route.params.grouppurchase_id;
             const response = await fetchGroupPurchaseJoin(grouppurchase_id, this.submitnumber);
-            if (response.status === 201) {
-                this.snotify('success',response.data.message);
-                this.submitopen = false;
-            }
+                if (response.status === 201 || response.status === 202) {
+                    this.snotify('success',response.data.message);
+                    this.submitopen = false;
+                    const grouppurchase_id = this.$route.params.grouppurchase_id;
+                    const community_name = this.$route.params.community_name;
+                    this.$store.dispatch("FETCH_GROUPPURCHASE_DETAIL", { community_name, grouppurchase_id });
+                }
             } catch (error) {
-                this.snotify('error',error.response.data.message);
+                if (error.response.status === 401) {
+                    this.snotify('warning',"로그인을 해주세요");
+                } else {
+                    this.snotify('error',error.response.data.message);
+                }
             }
         },
         async createComment() {
@@ -473,7 +523,291 @@ export default {
   a {
     text-decoration: none;
   }
-  
+  .main-content {
+      padding: 30px 10px 50px 10px;
+      grid-column: 1 / 4;
+      grid-row: 3 / 4;
+  }
+.main {
+  --clr: #FDFFFC;
+  --clr-text: #1C1D21;
+  --clr1: #9E2067;
+  background-color: var(--clr);
+  padding: 1em;
+  padding-bottom: 1.1em;
+  border-radius: 15px;
+  margin: 1em;
+  flex-direction: column;
+  outline: 2px solid var(--clr);
+  outline-offset: 3px;
+
+  display: flex;
+  grid-column: 3 / 4;
+  grid-row: 3 / 4;
+  min-width: 350px;
+}
+
+/* new start */
+.top-bar {
+  display: flex;
+  align-items: center;
+  align-self: flex-end;
+  gap: .5rem;
+  list-style: none;
+}
+
+.btn {
+  fill: var(--clr);
+  border: none;
+  width: 2rem;
+  aspect-ratio: 1/1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 10;
+  border-radius: 50%;
+}
+
+.close {
+  background-color: #dddddd;
+}
+.close:hover {
+  background-color: #a40303;
+}
+
+.minimize {
+  background-color: #dddddd;
+}
+.minimize:hover {
+  background-color: rgb(34, 64, 115);
+}
+
+.songs {
+  display: flex;
+  flex-direction: column;
+  gap: .5rem;
+  height: 210px;
+  overflow-y: auto;
+}
+.songs::-webkit-scrollbar {
+  width: 5px;
+}
+.songs::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+.songs::-webkit-scrollbar-thumb {
+  background: #888;
+}
+/* new end */
+
+.loader {
+  display: flex;
+  flex-direction: row;
+  height: 4em;
+  padding-inline: 1em;
+  transform: rotate(180deg);
+  justify-content: right;
+  border-radius: 10px;
+  transition: .4s ease-in-out;
+}
+
+.song > * {
+  transition: .4s ease-in-out;
+}
+
+.loader:hover {
+  cursor: pointer;
+  background-color: var(--clr1);
+  --clr-text: #FDFFFC;
+}
+
+.currentplaying {
+    display: flex;
+  align-self: center;
+  width: 100%;
+  border-radius: .5rem;
+}
+
+.spotify {
+  width: 50px;
+  height: 50px;
+  margin-right: 0.6em;
+}
+
+.heading {
+  color: #1C1D21;
+  font-size: 1.1em;
+  font-weight: bold;
+  align-self: center;
+  margin: 0 auto;
+  margin-top: 30px;
+  margin-bottom: 30px;
+}
+
+.loading {
+  display: flex;
+  margin-top: 1em;
+  margin-left: 0.3em;
+}
+
+.load {
+  width: 2px;
+  height: 33px;
+  background-color: limegreen;
+  animation: 1s move6 infinite;
+  border-radius: 5px;
+  margin: 0.1em;
+}
+
+.load:nth-child(1) {
+  animation-delay: 0.2s;
+}
+
+.load:nth-child(2) {
+  animation-delay: 0.4s;
+}
+
+.load:nth-child(3) {
+  animation-delay: 0.6s;
+}
+
+.play {
+  position: relative;
+  left: 0.35em;
+  height: 1.6em;
+  width: 1.6em;
+  clip-path: polygon(50% 50%, 100% 50%, 75% 6.6%);
+  background-color: var(--clr-text);
+  transform: rotate(-90deg);
+  align-self: center;
+  margin-top: 0.7em;
+  justify-self: center;
+  transition: .4s ease-in-out;
+}
+
+.albumcover {
+  position: relative;
+  margin-right: 1em;
+  height: 40px;
+  width: 40px;
+  background-color: rgb(233, 232, 232);
+  align-self: center;
+  border-radius: 5px;
+  overflow: hidden;
+}
+.albumcover img{
+    width:100%;
+    rotate:180deg;
+}
+.song {
+  position: relative;
+  transform: rotate(180deg);
+  margin-right: 1em;
+  color: var(--clr-text);
+  align-self: center;
+  width: 70%;
+}
+.song-name {
+    display: flex; 
+    justify-content: space-between;
+}
+.artist {
+  margin-top:-5px;
+  font-size: 0.6em;
+  color: var(--clr-text);
+}
+
+@keyframes move6 {
+  0% {
+    height: 0.2em;
+  }
+
+  25% {
+    height: 0.7em;
+  }
+
+  50% {
+    height: 1.5em;
+  }
+
+  100% {
+    height: 0.2em;
+  }
+}
+
+
+/* 참여 버튼 */
+.party-button {
+  padding: 0;
+  margin: 0;
+  border: none;
+  background: none;
+  cursor: pointer;
+}
+
+.party-button {
+  --primary-color: #111;
+  --hovered-color: #9E2067;
+  position: relative;
+  display: flex;
+  font-weight: 600;
+  font-size: 20px;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.party-button p {
+  margin: 0;
+  position: relative;
+  font-size: 1.1em;
+  color: var(--primary-color);
+  font-weight: bold;
+}
+
+.party-button::after {
+  position: absolute;
+  content: "";
+  width: 0;
+  left: 0;
+  bottom: -7px;
+  background: var(--hovered-color);
+  height: 2px;
+  transition: 0.3s ease-out;
+}
+
+.party-button p::before {
+  position: absolute;
+/*   box-sizing: border-box; */
+  content: "Subscribe";
+  width: 0%;
+  inset: 0;
+  color: var(--hovered-color);
+  overflow: hidden;
+  transition: 0.3s ease-out;
+}
+
+.party-button:hover::after {
+  width: 100%;
+}
+
+.party-button:hover p::before {
+  width: 100%;
+}
+
+.party-button:hover svg {
+  transform: translateX(4px);
+  color: var(--hovered-color)
+}
+
+.party-button svg {
+  color: var(--primary-color);
+  transition: 0.2s;
+  position: relative;
+  width: 15px;
+  transition-delay: 0.2s;
+}
+
   .head-area {
       width: 100%;
       height: 150px;
@@ -831,7 +1165,7 @@ export default {
   
   .main-content {
       padding: 30px 10px 50px 10px;
-      grid-column: 1 / 4;
+      grid-column: 2 / 4;
       grid-row: 3 / 4;
   }
   
@@ -1030,7 +1364,7 @@ export default {
   }
   
   .mapping {
-      grid-column: 4 / 6;
+      /*grid-column: 4 / 6;*/
       grid-row: 5 / 7;
       margin-left:auto;
       margin-right: 20px;
@@ -1137,7 +1471,6 @@ export default {
   
   .purchase-submit-input:hover, .purchase-submit-input:focus, .input {
       outline: none;
-      border-color: #9E2067;
   }
   
   .input-group:hover, .input:focus {
@@ -1371,13 +1704,7 @@ export default {
   
   .input-sub-text:hover, .input-sub-text:focus, .input {
       outline: none;
-      border-color: #9E2067;
   }
-  
-  .input-group:hover, .input:focus {
-      color: #9E2067;
-  }
-  
   
   /* 입력 button area */
   
@@ -1608,7 +1935,6 @@ export default {
 
 .update-textarea:hover, .update-textarea:focus, .input {
     outline: none;
-    border-color: #9E2067;
 }
 
 /* comment 수정 내 버튼 - 수정완료 / 취소 */

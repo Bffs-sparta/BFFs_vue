@@ -1202,13 +1202,8 @@ textarea{
 .input-sub-text:focus,
 .input {
   outline: none;
-  border-color: #9e2070;
 }
 
-.input-group:hover,
-.input:focus {
-  color: #9e2070;
-}
 
 /* 입력 button area */
 
@@ -1504,12 +1499,6 @@ textarea{
 .input-coco-text:focus,
 .input {
   outline: none;
-  border-color: #9e2070;
-}
-
-.input-group:hover,
-.input:focus {
-  color: #9e2070;
 }
 
 /* 대댓글 입력 / 취소 button area */
@@ -1598,7 +1587,6 @@ textarea{
 
 .update-textarea:hover, .update-textarea:focus, .input {
     outline: none;
-    border-color: #9E2067;
 }
 
 /* comment 수정 내 버튼 - 수정완료 / 취소 */
