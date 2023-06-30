@@ -1,36 +1,36 @@
 <template>
   <div class="card">
     <img class="logo" src="@/assets/mlogo.png"/>
-    <span class="card__title">Password Reset</span>
+    <span class="card__title">User Withdrawal</span>
     <p class="card__content">
-      We will send the password reset email to the email address you provided
-      below.
+      We are going to withdraw from the password with the password you provided.
+      Below.
     </p>
     <div class="card__form">
-      <input placeholder="Your Email" type="text" v-model="email" />
-      <button class="sign-up" @click="sendEmail">Send Email</button>
+      <input placeholder="Your Password" type="text" v-model="password" />
+      <button class="wdpassword" @click="sendPassword">Send Password</button>
     </div>
   </div>
 </template>
 
 <script>
-import { fetchPasswordReset } from "../api/index.js";
+import { fetchProfileDelete } from "../api/index.js";
 export default {
   data() {
     return {
-      email: "",
+      password: "",
     };
   },
   methods: {
-    async sendEmail() {
-      if (this.email == "") {
-        console.log("이메일을 입력해주세요");
+    async sendPassword() {
+      if (this.password == "") {
+        console.log("비밀번호를 입력해주세요.");
       } else {
         try {
-          const response = await fetchPasswordReset(this.email);
+          const response = await fetchProfileDelete(this.password);
           console.log(response);
           if (response.status === 200) {
-            console.log("이메일 전송 성공");
+            console.log("비밀번호 전송 성공");
           }
         } catch (error) {
           console.log(error);
@@ -104,7 +104,8 @@ export default {
   font-weight: bold;
 }
 
-.sign-up:hover {
+.wdpassword:hover {
   opacity: 0.8;
 }
 </style>
+

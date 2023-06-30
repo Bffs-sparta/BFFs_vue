@@ -5,7 +5,7 @@
         </Transition>
         <div class="modal-overlay" v-if="modalopen" @click="modalopen=false"></div>
         <div class="back">
-            <img class="back-img" src="@/assets/7348427.jpg"/>
+            <img class="back-img" src="@/assets/BestFriendForever.jpg"/>
             <div class="login-wrap">
                 <div class="title">
                     <a href="">L O G I N</a>
