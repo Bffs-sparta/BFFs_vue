@@ -142,7 +142,6 @@ import bus from '@/utils/bus'
 export default {
     data(){
         return{
-            //bookmark: false,
             searchname: '',
         }
     },
@@ -212,14 +211,6 @@ export default {
         },
     },    
     methods:{
-        // isTimeBeforeOpen(open_at) {
-        //     const currentTime = new Date();
-        //     return currentTime < new Date(open_at);
-        // },
-        // isTimeAfterClose(close_at) {
-        //     const currentTime = new Date();
-        //     return currentTime > new Date(close_at);
-        // },
         async addBookmark() {
             try {
                 const community_name = this.$route.params.community_name
@@ -252,7 +243,8 @@ export default {
         searchFeed() {
             if(this.searchname==''){
                 this.snotify('warning','검색어를 입력해주세요')
-            }else
+            }
+            else{
                 this.$router.push(`/feed/search/${this.searchname}`)
             }
         },

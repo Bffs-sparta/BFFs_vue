@@ -24,6 +24,7 @@ export default {
           this.$store.dispatch("TokenRefresh").then((response) => {
             if (response.status == 200) {
               localStorage.setItem("access_token", response.data.access);
+              this.$router.go();
             } else {
               alert("로그인 시간이 만료되었습니다.");
             }

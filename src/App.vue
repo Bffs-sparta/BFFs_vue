@@ -25,7 +25,7 @@ export default {
   },
   data(){
     return{
-        loading: true,
+        loading: false,
         axioscount:0,
     }
   },
@@ -33,9 +33,24 @@ export default {
     bus.$on('showSnackbar', ({type, message}) => {
       this.snotify(type,message)
     })
+    bus.$on('axiosStart', () => {
+      this.axiosStart()
+    })
+    bus.$on('axiosEnd', () => {
+      this.axiosEnd()
+    })
   },
   methods:{
-
+    axiosStart(){
+      this.axioscount++
+      this.loading = true
+    },
+    axiosEnd(){
+      this.axioscount--
+      if(this.axioscount <= 0){
+        this.loading = false
+      }
+    }
   }
 }
 
