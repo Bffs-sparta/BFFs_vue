@@ -1,8 +1,8 @@
 import axios from 'axios'
 
 const config = {
-    // baseUrl: 'https://api.makebestie.com'
-    baseUrl: 'http://127.0.0.1:8000'
+    baseUrl: 'https://api.makebestie.com'
+    // baseUrl: 'http://127.0.0.1:8000'
 }
 const access_token = () => {
     return localStorage.getItem('access_token')
@@ -404,8 +404,14 @@ function fetchGroupPurchaseList(community_name) {
 }
 
 // 공구 참여
-function fetchGroupPurchaseJoin(grouppurchase_id) {
-    return axios.get(`${config.baseUrl}/community/${grouppurchase_id}/join/`)
+function fetchGroupPurchaseJoin(grouppurchase_id, product_quantity) {
+    return axios.post(`${config.baseUrl}/community/${grouppurchase_id}/join/`,{
+        product_quantity
+    },{
+        headers: {
+            'Authorization': `Bearer ${access_token()}`,
+        }
+    })
 }
 
 // 공구 생성
@@ -435,13 +441,20 @@ function fetchGroupPurchaseDetail(community_name, grouppurchase_id) {
 }
 
 // 공구 게시글 수정
-function fetchGroupPurchaseEdit(grouppurchase_id) {
-    return axios.get(`${config.baseUrl}/feed/grouppurchase/${grouppurchase_id}/`)
+function fetchGroupPurchaseEdit(community_name, grouppurchase_id, title, content, product_name, product_number, product_price, person_limit, link, open_at, close_at, end_option, location, meeting_at) {
+    return axios.put(`${config.baseUrl}/community/${community_name}/grouppurchase/${grouppurchase_id}/`,{
+        title, content, product_name, product_number, product_price, person_limit, link, open_at, close_at, end_option, location, meeting_at
+    },{
+        headers: {
+            'Authorization': `Bearer ${access_token()}`,
+            'Content-Type': 'application/json',
+        }
+    })
 }
 
 // 공구 삭제
-function fetchGroupPurchaseDelete(grouppurchase_id) {
-    return axios.delete(`${config.baseUrl}/feed/grouppurchase/${grouppurchase_id}/`,{
+function fetchGroupPurchaseDelete(community_name,grouppurchase_id) {
+    return axios.delete(`${config.baseUrl}/community/${community_name}/grouppurchase/${grouppurchase_id}/`,{
         headers: {
             'Authorization': `Bearer ${access_token()}`,
         }
@@ -449,10 +462,14 @@ function fetchGroupPurchaseDelete(grouppurchase_id) {
 }
 
 
-// // 공구 게시글 작성자가 종료
-// function fetchGroupPurchaseSelfEnd(grouppurchase_id) {
-//     return axios.get(`${config.baseUrl}/feed/${grouppurchase_id}/self_end/`)
-// }
+// 공구 게시글 작성자가 종료
+function fetchGroupPurchaseSelfEnd(grouppurchase_id) {
+    return axios.post(`${config.baseUrl}/feed/${grouppurchase_id}/self_end/`,{},{
+        headers: {
+            'Authorization': `Bearer ${access_token()}`,
+        }
+    })
+}
 
 
 // 댓글 생성
@@ -533,39 +550,37 @@ function imageUpload(file) {
 }
 
 // 공구 댓글 생성
-// function fetchGroupPurchaseCommentCreate(grouppurchase_id, text) {
-//     return axios.post(`${config.baseUrl}/feed/${grouppurchase_id}/purchasecomment/`,{
-//         text,
-//     },
-//     {
-//         headers: {
-//             'Authorization': `Bearer ${access_token()}`,
-//             'Content-Type': 'application/json',
-//         }
-//     })
-// }
-
-// // 공구 댓글 수정
-// function fetchGroupPurchaseCommentEdit(purchase_comment_id, text) {
-//     return axios.put(`${config.baseUrl}/feed/purchasecomment/${purchase_comment_id}/`,{
-//         text,
-//     },
-//     {
-//         headers: {
-//             'Authorization': `Bearer ${access_token()}`,
-//             'Content-Type': 'application/json',
-//         }
-//     })
-// }
-//
-// // 공구 댓글 삭제 
-// function fetchGroupPurchaseCommentDelete(purchase_comment_id) {
-//     return axios.delete(`${config.baseUrl}/feed/purchasecomment/${purchase_comment_id}/`,{
-//         headers: {
-//             'Authorization': `Bearer ${access_token()}`,
-//         }
-//     })
-// }
+function fetchGroupPurchaseCommentCreate(grouppurchase_id, text) {
+    return axios.post(`${config.baseUrl}/feed/${grouppurchase_id}/purchasecomment/`,{
+        text,
+    },
+    {
+        headers: {
+            'Authorization': `Bearer ${access_token()}`,
+            'Content-Type': 'application/json',
+        }
+    })
+}
+// 공구 댓글 수정
+function fetchGroupPurchaseCommentEdit(purchase_comment_id, text) {
+    return axios.put(`${config.baseUrl}/feed/purchasecomment/${purchase_comment_id}/`,{
+        text,
+    },
+    {
+        headers: {
+            'Authorization': `Bearer ${access_token()}`,
+            'Content-Type': 'application/json',
+        }
+    })
+}
+// 공구 댓글 삭제 
+function fetchGroupPurchaseCommentDelete(purchase_comment_id) {
+    return axios.delete(`${config.baseUrl}/feed/purchasecomment/${purchase_comment_id}/`,{
+        headers: {
+            'Authorization': `Bearer ${access_token()}`,
+        }
+    })
+}
 
 // AI 대화하기
 function fetchMeetAI() {
@@ -650,10 +665,10 @@ export {
     fetchCocommentDelete,
     imageUpload,
     fetchCommunityCategoryPagination,
-    //fetchGroupPurchaseSelfEnd,
-    //fetchGroupPurchaseCommentCreate,
-    //fetchGroupPurchaseCommentEdit,
-    //fetchGroupPurchaseCommentDelete,
+    fetchGroupPurchaseSelfEnd,
+    fetchGroupPurchaseCommentCreate,
+    fetchGroupPurchaseCommentEdit,
+    fetchGroupPurchaseCommentDelete,
     fetchMeetAI,
     fetchMeetAICreate
 }

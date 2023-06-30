@@ -28,7 +28,6 @@ const getters ={
     fetchGroupPurchaseDetail(state) {
         return state.purchasedetail
     },
-
 }
 
 const mutations ={
@@ -112,8 +111,7 @@ const actions ={
     },
     async FETCH_GROUPPURCHASE_DETAIL(context, data) {
         try {
-            const response = await fetchGroupPurchaseDetail(data.community_name, data.purchase_id)
-
+            const response = await fetchGroupPurchaseDetail(data.community_name, data.grouppurchase_id)
             context.commit('SET_GROUPPURCHASE_DETAIL', response.data)
             return response
         } catch (error) {

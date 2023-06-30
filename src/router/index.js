@@ -20,7 +20,7 @@ import FeedDetailView from '../views/feed/FeedDetailView.vue'
 import FeedSearchView from '../views/feed/FeedSearchView.vue'
 import PurchaseWrite from '@/components/PurchaseWrite.vue'
 import PurchaseUpdateView from '../views/feed/PurchaseUpdateView.vue'
-import PurchaseDetail from '../views/feed/PurchaseDetail.vue'
+import PurchaseDetailView from '../views/feed/PurchaseDetailView.vue'
 
 Vue.use(VueRouter)
 
@@ -161,14 +161,14 @@ export const router = new VueRouter({
             }
         },
         {
-            path:'/community/update/purchase/:purchase_id',
+            path:'/community/update/:community_name/purchase/:grouppurchase_id',
             name:'purchase-update',
             component:PurchaseUpdateView
         },
         {
-            path:'/community/detail/:community_name/purchase/:purchase_id',
+            path:'/community/detail/:community_name/purchase/:grouppurchase_id',
             name:'purchase-detail',
-            component:PurchaseDetail
+            component:PurchaseDetailView
         },
         {
             path:'/meetfriend',
