@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <div id="test">
-      <router-loader></router-loader>
+      <router-loader v-if="loading"></router-loader>
       <nav-bar id="navigation"></nav-bar>
       <router-view id="app_content"></router-view>
       <footer-bar id="footer"></footer-bar>
@@ -23,10 +23,19 @@ export default {
     FooterBar,
     RouterLoader,
   },
+  data(){
+    return{
+        loading: true,
+        axioscount:0,
+    }
+  },
   created(){
     bus.$on('showSnackbar', ({type, message}) => {
       this.snotify(type,message)
     })
+  },
+  methods:{
+
   }
 }
 

@@ -226,23 +226,38 @@ export default {
                 const response = await fetchCommunityBookmark(community_name)
                 if (response.status == 200) {
                     this.bookmark = !this.bookmark;
-                    this.snotify('success',response.data.msg)
+                    this.snotify("success",response.data.msg)
                 }
             } catch (error) {
                 if (error.response.status === 401) {
-                    this.snotify('error',"로그인을 해주세요");
+                    this.snotify("warn","로그인을 해주세요");
                 }
+            }
+        },
+        pageMove(url){
+            if(url){
+                this.$store.dispatch('FETCH_COMMUNITY_CATEGORY_PAGINATION',url)
+            }
+        },
+        numberMove(page){
+            if(page == 1){
+                const community_name = this.$route.params.community_name
+                const category_name= this.$route.params.category_name
+                this.$store.dispatch('FETCH_COMMUNITY_CATEGORY_FEED',{community_name,category_name})
+            }else{
+                const url = this.pagination.url+'?page='+page
+                this.$store.dispatch('FETCH_COMMUNITY_CATEGORY_PAGINATION',url)
             }
         },
         searchFeed() {
             if(this.searchname==''){
                 this.snotify('warning','검색어를 입력해주세요')
-            }else{
+            }else
                 this.$router.push(`/feed/search/${this.searchname}`)
             }
         },
         notlogin(){
-            this.snotify('error','로그인을 해주세요')
+            this.norify('warning','로그인을 해주세요')
         },
         snotify(type,message){
             bus.$emit('showSnackbar',{

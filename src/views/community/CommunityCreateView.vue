@@ -73,7 +73,24 @@ export default {
                     this.$router.push(`/community/detail/${this.communityurl}`)
                 }
             } catch (error) {
-                this.snotify('error',error.response.data)
+                const title_error = error.response?.data?.title
+                const communityurl_error = error.response?.data?.communityurl
+                const introduction_error = error.response?.data?.introduction
+                if (title_error) {
+                    this.snotify('error',title_error[0])
+                }
+                else if(communityurl_error){
+                    this.snotify('error',communityurl_error[0])
+                }
+                else if(introduction_error){
+                    this.snotify('error',introduction_error[0])
+                }
+                else if(error.response?.data){
+                    this.snotify('error',error.response?.data)
+                }
+                else{
+                    this.snotify('error','커뮤니티 생성 신청에 실패했습니다.')
+                }
             }
         },
         snotify(type,message){

@@ -101,7 +101,7 @@ export default {
                 this.$store.dispatch("search_community", name)
 
                 if (this.fetchSearchCommunity?.length === 0) {
-                    alert("찾으시는 검색 결과가 없습니다")
+                    this.notify("찾으시는 검색 결과가 없습니다")
                     this.searchname = '';
                 }
             }

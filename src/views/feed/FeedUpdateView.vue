@@ -49,31 +49,37 @@ export default {
       async editFeed(){
           const feed_id = this.$route.params.feed_id;
           try{
-              const response = await fetchFeedEdit(feed_id, this.title, this.content);
               if(!this.title || this.title ==="" || !this.content || this.content==="") {
-                alert("제목 혹은 글 내용이 없습니다! 내용을 입력해주세요")
-                return(response.error)
+                  this.snotify("warning","제목 혹은 글 내용이 없습니다! 내용을 입력해주세요")
               }
-          
-              if(response.status === 200){
-                this.snotify("success",response.data.message);
-                this.$router.push({name: "feed-detail", params: {feed_id: feed_id}});
+              else{
+                  const response = await fetchFeedEdit(feed_id, this.title, this.content);
+                  if(response.status === 200){
+                      this.snotify("success",response.data.message);
+                      this.$router.push({name: "feed-detail", params: {feed_id: feed_id}});
+                  }
               }
           }catch(error){
-              //this.snotify("error",'수정에 실패하였습니다.');
-              console.log(error);
-              if(!this.title || this.title ==="" || !this.content || this.content==="") {
-                alert("제목 혹은 글 내용이 없습니다! 내용을 입력해주세요")
-                return(error.response)
+              if(error.response.status == 400){
+                  this.snotify('error',error.response.data.message)
               }
-              if(error.response.status === 405) {
-                alert('금지어가 포함되어 있습니다');
+              else{
+                  this.snotify('error','오류가 발생했습니다')
               }
-              else {alert("이상한 일이 발생했습니다. o_O");}
           }
       },
       goBack() {
         this.$router.go(-1);
+      },
+      async handleImageAdded(file, Editor, cursorLocation, resetUploader) {
+        const formData = new FormData();
+        formData.append("image", file);
+        const response = await this.$store.dispatch("FETCH_IMAGE_UPLOAD", formData)
+        if(response.status === 201){
+            const imageUrl = response.data.image_url;
+            Editor.insertEmbed(cursorLocation, "image", imageUrl);
+            resetUploader();
+        }
       },
       snotify(type,message){
           bus.$emit('showSnackbar',{

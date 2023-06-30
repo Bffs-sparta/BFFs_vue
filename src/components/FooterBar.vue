@@ -7,7 +7,31 @@
 </template>
 
 <script>
+import jwt_decode from "jwt-decode";
 export default {
+  created() {
+    const currentTime = Math.floor(Date.now() / 1000);
+    const exp = localStorage.getItem("access_token") ? jwt_decode(localStorage.getItem("access_token")).exp : null;
+    if (exp && exp < currentTime) {
+        const refresh = localStorage.getItem("refresh_token");
+        const refresh_decode = jwt_decode(refresh);
+        if (refresh_decode.exp < currentTime) {
+          localStorage.removeItem("access_token");
+          localStorage.removeItem("refresh_token");
+          localStorage.removeItem("payload");
+          alert("로그인 시간이 만료되었습니다.");
+        } else {
+          this.$store.dispatch("TokenRefresh").then((response) => {
+            if (response.status == 200) {
+              localStorage.setItem("access_token", response.data.access);
+            } else {
+              alert("로그인 시간이 만료되었습니다.");
+            }
+          });
+        }
+        this.checkLogin();
+      }
+  },
 };
 </script>
 
