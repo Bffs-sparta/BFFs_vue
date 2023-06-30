@@ -1,15 +1,5 @@
 <template>
     <div class="write-container" v-if="categories.data">
-        <!--<div>
-          <h3>카테고리</h3>
-          <div class="radio-inputs">
-            <label class="radio"  v-for="category,index in categories.data.categories" :key="index">
-              <input type="radio" name="radio" v-model="categoryId" :value="category[0]" v-if="index==1" checked="">
-              <input type="radio" name="radio" v-model="categoryId" :value="category[0]" v-else>
-              <span class="name">{{ category[1] }}</span>
-            </label>
-          </div>
-        </div>-->
         <div class = "title">
             <input type="text" id="title" v-model="title" placeholder="제목을 입력해주세요">
         </div>
@@ -110,7 +100,7 @@
 <script>
 import { VueEditor } from "vue2-editor";
 import { mapGetters } from "vuex";
-
+import bus from '@/utils/bus'
 export default {
 	components: {
     VueEditor,
@@ -161,11 +151,11 @@ export default {
                 meeting_at: this.meeting_at,
               });
               if(response.status === 201){
-                alert(response.data.message)
+                this.snotify("success",response.data.message)
                 this.$router.push({name: "community-detail", params: {name: this.$route.params.community_name}});
               }
           }catch(error){
-              alert('...구현중입니다...')
+              this.snotify("error","빈 칸을 입력해주세요");
           }
       },
       async handleImageAdded(file, Editor, cursorLocation, resetUploader) {
@@ -178,6 +168,12 @@ export default {
               resetUploader();
           }
       },
+      snotify(type,message){
+          bus.$emit('showSnackbar',{
+              type,
+              message
+          });
+      }
     },
 }
 

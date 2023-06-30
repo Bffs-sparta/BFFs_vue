@@ -330,7 +330,11 @@ export default {
     },
     methods: {
         submitOpen() {
-            this.submitopen = !this.submitopen
+            if (this.userid === this.feed.user) {
+                this.snotify('error','글 작성자 본인입니다');
+            } else {
+                this.submitopen = !this.submitopen
+            }
         },
         async addBookmark() {
             try {
@@ -363,8 +367,6 @@ export default {
             try {
                 const community_name = this.community.communityurl
                 const grouppurchase_id = this.$route.params.grouppurchase_id;
-                console.log(community_name)
-                console.log(grouppurchase_id)
                 const response = await fetchGroupPurchaseDelete(community_name, grouppurchase_id);
                 if (response.status === 200) {
                     this.snotify('success',response.data.message);

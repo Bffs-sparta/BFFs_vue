@@ -104,6 +104,7 @@
 import { VueEditor } from "vue2-editor";
 import { mapGetters } from "vuex";
 import { fetchGroupPurchaseEdit } from "@/api/index.js";
+import bus from "@/utils/bus.js";
 
 export default {
 	components: {
@@ -131,6 +132,16 @@ export default {
     },
     async editFeed() {
         try{
+            if (this.feeds.open_at.length === 16) {
+              this.feeds.open_at += ":00";
+            }
+            if (this.feeds.close_at.length === 16) {
+              this.feeds.close_at += ":00";
+            }
+            if (this.feeds.meeting_at.length === 16) {
+              this.feeds.meeting_at += ":00";
+            }
+
             const community_name = this.$route.params.community_name;
             const grouppurchase_id = this.$route.params.grouppurchase_id;
             const title = this.feeds.title;
@@ -150,13 +161,13 @@ export default {
               community_name, grouppurchase_id, title, content, product_name, product_number, product_price, person_limit, link, open_at, close_at, end_option, location, meeting_at,
             );
             if(response.status === 200){
-              alert(response.data.message)
+              this.snotify('success',response.data.message)
               this.$router.push({
                 name: "purchase-detail", 
                 params: {community_name: this.$route.params.community_name, grouppurchase_id: this.$route.params.grouppurchase_id}});
             }
         }catch(error){
-            console.log(error)
+          this.snotify('error','빈 칸을 입력해주세요')
         }
     },
     async handleImageAdded(file, Editor, cursorLocation, resetUploader) {
@@ -168,6 +179,12 @@ export default {
             Editor.insertEmbed(cursorLocation, "image", imageUrl);
             resetUploader();
         }
+    },
+    snotify(type,message){
+        bus.$emit('showSnackbar',{
+            type,
+            message
+        });
     },
   },
 }
