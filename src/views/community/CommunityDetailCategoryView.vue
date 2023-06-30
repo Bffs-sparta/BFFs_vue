@@ -124,6 +124,7 @@
 <script>
 import { mapGetters } from 'vuex'
 import { fetchCommunityBookmark } from '@/api/index'
+import bus from '@/utils/bus'
 export default {
     data(){
         return{
@@ -191,11 +192,11 @@ export default {
                 const response = await fetchCommunityBookmark(community_name)
                 if (response.status == 200) {
                     this.bookmark = !this.bookmark;
-                    alert(response.data.msg)
+                    this.snotify("success",response.data.msg)
                 }
             } catch (error) {
                 if (error.response.status === 401) {
-                    alert("로그인을 해주세요");
+                    this.snotify("warn","로그인을 해주세요");
                 }
             }
         },
@@ -211,7 +212,6 @@ export default {
                 this.$store.dispatch('FETCH_COMMUNITY_CATEGORY_FEED',{community_name,category_name})
             }else{
                 const url = this.pagination.url+'?page='+page
-                console.log(url)
                 this.$store.dispatch('FETCH_COMMUNITY_CATEGORY_PAGINATION',url)
             }
         },
@@ -219,8 +219,14 @@ export default {
             this.$router.push(`/feed/search/${this.searchname}`)
         },
         notlogin(){
-            alert('로그인을 해주세요')
+            this.norify('warning','로그인을 해주세요')
         },
+        snotify(type,message){
+            bus.$emit('showSnackbar',{
+                type,
+                message
+            });
+        }
     }
 }
 </script>

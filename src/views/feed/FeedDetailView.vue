@@ -510,7 +510,7 @@ export default {
     async editComment(comment_id) {
       try {
         if (!this.inputUpdateComment||this.inputUpdateComment=="") {
-          alert("댓글 수정란이 공백입니다!")
+          this.notify("warning","댓글 수정란이 공백입니다!")
         }
         const response = await fetchCommentEdit(
           comment_id,
@@ -531,13 +531,13 @@ export default {
       try {
         const response = await fetchCommentDelete(comment.id);
         if (response.status === 200) {
-          alert(response.data.message);
+          this.notify("success",response.data.message);
           const feed_id = this.$route.params.feed_id;
           const community_name = this.$route.params.community_name;
           this.$store.dispatch("FETCH_FEED_DETAIL", { community_name, feed_id });
         }
       } catch (error) {
-        console.log(error);
+        this.notify("error","댓글 삭제에 실패했습니다");
       }
     },
     moveFeed(id) {
@@ -584,7 +584,7 @@ export default {
     async editCocomment(comment_id) {
       try {
         if (!this.inputUpdateComment||this.inputUpdateComment=="") {
-          alert("댓글 수정란이 공백입니다!")
+          this.notify("warning","댓글 수정란이 공백입니다!")
         }
         const response = await fetchCocommentEdit(
           comment_id,
