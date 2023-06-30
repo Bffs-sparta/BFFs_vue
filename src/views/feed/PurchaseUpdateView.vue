@@ -149,7 +149,7 @@ export default {
             const response = await fetchGroupPurchaseEdit(
               community_name, grouppurchase_id, title, content, product_name, product_number, product_price, person_limit, link, open_at, close_at, end_option, location, meeting_at,
             );
-            if(response.status === 201){
+            if(response.status === 200){
               alert(response.data.message)
               this.$router.push({
                 name: "purchase-detail", 

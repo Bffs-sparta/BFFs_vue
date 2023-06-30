@@ -188,7 +188,6 @@
                         <li class="comment-text">
                           {{ comment.text }}
                         </li>
-                        <a class="cocomment-button" @click="cocommentShow(comment)">댓글 달기</a>
                         <div
                           class="comment-func-box"
                           v-if="userid === comment.user_id"
@@ -248,9 +247,9 @@ fetchCommunityBookmark,
 fetchGroupPurchaseJoin,
 fetchGroupPurchaseDelete,
 fetchGroupPurchaseSelfEnd,
-fetchCommentCreate,
-fetchCommentEdit,
-fetchCommentDelete,
+fetchGroupPurchaseCommentCreate,
+fetchGroupPurchaseCommentEdit,
+fetchGroupPurchaseCommentDelete,
 } from "@/api/index.js";
 
 export default {
@@ -311,9 +310,7 @@ export default {
             userid: "",
             email: "",
             inputComment: "",
-            inputCocomment:"",
             inputUpdateComment: "",
-            inputUpdateCocomment: "",
             searchname: '',
         };
     },
@@ -394,50 +391,54 @@ export default {
         },
         async createComment() {
             try {
-            const feed_id = this.$route.params.feed_id;
-            const response = await fetchCommentCreate(feed_id, this.inputComment);
+            const grouppurchase_id = this.$route.params.grouppurchase_id;
+            const response = await fetchGroupPurchaseCommentCreate(grouppurchase_id, this.inputComment);
             if (response.status === 201) {
                 this.snotify('success',response.data.message);
                 this.inputComment = "";
-                const feed_id = this.$route.params.feed_id;
+                const grouppurchase_id = this.$route.params.grouppurchase_id;
                 const community_name = this.$route.params.community_name;
-                this.$store.dispatch("FETCH_FEED_DETAIL", { community_name, feed_id });
+                this.$store.dispatch("FETCH_GROUPPURCHASE_DETAIL", { community_name, grouppurchase_id });
             }
             } catch (error) {
-            if (error.response.status === 401) {
-                this.snotify('error',"로그인을 해주세요");
-                this.inputComment = '';
-            }
+                if (error.response.status === 400) {
+                    this.snotify('error',"댓글을 작성해주세요");
+                    this.inputComment = '';
+                }
+                if (error.response.status === 401) {
+                    this.snotify('error',"로그인을 해주세요");
+                    this.inputComment = '';
+                }
             }
         },
         async editComment(comment_id) {
             try {
-            const response = await fetchCommentEdit(
+            const response = await fetchGroupPurchaseCommentEdit(
                 comment_id,
                 this.inputUpdateComment
             );
             if (response.status === 200) {
                 this.snotify('success',response.data.message);
                 this.commenteditshow = false;
-                const feed_id = this.$route.params.feed_id;
+                const grouppurchase_id = this.$route.params.grouppurchase_id;
                 const community_name = this.$route.params.community_name;
-                this.$store.dispatch("FETCH_FEED_DETAIL", { community_name, feed_id });
+                this.$store.dispatch("FETCH_GROUPPURCHASE_DETAIL", { community_name, grouppurchase_id });
             }
             } catch (error) {
-            this.snotify('error','댓글 수정에 실패했습니다');
+                this.snotify('error','댓글 수정에 실패했습니다');
             }
         },
         async deleteComment(comment) {
             try {
-            const response = await fetchCommentDelete(comment.id);
+            const response = await fetchGroupPurchaseCommentDelete(comment.id);
             if (response.status === 200) {
-                alert(response.data.message);
-                const feed_id = this.$route.params.feed_id;
+                this.snotify('success',response.data.message);
+                const grouppurchase_id = this.$route.params.grouppurchase_id;
                 const community_name = this.$route.params.community_name;
-                this.$store.dispatch("FETCH_FEED_DETAIL", { community_name, feed_id });
+                this.$store.dispatch("FETCH_GROUPPURCHASE_DETAIL", { community_name, grouppurchase_id });
             }
             } catch (error) {
-            console.log(error);
+                this.snotify('error','댓글 삭제를 실패했습니다');
             }
         },
         commenteditshow(comment) {
@@ -1422,7 +1423,7 @@ export default {
       grid-template-columns: 120px auto 200px;
       grid-template-rows: 30px auto;
       grid-gap: 4px;
-  
+      position: relative;
       padding: 10px 20px ;
       width: auto;
       height: auto;
@@ -1442,6 +1443,7 @@ export default {
       margin-top: 5px;
       grid-column: 3 / 4;
       grid-row: 1 / 2;
+      font-size: 13px;
   }
   
   .comment-text {
@@ -1495,16 +1497,19 @@ export default {
   
   .comment-edit-btn:hover > .edit-icon {
       transform: scale(1.3);
+      cursor: pointer;
   }
   
   .comment-edit-btn:hover > .edit-icon path {
       fill: rgb(34, 64, 115);
+      cursor: pointer;
   }
   
   .comment-edit-btn:hover::after {
       visibility: visible;
       opacity: 1;
       top: -160%;
+      cursor: pointer;
   }
   
   /* comment 삭제 버튼 */
@@ -1545,18 +1550,117 @@ export default {
   
   .comment-delete-btn:hover > .delete-icon {
       transform: scale(1.3);
+      cursor: pointer;
   }
   
   .comment-delete-btn:hover > .delete-icon path {
       fill: rgb(168, 7, 7);
+      cursor: pointer;
   }
   
   .comment-delete-btn:hover::after {
       visibility: visible;
       opacity: 1;
       top: -160%;
+      cursor: pointer;
   }
-  
+  /* comment 수정 div, textarea, button */
+.comment-update-box {
+    /* display: none; */
+    
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+}
+
+.comment-update-div{
+    display: flex;
+    width: 100%;
+    height: 100%;
+    background-color: #f5f5f5;
+    box-shadow:#dddddd 0px -2px 0px inset;
+    align-items: center;
+    justify-content: space-evenly;
+}
+.comment-update-div p {
+    color: #909090;
+    font-size: 0.9rem;
+    margin: 0px 15px;
+}
+
+/* 댓글 수정 textarea */
+.update-textarea {
+    width: 70%;
+    height: 65%;
+    margin-right: 20px;
+    resize: none;
+    overflow: auto;
+    padding: 0.5rem 0.8rem;
+
+    border-radius: .3rem;
+    border: 2px solid transparent;
+    font-size: 1rem;
+    transition: border-color .3s cubic-bezier(.25,.01,.25,1) 0s, color .3s cubic-bezier(.25,.01,.25,1) 0s;
+}
+
+.update-textarea:hover, .update-textarea:focus, .input {
+    outline: none;
+    border-color: #9E2067;
+}
+
+/* comment 수정 내 버튼 - 수정완료 / 취소 */
+.comment-update-div button {
+    margin-right: 10px;
+}
+
+.update-submit-button {
+    white-space: nowrap;
+    padding: 20px 13px;
+    outline: none;
+    border: none;
+    cursor: pointer;
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: hsl(0, 0%, 100%);
+    border-radius: 5px;
+    text-transform: uppercase;
+    transition: all 0.2s ease-in-out;
+    position: relative;
+    background-color: #9E2067;
+    box-shadow: 0 2px 5px rgba(70, 70, 70, 0.5);
+}
+.update-submit-button:hover{
+    background-color: #c3348e;
+}
+.update-submit-button:active {
+    transform: translate(0, 3px);
+    transition-duration: .1s;
+}
+
+.update-quit-button {
+    white-space: nowrap;
+    padding: 20px 25px;
+    outline: none;
+    border: none;
+    cursor: pointer;
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: hsl(0, 0%, 100%);
+    border-radius: 5px;
+    text-transform: uppercase;
+    transition: all 0.2s ease-in-out;
+    position: relative;
+    background-color: #dddddd;
+    box-shadow: 0 2px 5px rgba(131, 131, 131, 0.5);
+}
+.update-quit-button:active {
+    transform: translate(0, 3px);
+    transition-duration: .1s;
+}
+.update-quit-button:hover{
+    background-color: #c0c0c0;
+}
   .like-box {
     display: flex;
   }
