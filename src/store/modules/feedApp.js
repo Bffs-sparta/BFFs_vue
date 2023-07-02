@@ -7,6 +7,7 @@ import{
     fetchGroupPurchaseCreate,
     fetchGroupPurchaseDetail,
 } from '@/api/index.js'
+import bus from '@/utils/bus.js'
 
 const state ={
     feed: [],
@@ -33,33 +34,41 @@ const getters ={
 const mutations ={
     SET_FEED_ALL(state, feed) {
         state.feed = feed
+        bus.$emit('axiosEnd')
     },
     SET_FEED_DETAIL(state, feeddetail) {
         state.feeddetail = feeddetail
+        bus.$emit('axiosEnd')
     },
     SET_GROUPPURCHASE_LIST(state, purchaselist) {
         state.purchaselist = purchaselist
+        bus.$emit('axiosEnd')
     },
     SET_GROUPPURCHASE_DETAIL(state, purchasedetail) {
         state.purchasedetail = purchasedetail
+        bus.$emit('axiosEnd')
     },
 }
 const actions ={
     async FETCH_FEED_ALL(context) {
         try {
             const response = await fetchFeedAll()
+            bus.$emit('axiosStart')
             context.commit('SET_FEED_ALL', response.data)
             return response
         } catch (error) {
+            bus.$emit('axiosEnd')
             console.log(error)
         }
     },
     async FETCH_FEED_DETAIL(context, data) {
         try {
             const response = await fetchFeedDetail(data.community_name, data.feed_id)
+            bus.$emit('axiosStart')
             context.commit('SET_FEED_DETAIL', response.data)
             return response
         } catch (error) {
+            bus.$emit('axiosEnd')
             console.log(error)
         }
     },
@@ -68,6 +77,7 @@ const actions ={
         const content = feedData.content
         const category_id = feedData.categoryId
         const response = await fetchFeedCreate(category_id,title, content)
+        bus.$emit('axiosStart')
         return response
     },
     async FETCH_IMAGE_UPLOAD(context, formData) {
@@ -94,23 +104,28 @@ const actions ={
         const meeting_at = purchaseData.meeting_at + ":00"
 
         const response = await fetchGroupPurchaseCreate(community_url, title, content, product_name, product_number, product_price, person_limit, link, open_at, close_at, end_option, location, meeting_at)
+        bus.$emit('axiosStart')
         return response
     },
     async FETCH_GROUPPURCHASE_LIST(context, community_name) {
         try {
             const response = await fetchGroupPurchaseList(community_name)
+            bus.$emit('axiosStart')
             context.commit('SET_GROUPPURCHASE_LIST', response.data)
             return response
         } catch (error) {
+            bus.$emit('axiosEnd')
             console.log(error)
         }
     },
     async FETCH_GROUPPURCHASE_DETAIL(context, data) {
         try {
             const response = await fetchGroupPurchaseDetail(data.community_name, data.grouppurchase_id)
+            bus.$emit('axiosStart')
             context.commit('SET_GROUPPURCHASE_DETAIL', response.data)
             return response
         } catch (error) {
+            bus.$emit('axiosEnd')
             console.log(error)
         }
     },

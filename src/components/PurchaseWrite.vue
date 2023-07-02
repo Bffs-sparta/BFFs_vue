@@ -25,7 +25,7 @@
               <dt class="product-price">총 가격</dt>
               <dd type="number" class="product-price-text">
                 <div class="input-num-wrapper">
-                  <input class="gp-input-num-box" type="number" v-model="price" min="0"> 원
+                  <input class="gp-input-num-box" type="number" v-model="price" min="0" step="100"> 원
                 </div>
               </dd>
               <dt class="person-limit">모집 인원</dt>
@@ -82,7 +82,7 @@
                   <input class="gp-input-box" type="datetime-local" v-model="meeting_at" min="" step="600">
                 </div>
               </dd>
-              <div class="mapping">
+              <div class="mapping" style="display: none;">
                 지도 api를 넣고 싶다
               </div>
             </dl>
@@ -155,6 +155,7 @@ export default {
                 this.$router.push({name: "community-detail", params: {name: this.$route.params.community_name}});
               }
           }catch(error){
+            console.log(error)
               this.snotify("error","빈 칸을 입력해주세요");
           }
       },

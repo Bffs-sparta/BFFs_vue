@@ -1,8 +1,11 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
+import bus from '@/utils/bus.js'
 import IndexView from '../views/IndexView.vue'
+import BFFIntroduction from '../views/user/BFFIntroduction.vue'
 import UserRegisterView from '../views/user/UserRegister.vue'
 import UserLoginView from '../views/user/UserLogin.vue'
+import UserSearchView from '../views/user/UserSearchView.vue'
 import CommunityCreateView from '../views/community/CommunityCreateView.vue'
 import CommunityManageView from '../views/community/CommunityManageView.vue'
 import CommunityMainView from '../views/community/CommunityMainView.vue'
@@ -34,6 +37,11 @@ export const router = new VueRouter({
             component: IndexView
         },
         {
+            path: '/introduction',
+            name: 'introduction',
+            component: BFFIntroduction
+        },
+        {
             path: '/user/register',
             name: 'user-register',
             component: UserRegisterView
@@ -56,7 +64,10 @@ export const router = new VueRouter({
                 if (localStorage.getItem('access_token')) {
                     next()
                 } else {
-                    alert('로그인이 필요해요!')
+                    bus.$emit('showSnackbar',{
+                        type:'warning',
+                        message:'로그인이 필요해요!'
+                    });
                     next('/user/login')
                 }
             }
@@ -87,9 +98,17 @@ export const router = new VueRouter({
             component: CommunityDetailCategoryView
         },
         {
+            path: '/user/search/:name',
+            name: 'user-search',
+            component: UserSearchView
+        },
+        {
             path:'/profile/',
             beforeEnter(to, from, next) {
-                alert('로그인이 필요해요!')
+                bus.$emit('showSnackbar',{
+                        type:'warning',
+                        message:'로그인이 필요해요!'
+                    });
                 next('/user/login')
             }
         },
@@ -100,7 +119,10 @@ export const router = new VueRouter({
             beforeEnter: (to, from, next) => {
                 const id = to.params.id
                 if(id == 'update'){
-                    alert('로그인이 필요해요!')
+                    bus.$emit('showSnackbar',{
+                        type:'warning',
+                        message:'로그인이 필요해요!'
+                    });
                     next('/user/login')
                 }else{
                     next()
@@ -115,7 +137,10 @@ export const router = new VueRouter({
                 if (localStorage.getItem('access_token')) {
                     next()
                 } else {
-                    alert('로그인이 필요해요!')
+                    bus.$emit('showSnackbar',{
+                        type:'warning',
+                        message:'로그인이 필요해요!'
+                    });
                     next('/user/login')
                 }
             }    
@@ -128,7 +153,10 @@ export const router = new VueRouter({
                 if (localStorage.getItem('access_token')) {
                     next()
                 } else {
-                    alert('로그인이 필요해요!')
+                    bus.$emit('showSnackbar',{
+                        type:'warning',
+                        message:'로그인이 필요해요!'
+                    });
                     next('/user/login')
                 }
             }    
@@ -141,7 +169,10 @@ export const router = new VueRouter({
                 if (localStorage.getItem('access_token')) {
                     next()
                 } else {
-                    alert('로그인이 필요해요!')
+                    bus.$emit('showSnackbar',{
+                        type:'warning',
+                        message:'로그인이 필요해요!'
+                    });
                     next('/user/login')
                 }
             } 
@@ -169,7 +200,10 @@ export const router = new VueRouter({
                 if (localStorage.getItem('access_token')) {
                     next()
                 } else {
-                    alert('로그인이 필요해요!')
+                    bus.$emit('showSnackbar',{
+                        type:'warning',
+                        message:'로그인이 필요해요!'
+                    });
                     next('/user/login')
                 }
             }
@@ -197,7 +231,10 @@ export const router = new VueRouter({
                 if (localStorage.getItem('access_token')) {
                     next()
                 } else {
-                    alert('로그인이 필요해요!')
+                    bus.$emit('showSnackbar',{
+                        type:'warning',
+                        message:'로그인이 필요해요!'
+                    });
                     next('/user/login')
                 }
             }
@@ -206,5 +243,10 @@ export const router = new VueRouter({
     scrollBehavior() {
         return { x: 0, y: 0 }
     },
-    
+})
+
+
+router.beforeEach((to, from, next) => {
+    bus.$emit('pageMove')
+    next();
 })

@@ -85,7 +85,7 @@
                 <input class="gp-input-box" type="datetime-local" v-model="feeds.meeting_at" min="" step="600">
               </div>
             </dd>
-            <div class="mapping">
+            <div class="mapping" style="display: none;">
               지도 api를 넣고 싶다
             </div>
           </dl>
@@ -120,11 +120,6 @@ export default {
 		const community_name = this.$route.params.community_name;
     const grouppurchase_id = this.$route.params.grouppurchase_id;
     this.$store.dispatch("FETCH_GROUPPURCHASE_DETAIL", { community_name, grouppurchase_id });
-	},
-	data() {
-		return {
-      //categorycheck: true,
-		};
 	},
   methods: {
     goBack(){
@@ -167,7 +162,7 @@ export default {
                 params: {community_name: this.$route.params.community_name, grouppurchase_id: this.$route.params.grouppurchase_id}});
             }
         }catch(error){
-          this.snotify('error','빈 칸을 입력해주세요')
+          this.snotify('error',error.response.data.message)
         }
     },
     async handleImageAdded(file, Editor, cursorLocation, resetUploader) {

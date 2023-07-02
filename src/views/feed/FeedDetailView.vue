@@ -149,7 +149,7 @@
                     >
                     <!-- 본인 -->
                     <a
-                      v-if="feed.user === this.userid"
+                      v-if="feed.user === this.userid || feedadmin.includes(this.userid)"
                       class="content-delete-button"
                       @click="deleteFeed()"
                       >글 삭제</a
@@ -460,7 +460,7 @@ export default {
     async deleteFeed() {
       try {
         const feed_id = this.$route.params.feed_id;
-        const response = await fetchFeedDelete(feed_id);
+        const response = await fetchFeedDelete(this.community.communityurl, feed_id);
         if (response.status === 200) {
           this.snotify('success',response.data.message);
           this.$router.push({
@@ -492,41 +492,49 @@ export default {
       }
     },
     async createComment() {
-      try {
-        const feed_id = this.$route.params.feed_id;
-        const response = await fetchCommentCreate(feed_id, this.inputComment);
-        if (response.status === 201) {
-          this.snotify('success',response.data.message);
-          this.inputComment = "";
+      if (this.inputComment=="") {
+        this.snotify("warning","댓글 입력란이 공백입니다!")
+      } else {
+        try {        
           const feed_id = this.$route.params.feed_id;
-          const community_name = this.$route.params.community_name;
-          this.$store.dispatch("FETCH_FEED_DETAIL", { community_name, feed_id });
-        }
-      } catch (error) {
-        if (error.response.status === 401) {
-            this.snotify('error',"로그인을 해주세요");
-          this.inputComment = '';
+          const response = await fetchCommentCreate(feed_id, this.inputComment);
+          if (response.status === 201) {
+            this.snotify('success',response.data.message);
+            this.inputComment = "";
+            const feed_id = this.$route.params.feed_id;
+            const community_name = this.$route.params.community_name;
+            this.$store.dispatch("FETCH_FEED_DETAIL", { community_name, feed_id });
+          }
+        } catch (error) {
+          if (error.response.status === 401) {
+              this.snotify('error',"로그인을 해주세요");
+          } else {
+            this.snotify('error',error.response.data.message);
+            this.inputComment = '';
+          }          
         }
       }
     },
     async editComment(comment_id) {
-      try {
-        if (!this.inputUpdateComment||this.inputUpdateComment=="") {
-          this.notify("warning","댓글 수정란이 공백입니다!")
+      if (!this.inputUpdateComment||this.inputUpdateComment=="") {
+        this.snotify("warning","댓글 수정란이 공백입니다!")
+      } else {
+        try {
+          const response = await fetchCommentEdit(
+            comment_id,
+            this.inputUpdateComment
+          );
+          if (response.status === 200) {
+            this.snotify('success',response.data.message);
+            this.commenteditshow = false;
+            const feed_id = this.$route.params.feed_id;
+            const community_name = this.$route.params.community_name;
+            this.$store.dispatch("FETCH_FEED_DETAIL", { community_name, feed_id });
+          }
+        } catch (error) {
+          this.snotify('error',error.response.data.message);
+          this.inputUpdateComment = '';
         }
-        const response = await fetchCommentEdit(
-          comment_id,
-          this.inputUpdateComment
-        );
-        if (response.status === 200) {
-          this.snotify('success',response.data.message);
-          this.commenteditshow = false;
-          const feed_id = this.$route.params.feed_id;
-          const community_name = this.$route.params.community_name;
-          this.$store.dispatch("FETCH_FEED_DETAIL", { community_name, feed_id });
-        }
-      } catch (error) {
-        this.snotify('error','댓글 수정에 실패했습니다');
       }
     },
     async deleteComment(comment) {
@@ -539,7 +547,7 @@ export default {
           this.$store.dispatch("FETCH_FEED_DETAIL", { community_name, feed_id });
         }
       } catch (error) {
-        this.notify("error","댓글 삭제에 실패했습니다");
+        this.snotify("error","댓글 삭제에 실패했습니다");
       }
     },
     moveFeed(id) {
@@ -567,41 +575,49 @@ export default {
       this.$forceUpdate()
     },
     async createCocomment(comment) {
-      try {
-        const response = await fetchCocommentCreate(comment.id, this.inputCocomment);
-        if (response.status === 201) {
-          this.snotify('success',response.data.message);
-          this.inputCocomment = "";
-          const feed_id = this.$route.params.feed_id;
-          const community_name = this.$route.params.community_name;
-          this.$store.dispatch("FETCH_FEED_DETAIL", { community_name, feed_id });
-        }
-      } catch (error) {
-        if (error.response.status === 401) {
-          this.snotify('error','로그인을 해주세요');
-          this.inputCocomment = '';
+      if (this.inputCocomment=="") {
+        this.snotify("warning","댓글 입력란이 공백입니다!")
+      } else {
+          try {
+          const response = await fetchCocommentCreate(comment.id, this.inputCocomment);
+          if (response.status === 201) {
+            this.snotify('success',response.data.message);
+            this.inputCocomment = "";
+            const feed_id = this.$route.params.feed_id;
+            const community_name = this.$route.params.community_name;
+            this.$store.dispatch("FETCH_FEED_DETAIL", { community_name, feed_id });
+          }
+        } catch (error) {
+          if (error.response.status === 401) {
+                this.snotify('error',"로그인을 해주세요");
+            } else {
+              this.snotify('error',error.response.data.message);
+              this.inputCocomment = '';
+            } 
         }
       }
     },
     async editCocomment(comment_id) {
-      try {
-        if (!this.inputUpdateComment||this.inputUpdateComment=="") {
-          this.notify("warning","댓글 수정란이 공백입니다!")
+      if (!this.inputUpdateComment||this.inputUpdateComment=="") {
+        this.snotify("warning","댓글 수정란이 공백입니다!")
+      } else {
+        try {        
+          const response = await fetchCocommentEdit(
+            comment_id,
+            this.inputUpdateCocomment
+          );
+          if (response.status === 200) {
+            this.snotify('success',response.data.message);
+            this.cocommenteditshow = false;
+            const feed_id = this.$route.params.feed_id;
+            const community_name = this.$route.params.community_name;
+            this.$store.dispatch("FETCH_FEED_DETAIL", { community_name, feed_id });
+          }
+        } catch (error) {
+          this.snotify('error',error.response.data.message);
+          this.inputUpdateCocomment = '';
         }
-        const response = await fetchCocommentEdit(
-          comment_id,
-          this.inputUpdateCocomment
-        );
-        if (response.status === 200) {
-          this.snotify('success',response.data.message);
-          this.cocommenteditshow = false;
-          const feed_id = this.$route.params.feed_id;
-          const community_name = this.$route.params.community_name;
-          this.$store.dispatch("FETCH_FEED_DETAIL", { community_name, feed_id });
-        }
-      } catch (error) {
-        console.log(error);
-      }
+      }      
     },
     async deleteCocomment(comment_id) {
       try {
@@ -653,7 +669,7 @@ textarea{
   background: rgb(0, 0, 0);
 
   display: grid;
-  grid-template-columns: 75% 25%;
+  grid-template-columns: 50% 50%;
   grid-template-rows: 100px 50px;
 }
 .body-section{
@@ -1175,7 +1191,7 @@ textarea{
   margin: 0px 0px 50px 0px;
   display: grid;
 
-  grid-template-columns: 60px auto 120px;
+  grid-template-columns: 70px auto 120px;
   grid-template-rows: 90px;
 }
 

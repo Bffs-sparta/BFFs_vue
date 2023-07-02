@@ -286,7 +286,7 @@ export default {
                 );
                 if (response.status == 200) {
                     this.bookmark = !this.bookmark;
-                    this.snotify('success',response.data.msg);
+                    this.snotify('success',response.data.message);
                 }
             } catch (error) {
                 if (error.response.status === 401) {
@@ -838,6 +838,8 @@ header >  #menu {
   font-weight: 600;
   --tw-text-opacity: 1;
   color: rgba(55, 65, 81, 1);
+  height: 28px;
+  overflow: hidden;
 }
 
 .name {
@@ -951,7 +953,7 @@ header >  #menu {
     fill: #9E2067;
 }
 .visit-button:hover {
-    box-shadow: 9px 9px 33px #d1d1d1, -9px -9px 33px #ffffff;
+    /*box-shadow: 9px 9px 33px #d1d1d1, -9px -9px 33px #ffffff;*/
     transform: translateY(-3px);
 }
 </style>
