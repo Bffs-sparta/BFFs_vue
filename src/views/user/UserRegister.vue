@@ -127,6 +127,7 @@ export default {
                 {id:6, value:''},
             ],
             otp:'',
+            verification:false,
         }
     },
     methods: {
@@ -135,14 +136,18 @@ export default {
             this.inputType = this.visiable ? 'text' : 'password';    
         },
         async verify(){
-            try{
+            if(this.verification == false){
+                try{
                 const response = await fetchSendEmail(this.email);
                 if(response.status === 200){
                     this.modalopen = true;
                     this.snotify("success",response.data.message);
                 }
-            }catch(error){
-                this.snotify("error",error.response.data.error);
+                }catch(error){
+                    this.snotify("error",error.response.data.error);
+                }
+            }else{
+                this.snotify("info","이미 인증이 완료되었습니다.");
             }
         },
         handleInput(index){
@@ -165,6 +170,7 @@ export default {
                 const response = await fetchVerificationEmail(this.otp,this.email)
                 if(response.status === 200){
                     this.modalopen = false;
+                    this.verification = true;
                     this.snotify("success",response.data.message);
                 }
             }catch(error){
