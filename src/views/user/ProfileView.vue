@@ -419,22 +419,27 @@ export default {
             this.$forceUpdate()
         },
         async createComment() {
-            try {
-                const profile_id = this.$route.params.id;
-                const response = await fetchGuestBook(profile_id, this.inputComment)
-                if (response.status === 200) {
-                    this.snotify('success','방명록을 작성했습니다.')
-                    const user_id = this.$route.params.id
-                    this.$store.dispatch("FETCH_USER_PROFILE", user_id);
-                    this.inputComment='';
-                }
-            } catch (error) {
-                if (error.response.status === 401) {
-                    this.snotify('warning',"로그인을 해주세요");
-                }else{
-                    this.snotify('error','방명록 작성에 실패했습니다.')
-                }
-            } 
+            if (this.inputComment=="") {
+                this.snotify("warning","댓글 입력란이 공백입니다!")
+            } else {
+                try {
+                    const profile_id = this.$route.params.id;
+                    const response = await fetchGuestBook(profile_id, this.inputComment)
+                    if (response.status === 200) {
+                        this.snotify('success','방명록을 작성했습니다.')
+                        const user_id = this.$route.params.id
+                        this.$store.dispatch("FETCH_USER_PROFILE", user_id);
+                        this.inputComment='';
+                    }
+                } catch (error) {
+                    if (error.response.status === 401) {
+                        this.snotify('warning',"로그인을 해주세요");
+                    }else{
+                        this.snotify('error','방명록 작성에 실패했습니다.')
+                        this.inputComment='';
+                    }
+                } 
+            }
         },
         async editComment(guestbook_id) {
             try {
@@ -447,7 +452,8 @@ export default {
                     this.$store.dispatch("FETCH_USER_PROFILE", user_id);
                 }
             } catch (error) {
-                console.log(error)
+                this.snotify('error','방명록 수정에 실패했습니다.')
+                this.inputUpdateComment = '';
             } 
         },
         async deleteComment(guestbook_id) {
@@ -455,7 +461,6 @@ export default {
                 const profile_id = this.$route.params.id;
                 const response = await fetchGuestBookDelete(profile_id, guestbook_id)
                 if (response.status === 204) {
-                    console.log(response)
                     const user_id = this.$route.params.id
                     this.$store.dispatch("FETCH_USER_PROFILE", user_id);
                     this.snotify('success','방명록 삭제가 완료되었습니다.')
@@ -1016,13 +1021,14 @@ header > .profile > h3 {
 }
 
 .new-card-wrapper {
-    width: 800px;
+    width: 700px;
     display: flex;
     overflow-x: auto;
     overflow-y: hidden;
 }
 .new-card-wrapper::-webkit-scrollbar{
     height: 7px;
+    background-color: #F5F5F5;
 }
 .new-card-wrapper::-webkit-scrollbar-thumb{
     background-color: #a92278;
@@ -1567,7 +1573,10 @@ header > .profile > h3 {
     background-color: #9E2067;
     border-radius: 10px;
 }
-
+.my-feeds-box::-webkit-scrollbar-track{
+    background-color: #ffffff;
+    border-radius: 10px;
+}
 .content-card {
     width: 350px;
     height: 50px;

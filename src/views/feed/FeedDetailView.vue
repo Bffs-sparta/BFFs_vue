@@ -508,8 +508,8 @@ export default {
         } catch (error) {
           if (error.response.status === 401) {
               this.snotify('error',"로그인을 해주세요");
-          } else {
-            this.snotify('error',error.response.data.message);
+          } else if (error.response.status === 400) {
+            this.snotify('error','댓글을 입력해주세요');
             this.inputComment = '';
           }          
         }
@@ -541,7 +541,7 @@ export default {
       try {
         const response = await fetchCommentDelete(comment.id);
         if (response.status === 200) {
-          this.notify("success",response.data.message);
+          this.snotify("success",response.data.message);
           const feed_id = this.$route.params.feed_id;
           const community_name = this.$route.params.community_name;
           this.$store.dispatch("FETCH_FEED_DETAIL", { community_name, feed_id });
@@ -598,7 +598,7 @@ export default {
       }
     },
     async editCocomment(comment_id) {
-      if (!this.inputUpdateComment||this.inputUpdateComment=="") {
+      if (!this.inputUpdateCocomment||this.inputUpdateCocomment=="") {
         this.snotify("warning","댓글 수정란이 공백입니다!")
       } else {
         try {        

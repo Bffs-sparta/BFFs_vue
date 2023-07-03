@@ -1,7 +1,7 @@
 <template>
     <div class="write-container" v-if="categories.data">
         <div class = "title">
-            <input type="text" id="title" v-model="title" placeholder="제목을 입력해주세요">
+            <input type="text" id="title" v-model="title" placeholder="제목을 입력해주세요(필수)">
         </div>
         <vue-editor v-model="content" :useCustomImageHandler="true" @image-added="handleImageAdded"></vue-editor>
 
@@ -10,37 +10,37 @@
 
             <dl class="purchase-form">
               <span>... 공구 기본 내용 ...</span>
-              <dt class="product-name">상품 이름</dt>
+              <dt class="product-name">상품 이름<span style="margin-left:5px; color:red;">*</span></dt>
               <dd class="product-name-text">
                 <div class="input-wrapper">
                     <input class="gp-input-box" type="text" v-model="name">
                 </div>
               </dd>
-              <dt class="product-number">상품 수량</dt>
+              <dt class="product-number">상품 수량<span style="margin-left:5px; color:red;">*</span></dt>
               <dd class="product-number-text">
                 <div class="input-num-wrapper">
                   <input class="gp-input-num-box" type="number" v-model="number" min="0"> 개
                 </div>
               </dd>
-              <dt class="product-price">총 가격</dt>
+              <dt class="product-price">총 가격<span style="margin-left:5px; color:red;">*</span></dt>
               <dd type="number" class="product-price-text">
                 <div class="input-num-wrapper">
                   <input class="gp-input-num-box" type="number" v-model="price" min="0" step="100"> 원
                 </div>
               </dd>
-              <dt class="person-limit">모집 인원</dt>
+              <dt class="person-limit">모집 인원<span style="margin-left:5px; color:red;">*</span></dt>
               <dd class="person-limit-text">
                 <div class="input-num-wrapper">
                   <input class="gp-input-num-box" type="number" v-model="person" min="0"> 명 (본인 제외)
                 </div>
               </dd>
-              <dt class="product-link">상품 상세 url</dt>
+              <dt class="product-link">상품 상세 url<span style="margin-left:5px; color:red;">*</span></dt>
               <dd class="product-link-text">
                 <div class="input-wrapper">
-                  <input class="gp-input-box" type="url" v-model="link">
+                  <input class="gp-input-box" placeholder="최대 길이 500자 이하" type="url" v-model="link">
                 </div>
               </dd>
-              <dt class="open-at">모집 시작시간</dt>
+              <dt class="open-at">모집 시작 시간<span style="margin-left:5px; color:red;">*</span></dt>
               <dd class="open-at-text">
                 <div class="input-date-wrapper">
                   <!-- js로 오늘 날짜 가져와서 띄워주어야함 / step 10분 단위로 시간 받기 / min=선택 시간 제한, 현재 시간 넣기 -->
@@ -48,7 +48,7 @@
                   <input class="gp-input-box" type="datetime-local" v-model="open_at" min="" step="600">
                 </div>
               </dd>
-              <dt class="close-at">모집 종료 시간</dt>
+              <dt class="close-at">모집 종료 시간<span style="margin-left:5px; color:red;">*</span></dt>
               <dd class="close-at-text">
                 <div class="input-date-wrapper">
                   <input class="gp-input-box" type="datetime-local" v-model="close_at" min="" step="600">
@@ -58,7 +58,7 @@
 
             <dl class="purchase-end-form">
               <span>... 공구 종료 후 ...</span>
-              <dt class="end-option">공구 미 완료시</dt>
+              <dt class="end-option">공구 미 완료시<span style="margin-left:5px; color:red;">*</span></dt>
               <dd class="end-option-text">
                 <!-- select -->
                 <div class="input-wrapper">
@@ -70,13 +70,13 @@
                   </select>
                 </div>
               </dd>
-              <dt class="location">만날 위치</dt>
+              <dt class="location">만날 위치<span style="margin-left:5px; color:red;">*</span></dt>
               <dd class="location-text">
                 <div class="input-wrapper">
                   <input class="gp-input-box" type="text" v-model="location">
                 </div>
               </dd>
-              <dt class="meeting-at">만날 시간</dt>
+              <dt class="meeting-at">만날 시간<span style="margin-left:5px; color:red;">*</span></dt>
               <dd class="meeting-at-text">
                 <div class="input-wrapper">
                   <input class="gp-input-box" type="datetime-local" v-model="meeting_at" min="" step="600">

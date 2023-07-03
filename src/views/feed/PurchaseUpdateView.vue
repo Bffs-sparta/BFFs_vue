@@ -13,37 +13,37 @@
 
           <dl class="purchase-form">
             <span>... 공구 기본 내용 ...</span>
-            <dt class="product-name">상품 이름</dt>
+            <dt class="product-name">상품 이름<span style="margin-left:5px; color:red;">*</span></dt>
             <dd class="product-name-text">
               <div class="input-wrapper">
                   <input class="gp-input-box" type="text" v-model="feeds.product_name">
               </div>
             </dd>
-            <dt class="product-number">상품 수량</dt>
+            <dt class="product-number">상품 수량<span style="margin-left:5px; color:red;">*</span></dt>
             <dd class="product-number-text">
               <div class="input-num-wrapper">
                 <input class="gp-input-num-box" type="number" v-model="feeds.product_number"> 개
               </div>
             </dd>
-            <dt class="product-price">총 가격</dt>
+            <dt class="product-price">총 가격<span style="margin-left:5px; color:red;">*</span></dt>
             <dd type="number" class="product-price-text">
               <div class="input-num-wrapper">
                 <input class="gp-input-num-box" type="number" v-model="feeds.product_price" min="0"> 원
               </div>
             </dd>
-            <dt class="person-limit">모집 인원</dt>
+            <dt class="person-limit">모집 인원<span style="margin-left:5px; color:red;">*</span></dt>
             <dd class="person-limit-text">
               <div class="input-num-wrapper">
                 <input class="gp-input-num-box" type="number" v-model="feeds.person_limit" min="0"> 명
               </div>
             </dd>
-            <dt class="product-link">상품 상세 url</dt>
+            <dt class="product-link">상품 상세 url<span style="margin-left:5px; color:red;">*</span></dt>
             <dd class="product-link-text">
               <div class="input-wrapper">
                 <input class="gp-input-box" type="url" v-model="feeds.link">
               </div>
             </dd>
-            <dt class="open-at">모집 시작시간</dt>
+            <dt class="open-at">모집 시작시간<span style="margin-left:5px; color:red;">*</span></dt>
             <dd class="open-at-text">
               <div class="input-date-wrapper">
                 <!-- js로 오늘 날짜 가져와서 띄워주어야함 / step 10분 단위로 시간 받기 / min=선택 시간 제한, 현재 시간 넣기 -->
@@ -51,7 +51,7 @@
                 <input class="gp-input-box" type="datetime-local" v-model="feeds.open_at" min="" step="600">
               </div>
             </dd>
-            <dt class="close-at">모집 종료 시간</dt>
+            <dt class="close-at">모집 종료 시간<span style="margin-left:5px; color:red;">*</span></dt>
             <dd class="close-at-text">
               <div class="input-date-wrapper">
                 <input class="gp-input-box" type="datetime-local" v-model="feeds.close_at" min="" step="600">
@@ -61,7 +61,7 @@
 
           <dl class="purchase-end-form">
             <span>... 공구 종료 후 ...</span>
-            <dt class="end-option">공구 미 완료시</dt>
+            <dt class="end-option">공구 미 완료시<span style="margin-left:5px; color:red;">*</span></dt>
             <dd class="end-option-text">
               <!-- select -->
               <div class="input-wrapper">
@@ -73,13 +73,13 @@
                 </select>
               </div>
             </dd>
-            <dt class="location">만날 위치</dt>
+            <dt class="location">만날 위치<span style="margin-left:5px; color:red;">*</span></dt>
             <dd class="location-text">
               <div class="input-wrapper">
                 <input class="gp-input-box" type="text" v-model="feeds.location">
               </div>
             </dd>
-            <dt class="meeting-at">만날 시간</dt>
+            <dt class="meeting-at">만날 시간<span style="margin-left:5px; color:red;">*</span></dt>
             <dd class="meeting-at-text">
               <div class="input-wrapper">
                 <input class="gp-input-box" type="datetime-local" v-model="feeds.meeting_at" min="" step="600">
