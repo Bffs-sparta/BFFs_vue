@@ -453,13 +453,12 @@ export default {
                 this.$store.dispatch("FETCH_GROUPPURCHASE_DETAIL", { community_name, grouppurchase_id });
             }
             } catch (error) {
-                if (error.response.status === 400) {
-                    this.snotify('error',"댓글을 작성해주세요");
-                    this.inputComment = '';
-                }
                 if (error.response.status === 401) {
                     this.snotify('error',"로그인을 해주세요");
                     this.inputComment = '';
+                } else {
+                  this.snotify('error',error.response.data.message);
+                  this.inputComment = '';
                 }
             }
         },
@@ -477,7 +476,13 @@ export default {
                 this.$store.dispatch("FETCH_GROUPPURCHASE_DETAIL", { community_name, grouppurchase_id });
             }
             } catch (error) {
-                this.snotify('error','댓글 수정에 실패했습니다');
+                if (error.response.status === 401) {
+                    this.snotify('error',"로그인을 해주세요");
+                    this.inputComment = '';
+                } else {
+                    this.snotify('error',error.response.data.message);
+                    this.inputComment = '';
+                }
             }
         },
         async deleteComment(comment) {
