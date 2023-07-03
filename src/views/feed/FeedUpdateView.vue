@@ -53,7 +53,8 @@ export default {
                   this.snotify("warning","제목 혹은 글 내용이 없습니다! 내용을 입력해주세요")
               }
               else{
-                  const response = await fetchFeedEdit(feed_id, this.title, this.content);
+                  const community_name = this.$route.params.community_name;
+                  const response = await fetchFeedEdit(community_name, feed_id, this.title, this.content);
                   if(response.status === 200){
                       this.snotify("success",response.data.message);
                       this.$router.push({name: "feed-detail", params: {feed_id: feed_id}});

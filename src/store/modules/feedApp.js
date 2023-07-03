@@ -73,10 +73,11 @@ const actions ={
         }
     },
     async FETCH_FEED_CREATE(context, feedData) {
+        const community_name = feedData.community_name
         const title = feedData.title
         const content = feedData.content
         const category_id = feedData.categoryId
-        const response = await fetchFeedCreate(category_id,title, content)
+        const response = await fetchFeedCreate(community_name, title, content, category_id)
         bus.$emit('axiosStart')
         return response
     },

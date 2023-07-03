@@ -382,13 +382,12 @@ export default {
         },
         async endPurchase() {
             try {
+            const community_name = this.$route.params.community_name;
             const grouppurchase_id = this.$route.params.grouppurchase_id;
-            const response = await fetchGroupPurchaseSelfEnd(grouppurchase_id);
+            const response = await fetchGroupPurchaseSelfEnd(community_name, grouppurchase_id);
             if (response.status === 202) {
                 this.snotify('success',response.data.message);
                 this.feed.is_notification = !this.feed.is_notification;
-                const grouppurchase_id = this.$route.params.grouppurchase_id;
-                const community_name = this.$route.params.community_name;
                 this.$store.dispatch("FETCH_GROUPPURCHASE_DETAIL", { community_name, grouppurchase_id });
             }
             } catch (error) {
@@ -421,13 +420,12 @@ export default {
         async grouppurchaseJoin() {
             if (this.feed.grouppurchase_status == '진행 중') {
                 try {
+                    const community_name = this.$route.params.community_name;
                     const grouppurchase_id = this.$route.params.grouppurchase_id;
-                    const response = await fetchGroupPurchaseJoin(grouppurchase_id, this.submitnumber);
+                    const response = await fetchGroupPurchaseJoin(community_name, grouppurchase_id, this.submitnumber);
                     if (response.status === 201 || response.status === 202) {
                         this.snotify('success',response.data.message);
                         this.submitopen = false;
-                        const grouppurchase_id = this.$route.params.grouppurchase_id;
-                        const community_name = this.$route.params.community_name;
                         this.$store.dispatch("FETCH_GROUPPURCHASE_DETAIL", { community_name, grouppurchase_id });
                     }
                 } catch (error) {
@@ -443,13 +441,12 @@ export default {
         },
         async createComment() {
             try {
+            const community_name = this.$route.params.community_name;
             const grouppurchase_id = this.$route.params.grouppurchase_id;
-            const response = await fetchGroupPurchaseCommentCreate(grouppurchase_id, this.inputComment);
+            const response = await fetchGroupPurchaseCommentCreate(community_name, grouppurchase_id, this.inputComment);
             if (response.status === 201) {
                 this.snotify('success',response.data.message);
                 this.inputComment = "";
-                const grouppurchase_id = this.$route.params.grouppurchase_id;
-                const community_name = this.$route.params.community_name;
                 this.$store.dispatch("FETCH_GROUPPURCHASE_DETAIL", { community_name, grouppurchase_id });
             }
             } catch (error) {
