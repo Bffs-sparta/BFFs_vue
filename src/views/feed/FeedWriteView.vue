@@ -61,8 +61,10 @@ export default {
     },
     async writeFeed() {
         try{
-          const response = await this.$store.dispatch("FETCH_FEED_CREATE", {
-            title: this.title,
+          const community_name = this.$route.params.community_name;
+          const response = await this.$store.dispatch("FETCH_FEED_CREATE",{ 
+              community_name : community_name,
+              title: this.title,
               content: this.content,
               categoryId: this.categoryId,
             });
