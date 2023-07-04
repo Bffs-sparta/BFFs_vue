@@ -55,11 +55,11 @@
                             <div class="radio-inputs">
                                 <label class="radio">
                                     <input type="radio" name="radio" v-model="is_agreed" value=true :checked="profile.is_agreed">
-                                    <span class="name">동의</span>
+                                    <span class="name">공개</span>
                                 </label>
                                 <label class="radio">
                                     <input type="radio" name="radio" v-model="is_agreed" value=false :checked="profile.is_agreed==false">
-                                    <span class="name">미동의</span>
+                                    <span class="name">비공개</span>
                                 </label>
                             </div>
                         </dd>
@@ -80,9 +80,6 @@
 
                 <div class="user_profile">
                     <div class="card">
-                        <!-- <div class="card-image" v-if="profile.profileimage !== null">
-                            <img :src="profile.profileimageurl.slice(28)" />
-                        </div> -->
                         <div class="image-box">
                             <label class="custum-file-upload" for="file">
                                 <div class="icon">
