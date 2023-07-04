@@ -178,7 +178,7 @@
                                             </path>
                                         </svg>
                                     </router-link>
-                                    <button class="quit-button" @click="deleteUserCheck()">탈퇴</button>
+                                    <button class="quit-button" @click="PasswordWithdrawalModal">탈퇴</button>
                                 </div>               
                             </div>
                         </div>
@@ -250,7 +250,7 @@
 <script>
 import PasswordWithdrawalModal from "@/components/PasswordWithdrawalModal.vue";
 import { mapGetters } from "vuex";
-import  {  fetchGuestBook, fetchGuestBookEdit, fetchGuestBookDelete, fetchProfileDelete } from "@/api/index.js";
+import  {  fetchGuestBook, fetchGuestBookEdit, fetchGuestBookDelete} from "@/api/index.js";
 import bus from '@/utils/bus.js'
 
 
@@ -364,24 +364,8 @@ export default {
                 this.snotify('error','방명록 삭제에 실패했습니다.')
             } 
         },
-
-        deleteUserCheck() {
-            const check = confirm('계정을 비활성화 하시겠습니까?')
+        PasswordWithdrawalModal(){
             this.modalopen = true;
-            if (check) {
-                this.deleteUser();
-            }
-
-        },
-        async deleteUser() {
-            try {                
-                const response = await fetchProfileDelete(this.userid)
-                if (response.status === 204) {
-                    this.snotify('info',response.data.message)
-                }
-            } catch (error) {
-                this.snotify('error','계정 비활성화에 실패했습니다.')
-            } 
         },
         snotify(type,message){
             bus.$emit('showSnackbar',{

@@ -7,7 +7,7 @@
       Below.
     </p>
     <div class="card__form">
-      <input placeholder="Your Password" type="text" v-model="password" />
+      <input v-model="password" placeholder="Your Password" type="password" />
       <button class="wdpassword" @click="sendPassword">Send Password</button>
     </div>
   </div>
@@ -15,6 +15,8 @@
 
 <script>
 import { fetchProfileDelete } from "../api/index.js";
+import bus from '@/utils/bus.js'
+
 export default {
   data() {
     return {
@@ -27,16 +29,35 @@ export default {
         console.log("비밀번호를 입력해주세요.");
       } else {
         try {
-          const response = await fetchProfileDelete(this.password);
-          console.log(response);
-          if (response.status === 200) {
-            console.log("비밀번호 전송 성공");
+          const user_id = this.$route.params.id;
+          const response = await fetchProfileDelete(user_id, this.password);
+          
+          if (response.status === 204) {
+               console.log("비활성화 성공");
+
+              //  this.$router.push('/');
+               this.logout();
+               this.snotify('info', "계정 비활성화 되었습니다")
           }
-        } catch (error) {
-          console.log(error);
-        }
+          } catch (error) {
+                console.log(error)
+                this.snotify('error','계정 비활성화에 실패했습니다.')
+          } 
       }
     },
+    logout() {
+        localStorage.removeItem('access_token');
+        localStorage.removeItem('refresh_token');
+        localStorage.removeItem('payload');
+        this.$router.push('/').catch(() => {});
+        this.snotify('success','로그아웃 되었습니다.');
+    },
+    snotify(type,message){
+        bus.$emit('showSnackbar',{
+            type,
+            message
+        });
+        },
   },
 };
 </script>
