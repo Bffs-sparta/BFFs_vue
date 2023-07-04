@@ -436,7 +436,7 @@ export default {
         );
         if (response.status == 200) {
           this.bookmark = !this.bookmark;
-          this.snotify('info',response.data.msg);
+          this.snotify('success',response.data.message);
         }
       } catch (error) {
         if (error.response.status === 401) {
