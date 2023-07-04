@@ -3,9 +3,7 @@
         <header>
             <div id="menu">
                 <div class="sub-menu">
-                    <div class="hamburger">
-                        <div class="material-icons">menu</div>
-                    </div>
+
                     <h2>
                         <a>Be My Best Friend:D</a>
                     </h2>
@@ -97,13 +95,9 @@ header > #menu > .sub-menu {
     height: 70px;
 }
 
-header > #menu > .sub-menu > .hamburger > .material-icons {
-    color: #D7C0CD;
-    margin-left: 12px;
-    margin-right: 4px;
-}
 
 header > #menu > .sub-menu > h2 {
+    margin-left: 20px;
     color: #D7C0CD;
 }
 

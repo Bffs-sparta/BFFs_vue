@@ -126,11 +126,13 @@ function fetchProfileEdit(user_id, formData){
 }
 
 // 프로필 삭제 (회원탈퇴)
-function fetchProfileDelete(user_id){
-    return axios.delete(`${config.baseUrl}/user/${user_id}/`,{
+function fetchProfileDelete(user_id, password){
+    return axios.delete(`${config.baseUrl}/user/${user_id}/`, {
         headers: {
             'Authorization': `Bearer ${access_token()}`,
-        }
+            'Content-Type': 'application/json',
+        },
+        data: { password },
     })
 }
 
@@ -195,7 +197,6 @@ function fetchCommunityCreate(title, communityurl, introduction) {
         }
     })
 }
-
 // 커뮤니티 카테고리 조회
 function fetchCommunityCategoryDetail(community_name) {
     return axios.get(`${config.baseUrl}/community/${community_name}/category/`)
@@ -319,20 +320,11 @@ function fetchSearchUser(name,community_name) {
     return axios.get(`${config.baseUrl}/user/search?search=${name}&community_url=${community_name}`)
 }
 
-// 메인페이지 전체 피드 중 최근순 3개 조회
-function fetchFeedAll() {
-    return axios.get(`${config.baseUrl}/feed/`)
-}
-
 // 전체 피드 리스트 조회
 function fetchFeedList(community_name) {
     return axios.get(`${config.baseUrl}/community/${community_name}/list/`)
 }
 
-// 피드 카테고리별 조회
-function fetchFeedCategoryList(community_name, category_name) {
-    return axios.get(`${config.baseUrl}/community/${community_name}/category/${category_name}/`)
-}
 
 // 피드 상세 조회, 피드 댓글 조회
 function fetchFeedDetail(community_name,feed_id) {
@@ -397,13 +389,6 @@ function fetchFeedLike(feed_id) {
         }
     })
 }
-function fetchPrevfeed(community_name,feed_id){
-    return axios.get(`${config.baseUrl}/community/${community_name}/feed/${feed_id}/prev/`)
-}
-
-function fetchNextfeed(community_name,feed_id){
-    return axios.get(`${config.baseUrl}/community/${community_name}/feed/${feed_id}/next/`)
-}
 // 피드 게시글 공지 설정
 function fetchFeedNotification(feed_id) {
     return axios.post(`${config.baseUrl}/feed/${feed_id}/notification/`,{},{
@@ -430,9 +415,9 @@ function fetchGroupPurchaseJoin(community_name, grouppurchase_id, product_quanti
 }
 
 // 공구 생성
-function fetchGroupPurchaseCreate(community_url, title, content, product_name, product_number, product_price, person_limit, link, open_at, close_at, end_option, location, meeting_at) {
+function fetchGroupPurchaseCreate(community_url, data) {
     return axios.post(`${config.baseUrl}/community/${community_url}/grouppurchase/`,{
-        title, content, product_name, product_number, product_price, person_limit, link, open_at, close_at, end_option, location, meeting_at
+        ...data
     },{
         headers: {
             'Authorization': `Bearer ${access_token()}`,
@@ -456,9 +441,9 @@ function fetchGroupPurchaseDetail(community_name, grouppurchase_id) {
 }
 
 // 공구 게시글 수정
-function fetchGroupPurchaseEdit(community_name, grouppurchase_id, title, content, product_name, product_number, product_price, person_limit, link, open_at, close_at, end_option, location, meeting_at) {
+function fetchGroupPurchaseEdit(community_name, grouppurchase_id, data) {
     return axios.put(`${config.baseUrl}/community/${community_name}/grouppurchase/${grouppurchase_id}/`,{
-        title, content, product_name, product_number, product_price, person_limit, link, open_at, close_at, end_option, location, meeting_at
+        ...data
     },{
         headers: {
             'Authorization': `Bearer ${access_token()}`,
@@ -656,16 +641,12 @@ export {
     fetchSearchCommunity,
     fetchSearchFeed,
     fetchSearchUser,
-    fetchFeedAll,
     fetchFeedList,
-    fetchFeedCategoryList,
     fetchFeedDetail,
     fetchFeedCreate,
     fetchFeedLike,
     fetchFeedEdit,
     fetchFeedDelete,
-    fetchPrevfeed,
-    fetchNextfeed,
     fetchFeedNotification,
     fetchGroupPurchaseList,
     fetchGroupPurchaseDetail,

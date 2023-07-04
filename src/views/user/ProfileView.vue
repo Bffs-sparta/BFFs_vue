@@ -231,26 +231,27 @@
                             <img :src="profile.profileimageurl.slice(33)" v-else-if="profile.profileimage !== null" @click='openModal'/>
                             <img src="@/assets/room_image(5).jpg" v-else />
                         </div>
-                        <div class="category"> {{ profile.nickname }} | {{ profile.region }} </div>
-                        <div class="heading" v-if="profile.introduction != null"> {{ profile.introduction }}
-                            <div class="author"> By <span class="name">{{ profile.user_name }}</span></div>
-                            <div class="author"> 가입일 <span class="name">{{ profile.created_at.slice(0, 10) }}</span></div>
-                        </div>
-                        <div class="heading" v-else> 인사말이 없습니다
-                            <div class="author"> By <span class="name">{{ profile.user_name }}</span></div>
-                            <div class="author"> 가입일 <span class="name">{{ profile.created_at.slice(0, 10) }}</span></div>
-                        </div>
-                        <div class="guestbook-comment" v-if="userid===profile.id">
-                            <div class="submit-box">
-                                <router-link :to="`/profile/update/${profile.id}`" class="Btn" @click="editProfile()">수정
-                                    <svg class="Btn-svg" viewBox="0 0 512 512">
-                                        <path
-                                            d="M410.3 231l11.3-11.3-33.9-33.9-62.1-62.1L291.7 89.8l-11.3 11.3-22.6 22.6L58.6 322.9c-10.4 10.4-18 23.3-22.2 37.4L1 480.7c-2.5 8.4-.2 17.5 6.1 23.7s15.3 8.5 23.7 6.1l120.3-35.4c14.1-4.2 27-11.8 37.4-22.2L387.7 253.7 410.3 231zM160 399.4l-9.1 22.7c-4 3.1-8.5 5.4-13.3 6.9L59.4 452l23-78.1c1.4-4.9 3.8-9.4 6.9-13.3l22.7-9.1v32c0 8.8 7.2 16 16 16h32zM362.7 18.7L348.3 33.2 325.7 55.8 314.3 67.1l33.9 33.9 62.1 62.1 33.9 33.9 11.3-11.3 22.6-22.6 14.5-14.5c25-25 25-65.5 0-90.5L453.3 18.7c-25-25-65.5-25-90.5 0zm-47.4 168l-144 144c-6.2 6.2-16.4 6.2-22.6 0s-6.2-16.4 0-22.6l144-144c6.2-6.2 16.4-6.2 22.6 0s6.2 16.4 0 22.6z">
-                                        </path>
-                                    </svg>
-                                </router-link>
-                                <button class="quit-button" @click="deleteUserCheck()">탈퇴</button>
-                            </div>               
+                            <div class="category"> {{ profile.nickname }} | {{ profile.region }} </div>
+                            <div class="heading" v-if="profile.introduction != null"> {{ profile.introduction }}
+                                <div class="author"> By <span class="name">{{ profile.user_name }}</span></div>
+                                <div class="author"> 가입일 <span class="name">{{ profile.created_at.slice(0, 10) }}</span></div>
+                            </div>
+                            <div class="heading" v-else> 인사말이 없습니다
+                                <div class="author"> By <span class="name">{{ profile.user_name }}</span></div>
+                                <div class="author"> 가입일 <span class="name">{{ profile.created_at.slice(0, 10) }}</span></div>
+                            </div>
+                            <div class="guestbook-comment" v-if="userid===profile.id">
+                                <div class="submit-box">
+                                    <router-link :to="`/profile/update/${profile.id}`" class="Btn" @click="editProfile()">수정
+                                        <svg class="Btn-svg" viewBox="0 0 512 512">
+                                            <path
+                                                d="M410.3 231l11.3-11.3-33.9-33.9-62.1-62.1L291.7 89.8l-11.3 11.3-22.6 22.6L58.6 322.9c-10.4 10.4-18 23.3-22.2 37.4L1 480.7c-2.5 8.4-.2 17.5 6.1 23.7s15.3 8.5 23.7 6.1l120.3-35.4c14.1-4.2 27-11.8 37.4-22.2L387.7 253.7 410.3 231zM160 399.4l-9.1 22.7c-4 3.1-8.5 5.4-13.3 6.9L59.4 452l23-78.1c1.4-4.9 3.8-9.4 6.9-13.3l22.7-9.1v32c0 8.8 7.2 16 16 16h32zM362.7 18.7L348.3 33.2 325.7 55.8 314.3 67.1l33.9 33.9 62.1 62.1 33.9 33.9 11.3-11.3 22.6-22.6 14.5-14.5c25-25 25-65.5 0-90.5L453.3 18.7c-25-25-65.5-25-90.5 0zm-47.4 168l-144 144c-6.2 6.2-16.4 6.2-22.6 0s-6.2-16.4 0-22.6l144-144c6.2-6.2 16.4-6.2 22.6 0s6.2 16.4 0 22.6z">
+                                            </path>
+                                        </svg>
+                                    </router-link>
+                                    <button class="quit-button" @click="PasswordWithdrawalModal">탈퇴</button>
+                                </div>               
+                            </div>
                         </div>
                     </div>
 
@@ -344,7 +345,7 @@
 <script>
 import PasswordWithdrawalModal from "@/components/PasswordWithdrawalModal.vue";
 import { mapGetters } from "vuex";
-import  {  fetchGuestBook, fetchGuestBookEdit, fetchGuestBookDelete, fetchProfileDelete } from "@/api/index.js";
+import  {  fetchGuestBook, fetchGuestBookEdit, fetchGuestBookDelete} from "@/api/index.js";
 import bus from '@/utils/bus.js'
 
 
@@ -469,24 +470,8 @@ export default {
                 this.snotify('error','방명록 삭제에 실패했습니다.')
             } 
         },
-
-        deleteUserCheck() {
-            const check = confirm('계정을 비활성화 하시겠습니까?')
+        PasswordWithdrawalModal(){
             this.modalopen = true;
-            if (check) {
-                this.deleteUser();
-            }
-
-        },
-        async deleteUser() {
-            try {                
-                const response = await fetchProfileDelete(this.userid)
-                if (response.status === 204) {
-                    this.snotify('info',response.data.message)
-                }
-            } catch (error) {
-                this.snotify('error','계정 비활성화에 실패했습니다.')
-            } 
         },
         snotify(type,message){
             bus.$emit('showSnackbar',{
