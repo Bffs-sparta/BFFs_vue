@@ -58,8 +58,20 @@
             <section class="main-section">
                 <div class="main-area">
                     <div class="main-container">
+                        <!-- 공지 section -->
+                        <div class="notification-section" v-if="notification?.length !== 0">
+                            <router-link :to="`/community/detail/${communityurl}/feed/${feed.id}`" class="notification-wrap" v-for="feed, index in notification" :key="index">
+                                <div class="notification-list">
+                                    <p class="notification-title">[공지]</p>
+                                    <p class="notification-text">{{ feed.title }}</p>
+                                    <p class="notification-comment">({{ feed.comments_count }})</p>
+                                    <p class="notification-author">- {{ feed.nickname }}</p>
+                                </div>
+                                <p class="notification-date">{{ feed.created_at.slice(0, 10) }}</p>
+                            </router-link>
+                        </div>
                         <!-- category list 내용 -->
-                        <div class="main-content-wrapper" v-if="feeds?.length === 0">
+                        <div class="main-content-wrapper" v-if="feeds === undefined">
                             <h1 style="color:#707070; margin: 0 auto;">아직 게시글이 없습니다</h1>
                         </div>
                         <div class="main-content-wrapper" v-else>
@@ -151,6 +163,9 @@ export default {
         ...mapGetters(['fetchCommunityCategoryDetail', 'fetchGroupPurchaseList']),
         community(){
             return this.fetchCommunityCategoryDetail?.community
+        },
+        notification(){
+            return this.fetchCommunityCategoryDetail?.notification
         },
         bookmark(){
             return this.fetchCommunityCategoryDetail?.community?.is_bookmarked;
@@ -362,6 +377,40 @@ a{
     font-size: 24px;
     font-weight: 700;
     color: #707070;
+}
+
+.notification-section {
+    width: 95%;
+    margin-top: -50px;
+    padding: 20px;
+}
+.notification-wrap {
+    height: 30px;
+    display: flex;
+    justify-content: space-between;
+}
+.notification-list {
+    display: flex;
+}
+.notification-title {
+    color:#9E2067;
+    font-weight: bold;
+}
+.notification-text {
+    color:#454545;
+    margin-left: 5px;
+}
+.notification-comment {
+    color:#9E2067;
+    margin-left: 5px;
+}
+.notification-author {
+    color:#454545;
+    margin-left: 5px;
+}
+.notification-date {
+    color:#909090;
+    margin-right: 30px;
 }
 
 /***** 버튼 css *****/
@@ -777,4 +826,5 @@ a{
     border-bottom: 10px solid transparent;
     border-right:10px solid #9e2070;
 }
+
 </style>

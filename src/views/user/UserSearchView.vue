@@ -3,7 +3,7 @@
         <section class="main-section">
             <div class="main-container">
                 <div class="subtitle">
-                    <h3> 오늘의 추천 방</h3>
+                    <h3> 검색 결과 : {{ user }}</h3>
                 </div>
 
                 <!-- 검색 -->
@@ -22,11 +22,11 @@
         </section>
         <section class="notice">
             <div class="notice-list">
-                <div class="card" v-for="(profile, index) in newprofile" :key=index>
+                <div class="card" v-for="(profile, index) in profile" :key=index>
                     <router-link :to="`/profile/${profile.id}`">
                         <div class="card-image">
-                            <img :src="profile.profileimageurl" v-if="profile.profileimage !== null && profile.profileimage.includes('profile_img')"/>
-                            <img :src="profile.profileimageurl.slice(33)" v-else-if="profile.profileimage !== null"/>
+                            <img :src="profile.profileimageurl" v-if="profile.profileimage !== '' && profile.profileimage.includes('profile_img')"/>
+                            <img :src="profile.profileimageurl.slice(33)" v-else-if="profile.profileimage !== ''"/>
                             <img src="@/assets/room_image(5).jpg" v-else />
                         </div>
                         <div class="category"> {{ profile.nickname }} | {{ profile.region }} </div>
@@ -34,7 +34,7 @@
                             <div class="author"> By <span class="name">{{ profile.user_name }}</span></div>
                             <div class="author"> 가입일 <span class="name">{{ profile.created_at.slice(0, 10) }}</span></div>
                         </div>
-                        <div class="heading" v-else> 인사말이 없습니다
+                        <div class="heading" v-else> 친구해요 !
                             <div class="author"> By <span class="name">{{ profile.user_name }}</span></div>
                             <div class="author"> 가입일 <span class="name">{{ profile.created_at.slice(0, 10) }}</span></div>
                         </div>
@@ -47,33 +47,44 @@
 
 <script>
 import { mapGetters } from "vuex";
+import bus from '@/utils/bus.js';
 
 export default {
     computed: {
-        ...mapGetters(["fetchAllProfile"]),
-        newprofile() {
-            return [...this.fetchAllProfile].filter((profile) => profile.id !== this.userid).sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+        ...mapGetters(["fetchSearchUser"]),
+        profile() {
+            return this.fetchSearchUser;
         },
     },
     data() {
         return {
-            userid: '',
             user: '',
         }
     },
-    mounted() {
-        const payload = localStorage.getItem('payload');
-        if (payload) {
-            const { user_id } = JSON.parse(payload);
-            this.userid = user_id;
-        }
-    },
     created() {
-        this.$store.dispatch("FETCH_ALL_PROFILE");
+        const user = this.$route.params.name
+        this.$store.dispatch("search_user", {user});
     },
     methods: {
         searchUser() {
-            this.$router.push(`/user/search/${this.user}`)
+            const user = this.user
+            if(user==''){
+                this.snotify('warning','검색어를 입력해주세요.');
+            }
+            else{
+                this.$store.dispatch("search_user", {user});
+
+                if (this.fetchSearchUser?.length === 0) {
+                    this.notify("찾으시는 검색 결과가 없습니다")
+                    this.user = '';
+                }
+            }
+        },
+        snotify(type,message){
+            bus.$emit('showSnackbar',{
+                type,
+                message
+            });
         },
     },
 };

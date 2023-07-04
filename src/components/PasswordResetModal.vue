@@ -15,6 +15,8 @@
 
 <script>
 import { fetchPasswordReset } from "../api/index.js";
+import bus from '@/utils/bus.js'
+
 export default {
   data() {
     return {
@@ -24,18 +26,23 @@ export default {
   methods: {
     async sendEmail() {
       if (this.email == "") {
-        console.log("이메일을 입력해주세요");
+        this.snotify('warning','이메일을 입력해주세요')
       } else {
         try {
           const response = await fetchPasswordReset(this.email);
-          console.log(response);
           if (response.status === 200) {
-            console.log("이메일 전송 성공");
+            this.snotify('error',response.data.message)
           }
         } catch (error) {
-          console.log(error);
+          this.snotify('error',error.response.data.message)
         }
       }
+    },
+    snotify(type,message){
+        bus.$emit('showSnackbar',{
+            type,
+            message
+        });
     },
   },
 };

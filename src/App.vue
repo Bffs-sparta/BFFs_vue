@@ -25,30 +25,36 @@ export default {
   },
   data(){
     return{
-        loading: false,
+        loading: true,
         axioscount:0,
     }
   },
   created(){
     bus.$on('showSnackbar', ({type, message}) => {
       this.snotify(type,message)
-    })
+    }),
+    bus.$on('pageMove',()=>{
+      this.loading = true 
+    }),
     bus.$on('axiosStart', () => {
       this.axiosStart()
-    })
+    }),
     bus.$on('axiosEnd', () => {
       this.axiosEnd()
     })
   },
   methods:{
     axiosStart(){
-      this.axioscount++
+      this.axioscount= this.axioscount + 1
       this.loading = true
     },
     axiosEnd(){
       this.axioscount--
       if(this.axioscount <= 0){
-        this.loading = false
+        if(this.axioscount < 0) this.axioscount = 0;
+        setTimeout(() => {
+          this.loading = false
+        }, 500);
       }
     }
   }

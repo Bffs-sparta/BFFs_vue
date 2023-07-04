@@ -48,6 +48,22 @@
                             </div>
                         </dd>
                     </dl>
+
+                    <dl>
+                        <dt>agreement</dt>
+                        <dd>
+                            <div class="radio-inputs">
+                                <label class="radio">
+                                    <input type="radio" name="radio" v-model="is_agreed" value=true :checked="profile.is_agreed">
+                                    <span class="name">동의</span>
+                                </label>
+                                <label class="radio">
+                                    <input type="radio" name="radio" v-model="is_agreed" value=false :checked="profile.is_agreed==false">
+                                    <span class="name">미동의</span>
+                                </label>
+                            </div>
+                        </dd>
+                    </dl>
                     <div class="guestbook-comment">
                         <div class="submit-box">
                             <button class="Btn" @click="editProfile">수정
@@ -99,6 +115,11 @@ import { fetchProfileEdit } from "@/api/index.js";
 import bus from '@/utils/bus.js'
 
 export default {
+    data(){
+        return{
+            is_agreed: null,
+        }
+    },
     computed: {
         ...mapGetters(["fetchProfile"]),
         profile() {
@@ -113,6 +134,9 @@ export default {
             if(target_user!=user_id){
                 this.$router.go(-1)
             }
+        },
+        profile(){
+            this.is_agreed = this.profile.is_agreed
         }
     },
     created() {
@@ -141,10 +165,12 @@ export default {
                 const nickname = this.profile.nickname
                 const region = this.profile.region
                 const introduction = this.profile.introduction
+                const is_agreed = this.is_agreed
                 const image = this.$refs.fileInput.files[0]
 
                 const formData = new FormData()
                 formData.append("nickname", nickname)
+                formData.append("is_agreed", is_agreed)
                 if (region) {
                     formData.append("region", region)
                 }
@@ -497,5 +523,44 @@ dt {
     justify-content: center;
     align-items: center;
     margin-top: 44px;
+}
+
+.radio-inputs {
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  border-radius: 0.5rem;
+  background-color: #05060f0a;
+  box-sizing: border-box;
+  box-shadow: 0 0 0px 1px rgba(0, 0, 0, 0.06);
+  padding: 0.25rem;
+  width: 486px;
+  font-size: 14px;
+}
+
+.radio-inputs .radio {
+  flex: 1 1 auto;
+  text-align: center;
+}
+
+.radio-inputs .radio input {
+  display: none;
+}
+
+.radio-inputs .radio .name {
+  display: flex;
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0.5rem;
+  border: none;
+  padding: .5rem 0;
+  color: rgba(51, 65, 85, 1);
+  transition: all .15s ease-in-out;
+}
+
+.radio-inputs .radio input:checked + .name {
+  background-color: #fff;
+  font-weight: 600;
 }
 </style>

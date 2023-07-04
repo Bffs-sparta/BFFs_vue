@@ -34,7 +34,7 @@
             <div class="main-area"></div>
             <div class="main-container">
                 <div class="main-title">
-                    <h3>| 관심갈지도 몰라요! </h3>
+                    <h3>| 추천 커뮤니티 </h3>
                 </div>
                 <div class="main-box">
                     <!-- 관심-random 카드 섹션 -->

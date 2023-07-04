@@ -9,7 +9,7 @@
                         <router-link :to="`/community/detail/${fetchCommunityDetail.data.communityurl}` " class="visit-button"> 
                             <p class="paragraph">커뮤니티로 이동</p>
                             <span class="icon-wrapper">
-                            <svg class="icon" height="30" width="30" xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 1024 1024">
+                            <svg class="visiticon" height="30" width="30" xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 1024 1024">
                                 <path d="M874.690416 495.52477c0 11.2973-9.168824 20.466124-20.466124 20.466124l-604.773963 0 188.083679 188.083679c7.992021 7.992021 7.992021 20.947078 0 28.939099-4.001127 3.990894-9.240455 5.996574-14.46955 5.996574-5.239328 0-10.478655-1.995447-14.479783-5.996574l-223.00912-223.00912c-3.837398-3.837398-5.996574-9.046027-5.996574-14.46955 0-5.433756 2.159176-10.632151 5.996574-14.46955l223.019353-223.029586c7.992021-7.992021 20.957311-7.992021 28.949332 0 7.992021 8.002254 7.992021 20.957311 0 28.949332l-188.073446 188.073446 604.753497 0C865.521592 475.058646 874.690416 484.217237 874.690416 495.52477z"></path>
                             </svg>
                             </span>
@@ -74,7 +74,12 @@
                 <div class="main-container">
                     <div class="sub-title2">
                         <span>
-                            <h3>관리자 등록 삭제</h3>
+                            <div class="sub-title4">
+                                <span>
+                                    <h3>관리자 등록</h3>
+                                    <h5>(메인 관리자만 가능)</h5>
+                                </span>
+                            </div>
                             <div class="member-wrapper">
                                 <div class="search-area">
                                     <div class="admin-box">
@@ -99,10 +104,6 @@
                                             <li id="nickname" v-else>닉네임 없음</li>
                                             <li id="feed" v-if="admin.last_login">{{ admin.last_login.slice(0, 10) }}</li>
                                             <li id="feed" v-else>최근 접속일 없음</li>
-                                            <li id="subadmin">
-                                            <!-- subadmin 이면 상단에 배치 및 아이콘 띄워주기 -->
-                                                <img id="checked" src="@/assets/checked.png"> 
-                                            </li>
                                             <li class="button-box">
                                                 <button @click="deleteSubadmin(admin.user_id || admin.id)"> 삭제 </button>
                                             </li>
@@ -110,7 +111,7 @@
                                     </div>
                                 </div>
                                 <div class="search-area">
-                                    <h3>새로운 관리자 찾기</h3>
+                                    <p class="comuadmin-name">새로운 관리자 찾기</p>
                                     <div class="search-box">
                                         <div class="container-input">
                                             <input type="text" placeholder="User Search" name="text" class="input"
@@ -139,10 +140,6 @@
                                                 <li id="nickname" v-else>닉네임 없음</li>
                                                 <li id="feed" v-if="user.last_login">{{ user.last_login.slice(0, 10) }}</li>
                                                 <li id="feed" v-else>최근 접속일 없음</li>
-                                                <li id="subadmin">
-                                                <!-- subadmin 이면 상단에 배치 및 아이콘 띄워주기 -->
-                                                    <img id="checked" src="@/assets/checked.png"> 
-                                                </li>
                                                 <li class="button-box">
                                                     <button @click="createSubadmin(user.id || user.user_id)"> 등록 </button>
                                                 </li>
@@ -204,7 +201,7 @@ export default {
                     this.snotify('success','금지어 추가 완료')
                 }
             } catch (error) {
-                this.snotify("error",error.response.data.msg)
+                this.snotify("error",error.response.data.message)
             }
         },
         async forbiddenDelete(word) {
@@ -216,7 +213,7 @@ export default {
                     this.fetchCommunityDetail.data.forbiddenword.splice(this.fetchCommunityDetail.data.forbiddenword.indexOf(word), 1);
                 }
             } catch (error) {
-                this.snotify('error',error.response.data.msg)
+                this.snotify('error',error.response.data.message)
             }
         },
         async createSubadmin(id) {
@@ -230,7 +227,7 @@ export default {
                     this.snotify('success','관리자 등록 완료')
                 }
             } catch (error) {
-                this.snotify('error',error.response.data.msg)
+                this.snotify('error',error.response.data.message)
             }
         },
         async deleteSubadmin(id) {
@@ -244,7 +241,7 @@ export default {
                     this.snotify("success", "관리자 삭제 완료")
                 }
             } catch (error) {
-                this.snotify("error",error.response.data.msg)
+                this.snotify("error",error.response.data.message)
             }
         },
         InputImage(event) {
@@ -275,7 +272,7 @@ export default {
                     this.$router.push(`/community/detail/${community_name}`)
                 }
             } catch (error) {
-                this.snotify('error',error.response.data.msg)
+                this.snotify('error',error.response.data.message)
             }
         },
         searchUser() {
@@ -298,7 +295,7 @@ export default {
                     this.$router.push('/')
                 }
             } catch (error) {
-                this.snotify("error",error.response.data.msg)
+                this.snotify("error",error.response.data.message)
             }
         },
         snotify(type,message){
@@ -382,7 +379,7 @@ body {
 .sub-title p {
     font-weight: 550;
     font-size: 1.3rem;
-    color: #454545;
+    color: #909090;
 }
 
 .sub-title2 {
@@ -415,6 +412,25 @@ body {
 .sub-title3 h3 {
     margin-right: 45px;
     color: #909090;
+}
+
+.sub-title4 span {
+    font-weight: 450;
+    font-size: 1.1rem;
+    color: #707070;
+    display:flex;
+    flex-direction: column;
+}
+
+.sub-title4 h3 {
+    margin: 0;
+    margin-right: 40px;
+}
+
+.sub-title4 h5 {
+    color: #909090;
+    margin: 0;
+    width: 100%;
 }
 
 /***** imageupload css area *****/
@@ -493,6 +509,7 @@ body {
 }
 
 .input-introduction {
+    resize: none;
     width: 100%;
     height: 150px;
     background-color: #05060f0a;
@@ -608,10 +625,10 @@ body {
 }
 
 #feed {
-    width: 180px;
+    width: 200px;
     white-space: nowrap;
     overflow: hidden;
-    margin-left: 44px;
+    margin-left: 22px;
 }
 
 #subadmin {
@@ -803,14 +820,14 @@ body {
     transition-delay: .4s;
 }
   
-.visit-button:hover > .icon-wrapper .icon {
+.visit-button:hover > .icon-wrapper .visiticon {
     transform: scale(1.0);
     transform: rotate(180deg);
     fill: white;
 
 }
   
-.visit-button:hover > .icon-wrapper .icon path {
+.visit-button:hover > .icon-wrapper .visiticon path {
     stroke: rgb(255, 255, 255);
 }
   
@@ -838,7 +855,7 @@ body {
     justify-content: center;
 }
   
-.icon {
+.visiticon {
     transform: scale(1.0);
     transition: .2s linear;
     transform: rotate(180deg);
@@ -846,7 +863,7 @@ body {
 
 }
   
-.icon path {
+.visiticon path {
     stroke: #000;
     stroke-width: 2px;
     -webkit-transition: .2s linear;

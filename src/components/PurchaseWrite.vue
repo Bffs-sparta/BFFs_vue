@@ -25,7 +25,7 @@
               <dt class="product-price">총 가격</dt>
               <dd type="number" class="product-price-text">
                 <div class="input-num-wrapper">
-                  <input class="gp-input-num-box" type="number" v-model="price" min="0"> 원
+                  <input class="gp-input-num-box" type="number" v-model="price" min="0" step="100"> 원
                 </div>
               </dd>
               <dt class="person-limit">모집 인원</dt>
@@ -82,7 +82,7 @@
                   <input class="gp-input-box" type="datetime-local" v-model="meeting_at" min="" step="600">
                 </div>
               </dd>
-              <div class="mapping">
+              <div class="mapping" style="display: none;">
                 지도 api를 넣고 싶다
               </div>
             </dl>
@@ -135,27 +135,35 @@ export default {
       async writeFeed() {
           try{
               const community_url = this.$route.params.community_name
-              const response = await this.$store.dispatch("FETCH_GROUPPURCHASE_CREATE", {
-                community_url,
+              const data = {
                 title: this.title,
                 content: this.content,
-                name: this.name,
-                number: this.number,
-                price: this.price,
-                person: this.person,
+                product_name: this.name,
+                product_number: this.number,
+                product_price: this.price,
+                person_limit: this.limit,
                 link: this.link,
-                open_at: this.open_at,
-                close_at: this.close_at,
+                open_at: this.open_at + ":00",
+                close_at: this.close_at + ":00",
                 end_option: this.end_option,
                 location: this.location,
-                meeting_at: this.meeting_at,
+                meeting_at: this.meeting_at + ":00",
+              }
+              const response = await this.$store.dispatch("FETCH_GROUPPURCHASE_CREATE", {
+                community_url, data
               });
               if(response.status === 201){
                 this.snotify("success",response.data.message)
                 this.$router.push({name: "community-detail", params: {name: this.$route.params.community_name}});
               }
           }catch(error){
+            if (error.response.data.message) {
+              this.snotify("error",error.response.data.message);
+            } else if (error.response.data.error) {
+              this.snotify("error",error.response.data.error);
+            } else {
               this.snotify("error","빈 칸을 입력해주세요");
+            }
           }
       },
       async handleImageAdded(file, Editor, cursorLocation, resetUploader) {

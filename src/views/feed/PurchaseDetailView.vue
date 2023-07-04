@@ -109,7 +109,7 @@
                               <li class="meeting-at">{{ feed.meeting_at.slice(0, 10) }} {{ feed.meeting_at.slice(11, 16) }}</li>
                               <li class="end-option">{{ feed.end_choice }}</li>
                               <!-- 지도 api 넣을 예정 -->
-                              <div id="map" class="mapping"></div>
+                              <div id="map" class="mapping" style="display: none;"></div>
                               <div class="parti-button-box">
                                   <button class="party-button" @click="submitOpen()">
                                       <p>Subscribe</p>
@@ -167,7 +167,7 @@
                       <router-link :to="`/community/${communityurl}/category/${feed.category_url}`" class="move-button">목록으로</router-link>
                     </div>
                     <div class="like-box">
-                      <router-link v-if="feed.user === this.userid" class="content-edit-button" :to="`/community/update/${communityurl}/purchase/${feed.id}`" >글 수정</router-link>
+                      <a v-if="feed.user === this.userid" class="content-edit-button"  @click="editFeed()">글 수정</a>
                       <!-- 본인 -->
                       <a v-if="feed.user === this.userid" class="content-delete-button" @click="deleteFeed()" >글 삭제</a>
                     </div>
@@ -302,28 +302,12 @@ export default {
         communityurl() {
             return this.data?.community?.communityurl;
         },
-        //user() {
-        //    return this.data?.user;
-        //},
         bookmark() {
             return this.community?.is_bookmarked;
         },
         hasAccessToken(){
             return localStorage.getItem('access_token');
         },
-        // ...mapGetters({ data: "fetchFeedDetail" }),
-        // community() {
-        //   return this.data?.community;
-        // },
-        // communityurl() {
-        //   return this.data?.community?.communityurl;
-        // },
-        // feed() {
-        //   return this.data?.feed;
-        // },
-        // feedadmin() {
-        //   return this.data.admin.map(admin => admin.user_id);
-        // },
         comment(){
             if (Array.isArray(this.data?.comment)) {
                 return this.data?.comment?.map(comment => ({
@@ -398,15 +382,24 @@ export default {
         },
         async endPurchase() {
             try {
+            const community_name = this.$route.params.community_name;
             const grouppurchase_id = this.$route.params.grouppurchase_id;
-            const response = await fetchGroupPurchaseSelfEnd(grouppurchase_id);
+            const response = await fetchGroupPurchaseSelfEnd(community_name, grouppurchase_id);
             if (response.status === 202) {
                 this.snotify('success',response.data.message);
                 this.feed.is_notification = !this.feed.is_notification;
+                this.$store.dispatch("FETCH_GROUPPURCHASE_DETAIL", { community_name, grouppurchase_id });
             }
             } catch (error) {
                 this.snotify('error',error.response.data.message);
             }
+        },
+        editFeed() {
+          if (this.feed.grouppurchase_status != '시작 전') {
+            this.snotify('error','공구 시작전에만 수정이 가능합니다');
+          } else {
+            this.$router.push({name:'purchase-update', params:{community_name: this.communityurl, grouppurchase_id: this.feed.id}})
+          }
         },
         async deleteFeed() {
             try {
@@ -425,43 +418,44 @@ export default {
             }
         },
         async grouppurchaseJoin() {
-            try {
-            const grouppurchase_id = this.$route.params.grouppurchase_id;
-            const response = await fetchGroupPurchaseJoin(grouppurchase_id, this.submitnumber);
-                if (response.status === 201 || response.status === 202) {
-                    this.snotify('success',response.data.message);
-                    this.submitopen = false;
-                    const grouppurchase_id = this.$route.params.grouppurchase_id;
+            if (this.feed.grouppurchase_status == '진행 중') {
+                try {
                     const community_name = this.$route.params.community_name;
-                    this.$store.dispatch("FETCH_GROUPPURCHASE_DETAIL", { community_name, grouppurchase_id });
+                    const grouppurchase_id = this.$route.params.grouppurchase_id;
+                    const response = await fetchGroupPurchaseJoin(community_name, grouppurchase_id, this.submitnumber);
+                    if (response.status === 201 || response.status === 202) {
+                        this.snotify('success',response.data.message);
+                        this.submitopen = false;
+                        this.$store.dispatch("FETCH_GROUPPURCHASE_DETAIL", { community_name, grouppurchase_id });
+                    }
+                } catch (error) {
+                    if (error.response.status === 401) {
+                        this.snotify('warning',"로그인을 해주세요");
+                    } else {
+                        this.snotify('error',error.response.data.message);
+                    }
                 }
-            } catch (error) {
-                if (error.response.status === 401) {
-                    this.snotify('warning',"로그인을 해주세요");
-                } else {
-                    this.snotify('error',error.response.data.message);
-                }
+            } else {
+              this.snotify('error','공구 진행중에만 참여 가능합니다');
             }
         },
         async createComment() {
             try {
+            const community_name = this.$route.params.community_name;
             const grouppurchase_id = this.$route.params.grouppurchase_id;
-            const response = await fetchGroupPurchaseCommentCreate(grouppurchase_id, this.inputComment);
+            const response = await fetchGroupPurchaseCommentCreate(community_name, grouppurchase_id, this.inputComment);
             if (response.status === 201) {
                 this.snotify('success',response.data.message);
                 this.inputComment = "";
-                const grouppurchase_id = this.$route.params.grouppurchase_id;
-                const community_name = this.$route.params.community_name;
                 this.$store.dispatch("FETCH_GROUPPURCHASE_DETAIL", { community_name, grouppurchase_id });
             }
             } catch (error) {
-                if (error.response.status === 400) {
-                    this.snotify('error',"댓글을 작성해주세요");
-                    this.inputComment = '';
-                }
                 if (error.response.status === 401) {
                     this.snotify('error',"로그인을 해주세요");
                     this.inputComment = '';
+                } else {
+                  this.snotify('error',error.response.data.message);
+                  this.inputComment = '';
                 }
             }
         },
@@ -479,7 +473,13 @@ export default {
                 this.$store.dispatch("FETCH_GROUPPURCHASE_DETAIL", { community_name, grouppurchase_id });
             }
             } catch (error) {
-                this.snotify('error','댓글 수정에 실패했습니다');
+                if (error.response.status === 401) {
+                    this.snotify('error',"로그인을 해주세요");
+                    this.inputComment = '';
+                } else {
+                    this.snotify('error',error.response.data.message);
+                    this.inputComment = '';
+                }
             }
         },
         async deleteComment(comment) {
@@ -1186,7 +1186,7 @@ a {
   .purchase-form-box {
       display: inline-flex;
       list-style-type: none;
-      width: 900px;
+      width: 850px;
       height: 500px auto;
   }
   

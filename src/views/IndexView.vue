@@ -163,8 +163,10 @@ export default {
     }
   },
   created() {
-    this.$store.dispatch("FETCH_COMMUNITY_LIST");
-    this.$store.dispatch("FETCH_ALL_PROFILE");
+    Promise.all([
+      this.$store.dispatch("FETCH_COMMUNITY_LIST"),
+      this.$store.dispatch("FETCH_ALL_PROFILE")
+    ])    
   }
 };
 </script>
