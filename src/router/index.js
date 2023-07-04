@@ -25,7 +25,6 @@ import FeedSearchView from '../views/feed/FeedSearchView.vue'
 import PurchaseWrite from '@/components/PurchaseWrite.vue'
 import PurchaseUpdateView from '../views/feed/PurchaseUpdateView.vue'
 import PurchaseDetailView from '../views/feed/PurchaseDetailView.vue'
-import PasswordWithdrawalModalView from '../components/PasswordWithdrawalModal.vue'
 
 Vue.use(VueRouter)
 
@@ -128,14 +127,6 @@ export const router = new VueRouter({
                 }else{
                     next()
                 }
-            }
-        },
-        {
-            path: '/profile/:user_id',
-            name: 'profile',
-            component:PasswordWithdrawalModalView,
-            beforeEnter(to, from, next) {
-                next()
             }
         },
         {
