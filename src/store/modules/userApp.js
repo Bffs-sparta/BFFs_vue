@@ -12,7 +12,8 @@ const state ={
     profile: [],
     menubar : false,
     meetai: {},
-    profilecomu: {}
+    profilecomu: {},
+    alarmlist:[]
 }
 
 const getters ={
@@ -31,6 +32,12 @@ const getters ={
     fetchMeetAI(state) {
         return state.meetai
     },
+    getAlarmData(state) {
+        return state.alarmlist.sort((a,b) => b.id - a.id)
+    },
+    getAlarmCount(state) {
+        return state.alarmlist.length
+    }
 }
 
 const mutations ={
@@ -54,6 +61,19 @@ const mutations ={
         state.meetai = meetai
         bus.$emit('axiosEnd')
     },
+    SET_ALARM(state, data) {
+        if(Array.isArray(data)){
+            if(data.length>=state.alarmlist.length){
+                state.alarmlist = data
+            }else{
+                data.forEach(e => {
+                    state.alarmlist.push(e)
+                });
+            }
+        }else{
+            state.alarmlist.push(data)
+        }
+    }
 }
 
 const actions={
@@ -110,6 +130,16 @@ const actions={
         } catch (error) {
             console.log(error)
         }
+    },
+    getAlarm(context, alarmlist) {
+        context.commit('SET_ALARM', alarmlist.message)
+        return alarmlist
+    },
+    deleteAlarm(context, index) {
+        context.state.alarmlist.splice(index,1)
+    },
+    deleteAllAlarm(context){
+        context.state.alarmlist = []
     }
 }
 export default {

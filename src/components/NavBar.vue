@@ -5,12 +5,20 @@
 				<h1>
 					<router-link to="/" class="logo">
 						<img src="../assets/logo.png" alt="BFF">
-                    </router-link>
+          </router-link>
 				</h1>
 				<div class="sub-menu">
 					<nav>
-						<!-- <h2>메뉴</h2> -->
-                        <ul class="menu" v-if="loginuser">
+            <ul class="menu" v-if="loginuser">
+              <li>
+                <alarm-modal v-if="alarmopen" class="alarm-modal"></alarm-modal>
+                <div class="alarm-count-wrap" v-if="getAlarmCount>0">
+                  <i class="alarm-count">{{getAlarmCount<999? getAlarmCount:'999+'}}</i>
+                </div>
+                <button class="alarm" @click="alarmOpen">
+                  <svg viewBox="0 0 448 512" class="bell"><path d="M224 0c-17.7 0-32 14.3-32 32V49.9C119.5 61.4 64 124.2 64 200v33.4c0 45.4-15.5 89.5-43.8 124.9L5.3 377c-5.8 7.2-6.9 17.1-2.9 25.4S14.8 416 24 416H424c9.2 0 17.6-5.3 21.6-13.6s2.9-18.2-2.9-25.4l-14.9-18.6C399.5 322.9 384 278.8 384 233.4V200c0-75.8-55.5-138.6-128-150.1V32c0-17.7-14.3-32-32-32zm0 96h8c57.4 0 104 46.6 104 104v33.4c0 47.9 13.9 94.6 39.7 134.6H72.3C98.1 328 112 281.3 112 233.4V200c0-57.4 46.6-104 104-104h8zm64 352H224 160c0 17 6.7 33.3 18.7 45.3s28.3 18.7 45.3 18.7s33.3-6.7 45.3-18.7s18.7-28.3 18.7-45.3z"></path></svg>
+                </button>
+              </li>
 							<li><router-link :to="`/profile/${userid}`">My page</router-link></li>
 							<li><a @click="logout()">Log out</a></li>
 						</ul>
@@ -25,10 +33,6 @@
                 <div id="bar2" class="bars" :class="{bar2checked:menubar}"></div>
                 <div id="bar3" class="bars"></div>
             </label>
-
-					<!-- <div class="hamburger" @click="menuShow">
-                        <div class="material-icons">menu</div>
-                    </div> -->
 				</div>
 			</div>
 		</header>
@@ -43,100 +47,125 @@
 <script>
 import jwt_decode from "jwt-decode";
 import MenuBar from './MenuBar.vue'
+import AlarmModal from './AlarmModal.vue'
 import { mapGetters } from 'vuex'
 import bus from '@/utils/bus.js'
 
 export default {
-  components: {
-    MenuBar,
-  },
-  data() {
-    return {
-        loginuser: false,
-        userid: '',
-    }
-  },
-  mounted() {
-    window.addEventListener('scroll', this.handleScroll);
-    this.checkLogin();
-  },
-  beforeDestroy() {
-    window.removeEventListener('scroll', this.handleScroll);
-  },
-  watch:{
-    '$route'(){
-        this.$store.dispatch('checkMenubar',false);
-    }
-  },
-  computed:{
-    ...mapGetters(['menubar']),
-  },
-  created() {
-    this.$router.beforeEach((to, from, next) => {
-      const currentTime = Math.floor(Date.now() / 1000);
-      const exp = localStorage.getItem("access_token") ? jwt_decode(localStorage.getItem("access_token")).exp : null;
-      if (exp && exp < currentTime) {
-        const refresh = localStorage.getItem("refresh_token");
-        const refresh_decode = jwt_decode(refresh);
-        if (refresh_decode.exp < currentTime) {
-          localStorage.removeItem("access_token");
-          localStorage.removeItem("refresh_token");
-          localStorage.removeItem("payload");
-          alert("로그인 시간이 만료되었습니다.");
-          next(false);
-        } else {
-          this.$store.dispatch("TokenRefresh").then((response) => {
-            if (response.status == 200) {
-              localStorage.setItem("access_token", response.data.access);
-              next();
-            } else {
-              alert("로그인 시간이 만료되었습니다.");
-              next(false);
-            }
-          });
+    components: {
+        MenuBar,
+        AlarmModal,
+    },
+    data() {
+        return {
+            loginuser: false,
+            userid: '',
+            alarmopen: false,
         }
-        
-        this.checkLogin();
-      } else {
-        this.checkLogin();
-        next();
-      }
-    });
-    
-  },
-  methods: {
-    menuShow() {
-        this.$store.dispatch('checkMenubar',!this.menubar);
     },
-    logout() {
-        localStorage.removeItem('access_token');
-        localStorage.removeItem('refresh_token');
-        localStorage.removeItem('payload');
-        this.$router.push('/').catch(() => {});
+    mounted() {
+        window.addEventListener('scroll', this.handleScroll);
         this.checkLogin();
-        this.snotify('success','로그아웃 되었습니다.');
     },
-    checkLogin(){
-      const access = localStorage.getItem('access_token')
-      this.loginuser = access !== null ? true : false;
+    beforeDestroy() {
+        window.removeEventListener('scroll', this.handleScroll);
+    },
+    watch: {
+        '$route'() {
+            this.$store.dispatch('checkMenubar', false);
+        },
+        getAlarmCount(value){
+            if(value == 0){
+                this.alarmopen = false;
+            }
+        }
+    },
+    computed: {
+        ...mapGetters(['menubar','getAlarmCount']),
+    },
+    created() {
+        this.$router.beforeEach((to, from, next) => {
+            const currentTime = Math.floor(Date.now() / 1000);
+            const exp = localStorage.getItem("access_token") ? jwt_decode(localStorage.getItem("access_token")).exp : null;
+            if (exp && exp < currentTime) {
+                const refresh = localStorage.getItem("refresh_token");
+                const refresh_decode = jwt_decode(refresh);
+                if (refresh_decode.exp < currentTime) {
+                    localStorage.removeItem("access_token");
+                    localStorage.removeItem("refresh_token");
+                    localStorage.removeItem("payload");
+                    alert("로그인 시간이 만료되었습니다.");
+                    next(false);
+                } else {
+                    this.$store.dispatch("TokenRefresh").then((response) => {
+                        if (response.status == 200) {
+                            localStorage.setItem("access_token", response.data.access);
+                            next();
+                        } else {
+                            alert("로그인 시간이 만료되었습니다.");
+                            next(false);
+                        }
+                    });
+                }
 
-      const payload = localStorage.getItem('payload');
-      if (payload) {
-        const { user_id } = JSON.parse(payload);
-        this.userid = user_id;
-      }
-    },
-    snotify(type,message){
-        bus.$emit('showSnackbar',{
-            type,
-            message
+                this.checkLogin();
+            } else {
+                this.checkLogin();
+                next();
+            }
         });
+        this.createWebSocket();
     },
-    handleScroll() {
-      this.$store.dispatch('checkMenubar',false);
+    methods: {
+        menuShow() {
+            this.$store.dispatch('checkMenubar', !this.menubar);
+        },
+        alarmOpen() {
+            if(this.getAlarmCount > 0) {
+                this.alarmopen = !this.alarmopen;
+            }
+            else{
+                this.snotify('info', '알림이 없습니다.');
+            }
+        },
+        logout() {
+            localStorage.removeItem('access_token');
+            localStorage.removeItem('refresh_token');
+            localStorage.removeItem('payload');
+            this.$router.push('/').catch(() => { });
+            this.checkLogin();
+            this.snotify('success', '로그아웃 되었습니다.');
+        },
+        checkLogin() {
+            const access = localStorage.getItem('access_token')
+            this.loginuser = access !== null ? true : false;
 
-    }
-  },
+            const payload = localStorage.getItem('payload');
+            if (payload) {
+                const { user_id } = JSON.parse(payload);
+                this.userid = user_id;
+            }
+        },
+        snotify(type, message) {
+            bus.$emit('showSnackbar', {
+                type,
+                message
+            });
+        },
+        handleScroll() {
+            this.$store.dispatch('checkMenubar', false);
+
+        },
+        createWebSocket() {
+            const socket = new WebSocket(
+                `ws://127.0.0.1:8000/ws/alarm/?token=${localStorage.getItem('access_token')}`
+            );
+            socket.onmessage = (event) => {
+                const data = JSON.parse(event.data);
+                this.$store.dispatch('getAlarm',data);
+            };
+        },
+    },
 }
 </script>
 
@@ -213,23 +242,6 @@ header > .inner > .sub-menu > nav > .menu > li > a:hover {
     cursor: pointer;
 }
 
-/*header > .inner > .sub-menu > .hamburger {
-    position: relative;
-}
-
-header > .inner > .sub-menu > .hamburger > .material-icons {
-    height: 24px;
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    right: 4px;
-    margin: auto;
-}
-
-.hamburger:hover {
-    cursor: pointer;
-}*/
-
 .menu-bar {
     position: absolute;
     right: 0;
@@ -295,5 +307,93 @@ header > .inner > .sub-menu > .hamburger > .material-icons {
   transform: rotate(-90deg);
 }
 
+.alarm{
+  width: 40px;
+  height: 40px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  cursor: pointer;
+  transition-duration: .3s;
+  border: none;
+  background-color: transparent;
+  margin-right:18px;
+}
+.alarm-count-wrap{
+  position :absolute;
+  top: -4px;
+  left: 20px;
+}
+.alarm-count{
+  font-size: 14px;
+  text-decoration: none;
+  font-style: normal;
+  background-color: #F55729;
+  border-radius: 18px;
+  min-width: 18px;
+  width: auto;
+  height: 18px;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 80;
+  position: sticky;
+  padding: 2px;
+}
+.bell {
+  width: 25px;
+}
 
+.bell path {
+  fill: #555555;
+}
+.bell:hover path{
+  fill:#FEBD1A;
+}
+.bell:focus-visible{
+    outline: 3px solid #aaa;
+}
+.bell:hover {
+  animation: bellRing 0.9s both;
+}
+
+/* bell ringing animation keyframes*/
+@keyframes bellRing {
+  0%,
+  100% {
+    transform-origin: top;
+  }
+
+  15% {
+    transform: rotateZ(10deg);
+  }
+
+  30% {
+    transform: rotateZ(-10deg);
+  }
+
+  45% {
+    transform: rotateZ(5deg);
+  }
+
+  60% {
+    transform: rotateZ(-5deg);
+  }
+
+  75% {
+    transform: rotateZ(2deg);
+  }
+}
+
+.bell:active {
+  transform: scale(0.9);
+}
+.alarm-modal{
+  top:55px;
+  left:50%;
+  transform: translate(-50%,0);
+}
 </style>
