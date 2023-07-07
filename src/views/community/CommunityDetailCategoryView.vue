@@ -341,13 +341,22 @@ a{
     overflow-y: auto;
 }
 
+.intro-box::-webkit-scrollbar{
+    width: 5px;
+}
+.intro-box::-webkit-scrollbar-thumb{
+    background-color: #eee;
+    border-radius: 10px;
+}
+
+
 .head-introduction {
     white-space:pre-wrap;
     text-align: center;
     justify-content: center;
     color: white;
-    overflow-y: auto;
 }
+
 
 .main-area {
     width: 1200;
